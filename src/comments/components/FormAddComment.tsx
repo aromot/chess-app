@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -51,7 +52,7 @@ const FormAddComment = ({
             <FormControl>
               <Textarea placeholder="ici votre commentaire" {...field} />
             </FormControl>
-            {/* <FormDescription>description</FormDescription> */}
+            <FormDescription></FormDescription>
             <FormMessage />
           </FormItem>
         )}

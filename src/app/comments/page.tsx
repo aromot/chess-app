@@ -14,6 +14,7 @@ import FormAddComment from "@/comments/components/FormAddComment";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { getComments } from "@/comments/db-queries";
+import Title1 from "@/components/ui/title1";
 
 const ButtonAddComment = () => (
   <Dialog>
@@ -45,6 +46,7 @@ const CommentPage = async () => {
 
   return (
     <div className="container mx-auto py-10 space-y-3">
+      <Title1>Liste des commentaires</Title1>
       <DataTable columns={columns} data={comments} />
       <ButtonAddComment />
     </div>
