@@ -1,7 +1,7 @@
-import { Comment, PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { Comment } from "@prisma/client";
 
 const CommentPage = async () => {
-  const prisma = new PrismaClient();
   const comments: Comment[] = await prisma.comment.findMany();
 
   if (comments.length === 0) {
