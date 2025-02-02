@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateTime } from "@/lib/i18n";
 import { ColumnDef } from "@tanstack/react-table";
 
 // This type is used to define the shape of our data.
@@ -21,5 +22,6 @@ export const columns: ColumnDef<Directory>[] = [
   {
     accessorKey: "createdAt",
     header: "Date d'ajout",
+    cell: ({ renderValue }) => formatDateTime(renderValue() as string),
   },
 ];
