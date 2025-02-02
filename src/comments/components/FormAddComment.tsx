@@ -9,9 +9,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import AppForm from "@/components/forms/AppForm";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
+import { Textarea } from "@/components/ui/textarea";
+import { createComment } from "../actions";
+import { Comment } from "@prisma/client";
 
 const formSchema = z.object({
   content: z.string().min(2, {
@@ -19,7 +21,11 @@ const formSchema = z.object({
   }),
 });
 
-const FormAddComment = () => {
+const FormAddComment = ({
+  onSuccess,
+}: {
+  onSuccess?: (comment: Comment) => void;
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,14 +33,15 @@ const FormAddComment = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const comment = (await createComment(values.content)) as Comment;
+    if (onSuccess) {
+      onSuccess(comment);
+    }
   }
 
   return (
-    <AppForm form={form} onSubmit={onSubmit} className="space-y-8">
+    <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
       <FormField
         control={form.control}
         name="content"
@@ -42,7 +49,7 @@ const FormAddComment = () => {
           <FormItem>
             <FormLabel>Votre commentaire</FormLabel>
             <FormControl>
-              <Input placeholder="ici votre commentaire" {...field} />
+              <Textarea placeholder="ici votre commentaire" {...field} />
             </FormControl>
             {/* <FormDescription>description</FormDescription> */}
             <FormMessage />
