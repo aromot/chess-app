@@ -10,6 +10,9 @@ export default function Home() {
         <li>
           <Link href="/comments">Commentaires</Link>
         </li>
+        <li>
+          <Link href="/ui">Charte graphique</Link>
+        </li>
       </ul>
     </div>
   );
