@@ -2,6 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import Title1 from "@/components/ui/title1";
 import { TriangleAlert } from "lucide-react";
+import Link from "next/link";
 
 const UiPage = () => {
   return (
@@ -18,6 +19,9 @@ const UiPage = () => {
           <AlertTitle>Attention, derrière toi !</AlertTitle>
           <AlertDescription>Voici une alerte</AlertDescription>
         </Alert>
+      </div>
+      <div>
+        <Link href="/">accueil</Link>
       </div>
     </div>
   );
