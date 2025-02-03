@@ -15,12 +15,10 @@ import { useState } from "react";
 const ButtonAddComment = () => {
   const [open, setOpen] = useState(false);
 
-  console.log({ open });
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Ajouter un commentaire</Button>
+        <Button>Ajouter</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -30,8 +28,6 @@ const ButtonAddComment = () => {
         </DialogHeader>
         <FormAddComment
           onSuccess={() => {
-            console.log("onSuccess: setOpen(false)");
-
             setOpen(false);
           }}
         />

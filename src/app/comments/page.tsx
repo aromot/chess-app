@@ -19,10 +19,12 @@ const CommentPage = async () => {
   }
 
   return (
-    <div className="container mx-auto py-10 space-y-3">
-      <Title1>Liste des commentaires</Title1>
+    <div className="container mx-auto space-y-3 max-w-xl">
+      <div className="flex">
+        <Title1 className="flex-1">Liste des commentaires</Title1>
+        <ButtonAddComment />
+      </div>
       <DataTable columns={columns} data={comments} />
-      <ButtonAddComment />
     </div>
   );
 };
