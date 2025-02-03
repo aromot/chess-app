@@ -1,35 +1,18 @@
 import { DataTable } from "@/components/ui/data-table";
-import { columns, Directory } from "./columns";
+import { columns } from "./columns";
+import { getDirectories } from "@/directories/actions";
+import ButtonAddDirectory from "@/directories/components/ButtonAddDirectory";
 
-async function getData(): Promise<Directory[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: 1,
-      name: "Mon répertoire e4",
-    },
-    {
-      id: 2,
-      name: "Mon répertoire d4",
-    },
-    {
-      id: 3,
-      name: "ma défense Sicilienne e4-c5",
-    },
-  ];
-}
-
-const DirectoryPage = async () => {
-  const data = await getData();
+export default async function DirectoriesPage() {
+  const directories = await getDirectories();
 
   return (
-    <div>
-      Ici la liste des répertoires
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+    <div className="container mx-auto py-4 px-20">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Liste des répertoires</h1>
+        <ButtonAddDirectory />
       </div>
+      <DataTable columns={columns} data={directories} />
     </div>
   );
-};
-
-export default DirectoryPage;
+}

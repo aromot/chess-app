@@ -1,12 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import { formatDateTime } from "@/lib/i18n";
 export type Directory = {
   id: number;
   name: string;
+  white: boolean;
+  createdAt: Date;
 };
 
 export const columns: ColumnDef<Directory>[] = [
@@ -17,5 +17,15 @@ export const columns: ColumnDef<Directory>[] = [
   {
     accessorKey: "name",
     header: "Nom",
+  },
+  {
+    accessorKey: "white",
+    header: "Couleur",
+    cell: ({ row }) => (row.original.white ? "Blanc" : "Noir"),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Date d'ajout",
+    cell: ({ renderValue }) => formatDateTime(renderValue() as string),
   },
 ];

@@ -34,7 +34,7 @@ model Directory {
   id        Int      @id @default(autoincrement())
   name      String
   white     Boolean
-  createdAt DateTime
+  createdAt DateTime @default(now())
 }
 
 model Comment {
