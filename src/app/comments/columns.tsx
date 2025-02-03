@@ -1,17 +1,11 @@
 "use client";
 
 import { formatDateTime } from "@/lib/i18n";
+import { Comment } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import nl2br from "react-br";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Directory = {
-  id: number;
-  name: string;
-};
-
-export const columns: ColumnDef<Directory>[] = [
+export const columns: ColumnDef<Comment>[] = [
   {
     accessorKey: "id",
     header: "Id",

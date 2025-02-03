@@ -1,36 +1,10 @@
 import { Alert } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/db";
 import { Comment } from "@prisma/client";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import FormAddComment from "@/comments/components/FormAddComment";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { getComments } from "@/comments/db-queries";
 import Title1 from "@/components/ui/title1";
-
-const ButtonAddComment = () => (
-  <Dialog>
-    <DialogTrigger asChild>
-      <Button>Ajouter un commentaire</Button>
-    </DialogTrigger>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Nouveau commentaire</DialogTitle>
-        <DialogDescription asChild>
-          <FormAddComment />
-        </DialogDescription>
-      </DialogHeader>
-    </DialogContent>
-  </Dialog>
-);
+import ButtonAddComment from "@/comments/components/ButtonAddComment";
 
 const CommentPage = async () => {
   const comments: Comment[] = await getComments();

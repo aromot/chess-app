@@ -14,7 +14,6 @@ import AppForm from "@/components/forms/AppForm";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { Textarea } from "@/components/ui/textarea";
 import { createComment } from "../actions";
-import { Comment } from "@prisma/client";
 
 const formSchema = z.object({
   content: z.string().min(2, {
@@ -22,11 +21,7 @@ const formSchema = z.object({
   }),
 });
 
-const FormAddComment = ({
-  onSuccess,
-}: {
-  onSuccess?: (comment: Comment) => void;
-}) => {
+const FormAddComment = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,10 +30,10 @@ const FormAddComment = ({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const comment = (await createComment(values.content)) as Comment;
     if (onSuccess) {
-      onSuccess(comment);
+      onSuccess();
     }
+    await createComment(values.content);
   }
 
   return (

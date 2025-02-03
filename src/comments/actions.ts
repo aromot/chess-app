@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { addComment } from "./db-queries";
 import { z } from "zod";
 
@@ -12,10 +13,12 @@ const formSchema = z.object({
 export async function createComment(content: string) {
   try {
     formSchema.safeParse({ content });
-    const comment = await addComment(content);
-    return comment;
+    await addComment(content);
+    // return comment;
   } catch (error) {
     console.log("Une erreur s'est produite");
     console.log({ error });
   }
+
+  redirect("/comments");
 }
