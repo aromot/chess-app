@@ -1,5 +1,6 @@
 "use client";
 
+import DeleteMenuItem from "@/comments/components/DeleteMenuItem";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -56,7 +57,7 @@ export const columns: ColumnDef<Comment>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>Modifier</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Supprimer</DropdownMenuItem>
+            <DeleteMenuItem />
           </DropdownMenuContent>
         </DropdownMenu>
       );
