@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-const Title1 = ({
+const Title2 = ({
   children,
   className,
   ...props
@@ -9,10 +9,10 @@ const Title1 = ({
   className?: string;
 }) => {
   return (
-    <h1 className={clsx("text-3xl", className)} {...props}>
+    <h2 className={clsx("text-2xl", className)} {...props}>
       {children}
-    </h1>
+    </h2>
   );
 };
 
-export default Title1;
+export default Title2;
