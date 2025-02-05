@@ -1,23 +1,39 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
-type CommentContext = {
+interface CommentContext {
   modalDeleteOpen: boolean;
-};
+  openModalDelete: () => void;
+  closeModalDelete: () => void;
+  toggleModalDelete: (open: boolean) => void;
+}
 
 const Context = createContext<CommentContext | null>(null);
 
-const CommentProvider = ({ children }) => {
+const CommentProvider = ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => {
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
+
+  const openModalDelete = () => setModalDeleteOpen(true);
+  const closeModalDelete = () => setModalDeleteOpen(false);
+  const toggleModalDelete = (open: boolean) => setModalDeleteOpen(open);
+
   const context: CommentContext = {
-    modalDeleteOpen: false,
+    modalDeleteOpen,
+    openModalDelete,
+    closeModalDelete,
+    toggleModalDelete,
   };
 
   return <Context value={context}>{children}</Context>;
 };
 
 export function useComment() {
-  return useContext(Context);
+  return useContext(Context) as CommentContext;
 }
 
 export default CommentProvider;
