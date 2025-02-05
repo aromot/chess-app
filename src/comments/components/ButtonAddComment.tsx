@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import FormAddComment from "@/comments/components/FormAddComment";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const ButtonAddComment = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   return (
@@ -20,6 +22,7 @@ const ButtonAddComment = () => {
       <DialogTrigger asChild>
         <Button>Ajouter</Button>
       </DialogTrigger>
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Nouveau commentaire</DialogTitle>
@@ -29,6 +32,7 @@ const ButtonAddComment = () => {
         <FormAddComment
           onSuccess={() => {
             setOpen(false);
+            router.refresh();
           }}
         />
       </DialogContent>

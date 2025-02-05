@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { addComment } from "./db-queries";
 import { z } from "zod";
 
@@ -20,5 +19,5 @@ export async function createComment(content: string) {
     console.log({ error });
   }
 
-  redirect("/comments");
+  // redirect("/comments");
 }

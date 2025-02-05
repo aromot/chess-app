@@ -7,6 +7,7 @@ import Title1 from "@/components/ui/title1";
 import ButtonAddComment from "@/comments/components/ButtonAddComment";
 import CommentProvider from "@/comments/components/CommentProvider";
 import ModalDeleteComment from "@/comments/components/ModalDeleteComment";
+import { Button } from "@/components/ui/button";
 
 const CommentPage = async () => {
   const comments: Comment[] = await getComments();
@@ -30,6 +31,7 @@ const CommentPage = async () => {
         <DataTable columns={columns} data={comments} />
         <ModalDeleteComment />
       </CommentProvider>
+      <Button>Mon bouton</Button>
     </>
   );
 };

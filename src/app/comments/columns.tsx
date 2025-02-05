@@ -30,11 +30,15 @@ export const columns: ColumnDef<Comment>[] = [
     accessorKey: "createdAt",
     header: "Date d'ajout",
     size: 50,
+    minSize: 50,
+    maxSize: 50,
     cell: ({ renderValue }) => formatDateTime(renderValue() as string),
   },
   {
     id: "actions",
     size: 50,
+    minSize: 50,
+    maxSize: 50,
     cell: ({ row }) => {
       const comment = row.original as Comment;
 

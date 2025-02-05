@@ -1,7 +1,5 @@
 "use client";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+
 import {
   FormControl,
   FormDescription,
@@ -14,27 +12,23 @@ import AppForm from "@/components/forms/AppForm";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { Textarea } from "@/components/ui/textarea";
 import { createComment } from "../actions";
-
-const formSchema = z.object({
-  content: z.string().min(2, {
-    message: "Votre message doit contenir au moins 2 caractères.",
-  }),
-});
+import { useAppForm } from "@/components/forms/useAppForm";
+import { CommentSchema, CommentFormValues } from "../schema";
 
 const FormAddComment = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useAppForm({
+    schema: CommentSchema,
     defaultValues: {
       content: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: CommentFormValues) => {
+    await createComment(values.content);
     if (onSuccess) {
       onSuccess();
     }
-    await createComment(values.content);
-  }
+  };
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
@@ -52,6 +46,7 @@ const FormAddComment = ({ onSuccess }: { onSuccess?: () => void }) => {
           </FormItem>
         )}
       />
+
       <ButtonSubmit loadingText="ajout en cours...">
         Ajouter mon commentaire
       </ButtonSubmit>
