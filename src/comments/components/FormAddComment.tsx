@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import AppForm from "@/components/forms/AppForm";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { Textarea } from "@/components/ui/textarea";
 import { createComment } from "../actions";
 import { useAppForm } from "@/components/forms/useAppForm";
 import { CommentSchema, CommentFormValues } from "../schema";
+import InputTextArea from "@/components/forms/InputTextArea";
 
 const FormAddComment = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useAppForm({
@@ -32,19 +24,10 @@ const FormAddComment = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
-      <FormField
-        control={form.control}
+      <InputTextArea
+        label="Votre commentaire"
         name="content"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Votre commentaire</FormLabel>
-            <FormControl>
-              <Textarea placeholder="ici votre commentaire" {...field} />
-            </FormControl>
-            <FormDescription></FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
+        placeholder="ici votre commentaire"
       />
 
       <ButtonSubmit loadingText="ajout en cours...">
