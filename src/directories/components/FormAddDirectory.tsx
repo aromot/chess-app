@@ -85,7 +85,9 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Ajouter</Button>
+        <Button type="submit" className="mt-4">
+          Ajouter
+        </Button>
       </form>
     </Form>
   );

@@ -7,7 +7,7 @@ export default async function DirectoriesPage() {
   const directories = await getDirectories();
 
   return (
-    <div className="container mx-auto py-4 px-20">
+    <div className="container mx-auto my-10 px-20 w-[80%]">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Liste des répertoires</h1>
         <ButtonAddDirectory />

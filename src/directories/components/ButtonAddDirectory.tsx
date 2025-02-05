@@ -22,7 +22,7 @@ const ButtonAddDirectory = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nouveau directory</DialogTitle>
+          <DialogTitle>Nouveau répertoire</DialogTitle>
           {/* Si on retire cette balise, on a un warning :-( */}
           <DialogDescription></DialogDescription>
         </DialogHeader>
