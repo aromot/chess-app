@@ -7,6 +7,8 @@ import { useAppForm } from "@/components/forms/useAppForm";
 import { CommentSchema, CommentFormValues } from "../../schema";
 import InputTextArea from "@/components/forms/InputTextArea";
 import { Comment } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { useComment } from "../CommentProvider";
 
 const FormEditComment = ({
   comment,
@@ -21,6 +23,7 @@ const FormEditComment = ({
       content: comment.content,
     },
   });
+  const { closeModalEdit } = useComment();
 
   const onSubmit = async (values: CommentFormValues) => {
     await changeComment(comment.id, values.content);
@@ -37,9 +40,18 @@ const FormEditComment = ({
         placeholder="ici votre commentaire"
       />
 
-      <ButtonSubmit loadingText="modification en cours...">
-        Modifier
-      </ButtonSubmit>
+      <div className="flex">
+        <div className="flex-1">
+          <ButtonSubmit loadingText="modification en cours...">
+            Modifier
+          </ButtonSubmit>
+        </div>
+        <div>
+          <Button variant="link" onClick={closeModalEdit}>
+            Annuler
+          </Button>
+        </div>
+      </div>
     </AppForm>
   );
 };

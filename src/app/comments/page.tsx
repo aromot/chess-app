@@ -8,6 +8,7 @@ import ButtonAddComment from "@/comments/components/add/ButtonAddComment";
 import CommentProvider from "@/comments/components/CommentProvider";
 import ModalDeleteComment from "@/comments/components/delete/ModalDeleteComment";
 import ModalEditComment from "@/comments/components/edit/ModalEditComment";
+import ButtonRefresh from "@/comments/components/ButtonRefresh";
 
 const CommentPage = async () => {
   const comments: Comment[] = await getComments();
@@ -25,7 +26,10 @@ const CommentPage = async () => {
     <>
       <div className="flex">
         <Title1 className="flex-1">Liste des commentaires</Title1>
-        <ButtonAddComment />
+        <div className="flex gap-5">
+          <ButtonRefresh />
+          <ButtonAddComment />
+        </div>
       </div>
       <CommentProvider>
         <DataTable columns={columns} data={comments} />
