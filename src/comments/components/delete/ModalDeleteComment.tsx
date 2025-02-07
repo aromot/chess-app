@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useComment } from "./CommentProvider";
+import { useComment } from "../CommentProvider";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { removeComment } from "../actions";
+import { removeComment } from "../../actions";
 
 const ModalDeleteComment = () => {
   const {
@@ -26,6 +26,8 @@ const ModalDeleteComment = () => {
     closeModalDelete();
     router.refresh();
   };
+
+  if (!commentDelete) return;
 
   return (
     <Dialog open={modalDeleteOpen} onOpenChange={toggleModalDelete}>

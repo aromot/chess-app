@@ -4,9 +4,10 @@ import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { getComments } from "@/comments/db-queries";
 import Title1 from "@/components/ui/title1";
-import ButtonAddComment from "@/comments/components/ButtonAddComment";
+import ButtonAddComment from "@/comments/components/add/ButtonAddComment";
 import CommentProvider from "@/comments/components/CommentProvider";
-import ModalDeleteComment from "@/comments/components/ModalDeleteComment";
+import ModalDeleteComment from "@/comments/components/delete/ModalDeleteComment";
+import ModalEditComment from "@/comments/components/edit/ModalEditComment";
 
 const CommentPage = async () => {
   const comments: Comment[] = await getComments();
@@ -29,6 +30,7 @@ const CommentPage = async () => {
       <CommentProvider>
         <DataTable columns={columns} data={comments} />
         <ModalDeleteComment />
+        <ModalEditComment />
       </CommentProvider>
     </>
   );

@@ -20,3 +20,14 @@ export async function deleteComment(id: number) {
     },
   });
 }
+
+// Mettre à jour un comment par son ID
+export async function updateComment(id: number, content: string) {
+  const comment = await prisma.comment.update({
+    where: {
+      id,
+    },
+    data: { content },
+  });
+  return comment;
+}

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useComment } from "./CommentProvider";
+import { useComment } from "../CommentProvider";
 import { X } from "lucide-react";
 import { Comment } from "@prisma/client";
 
@@ -10,9 +10,8 @@ const ButtonDeleteComment = ({ comment }: { comment: Comment }) => {
     <Button
       onClick={() => openModalDelete(comment)}
       variant="ghost"
-      className="h-6 w-6 p-0"
+      className="h-8 w-8 p-0"
     >
-      <span className="sr-only">Actions</span>
       <X className="h-4 w-4" />
     </Button>
   );

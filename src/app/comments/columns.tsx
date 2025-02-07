@@ -1,20 +1,10 @@
 "use client";
 
-import ButtonDeleteComment from "@/comments/components/ButtonDeleteComment";
-import DeleteMenuItem from "@/comments/components/DeleteMenuItem";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import ButtonDeleteComment from "@/comments/components/delete/ButtonDeleteComment";
+import ButtonEditComment from "@/comments/components/edit/ButtonEditComment";
 import { formatDateTime } from "@/lib/i18n";
 import { Comment } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, X } from "lucide-react";
 import nl2br from "react-br";
 
 export const columns: ColumnDef<Comment>[] = [
@@ -30,44 +20,25 @@ export const columns: ColumnDef<Comment>[] = [
   {
     accessorKey: "createdAt",
     header: "Date d'ajout",
-    size: 50,
-    minSize: 50,
     maxSize: 50,
     cell: ({ renderValue }) => formatDateTime(renderValue() as string),
   },
   {
     id: "actions",
-    size: 50,
-    minSize: 50,
     maxSize: 50,
     cell: ({ row }) => {
       const comment = row.original as Comment;
 
-      return <ButtonDeleteComment comment={comment} />;
-
-      // return (
-      //   <DropdownMenu>
-      //     <DropdownMenuTrigger asChild>
-      //       <Button variant="ghost" className="h-8 w-8 p-0">
-      //         <span className="sr-only">Actions</span>
-      //         <MoreHorizontal className="h-4 w-4" />
-      //       </Button>
-      //     </DropdownMenuTrigger>
-      //     <DropdownMenuContent align="end">
-      //       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      //       <DropdownMenuItem
-      //         onClick={() =>
-      //           navigator.clipboard.writeText(comment.id.toString())
-      //         }
-      //       >
-      //         Copier l&apos;identifiant
-      //       </DropdownMenuItem>
-      //       <DropdownMenuItem>Modifier</DropdownMenuItem>
-      //       <DropdownMenuSeparator />
-      //       <DeleteMenuItem />
-      //     </DropdownMenuContent>
-      //   </DropdownMenu>
-      // );
+      return (
+        <div className="flex gap-3">
+          <div>
+            <ButtonEditComment comment={comment} />
+          </div>
+          <div>
+            <ButtonDeleteComment comment={comment} />
+          </div>
+        </div>
+      );
     },
   },
 ];
