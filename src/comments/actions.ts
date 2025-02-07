@@ -1,6 +1,6 @@
 "use server";
 
-import { addComment } from "./db-queries";
+import { addComment, deleteComment } from "./db-queries";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -20,4 +20,13 @@ export async function createComment(content: string) {
   }
 
   // redirect("/comments");
+}
+
+export async function removeComment(id: number) {
+  try {
+    await deleteComment(id);
+  } catch (error) {
+    console.log("Une erreur s'est produite");
+    console.log({ error });
+  }
 }

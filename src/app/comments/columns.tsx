@@ -1,5 +1,6 @@
 "use client";
 
+import ButtonDeleteComment from "@/comments/components/ButtonDeleteComment";
 import DeleteMenuItem from "@/comments/components/DeleteMenuItem";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,7 @@ import {
 import { formatDateTime } from "@/lib/i18n";
 import { Comment } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import nl2br from "react-br";
 
 export const columns: ColumnDef<Comment>[] = [
@@ -42,29 +43,31 @@ export const columns: ColumnDef<Comment>[] = [
     cell: ({ row }) => {
       const comment = row.original as Comment;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Actions</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(comment.id.toString())
-              }
-            >
-              Copier l&apos;identifiant
-            </DropdownMenuItem>
-            <DropdownMenuItem>Modifier</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DeleteMenuItem />
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <ButtonDeleteComment comment={comment} />;
+
+      // return (
+      //   <DropdownMenu>
+      //     <DropdownMenuTrigger asChild>
+      //       <Button variant="ghost" className="h-8 w-8 p-0">
+      //         <span className="sr-only">Actions</span>
+      //         <MoreHorizontal className="h-4 w-4" />
+      //       </Button>
+      //     </DropdownMenuTrigger>
+      //     <DropdownMenuContent align="end">
+      //       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      //       <DropdownMenuItem
+      //         onClick={() =>
+      //           navigator.clipboard.writeText(comment.id.toString())
+      //         }
+      //       >
+      //         Copier l&apos;identifiant
+      //       </DropdownMenuItem>
+      //       <DropdownMenuItem>Modifier</DropdownMenuItem>
+      //       <DropdownMenuSeparator />
+      //       <DeleteMenuItem />
+      //     </DropdownMenuContent>
+      //   </DropdownMenu>
+      // );
     },
   },
 ];
