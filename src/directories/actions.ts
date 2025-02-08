@@ -2,18 +2,14 @@
 
 import { z } from "zod";
 import { addDirectory } from "./db-queries";
+import { DirectorySchema } from "./schema";
+
 
 // Exporter les fonctions pour les utiliser dans les composants
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Votre message doit contenir au moins 2 caractères.",
-  }),
-  white: z.boolean()
-});
-
 export async function createDirectory(name: string, white: boolean) {
   try {
-    const result = formSchema.safeParse({ name, white });
+    const result = DirectorySchema.safeParse({ name, white });
+
     
     if (!result.success) {
       return {
