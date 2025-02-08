@@ -4,10 +4,11 @@ import { prisma } from "@/lib/db";
 export async function getDirectories() {
   const directories = await prisma.directory.findMany({
     orderBy: {
-      createdAt: "asc", // Tri par date de création croissante
+      createdAt: "desc", // Tri par date de création croissante
     },
   });
   return directories;
+
 }
 
 // Ajouter un nouveau directory

@@ -2,12 +2,16 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "@/lib/i18n";
+import ButtonEditDirectory from "@/directories/components/edit/ButtonEditDirectory";
+import ButtonDeleteDirectory from "@/directories/components/delete/ButtonDeleteDirectory";
+
 export type Directory = {
   id: number;
   name: string;
   white: boolean;
   createdAt: Date;
 };
+
 
 export const columns: ColumnDef<Directory>[] = [
   {
@@ -27,5 +31,18 @@ export const columns: ColumnDef<Directory>[] = [
     accessorKey: "createdAt",
     header: "Date d'ajout",
     cell: ({ renderValue }) => formatDateTime(renderValue() as string),
+  },
+  {
+    id: "actions",
+    maxSize: 50,
+    cell: ({ row }) => {
+      const directory = row.original as Directory;
+      return (
+        <div className="flex gap-3">
+          <ButtonEditDirectory directory={directory} />
+          <ButtonDeleteDirectory directory={directory} />
+        </div>
+      );
+    },
   },
 ];

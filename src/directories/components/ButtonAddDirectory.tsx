@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { FormAddDirectory } from "./FormAddDirectory";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 const ButtonAddDirectory = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -28,10 +29,12 @@ const ButtonAddDirectory = () => {
         </DialogHeader>
         <FormAddDirectory
           onSuccess={() => {
-            setOpen(false); // Fermer le dialogue après un ajout réussi
+            setOpen(false);
+            router.refresh(); // Fermer le dialogue après un ajout réussi
           }}
         />
       </DialogContent>
+
     </Dialog>
   );
 };

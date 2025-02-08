@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
-import { getDirectories } from "@/directories/actions";
+import { getDirectories } from "@/directories/db-queries";
 import ButtonAddDirectory from "@/directories/components/ButtonAddDirectory";
 
 export default async function DirectoriesPage() {

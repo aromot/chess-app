@@ -3,8 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DirectorySchema, DirectoryFormValues } from "../schema";
-import { addDirectory } from "../actions";
-import { useRouter } from "next/navigation";
+import { createDirectory } from "../actions";
 import {
   Form,
   FormControl,
@@ -29,7 +28,6 @@ interface FormAddDirectoryProps {
 }
 
 export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
-  const router = useRouter();
 
   const form = useForm<DirectoryFormValues>({
     resolver: zodResolver(DirectorySchema),
@@ -38,10 +36,8 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
       white: true,
     },
   });
-
   const onSubmit = async (data: DirectoryFormValues) => {
-    await addDirectory(data);
-    router.refresh(); // Rafraîchir la page pour afficher le nouveau directory
+    await createDirectory(data.name, data.white);
     onSuccess(); // Fermer le dialogue après un ajout réussi
   };
 
