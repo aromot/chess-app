@@ -1,16 +1,30 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {
+  DeepPartial,
+  DefaultValues,
+  FieldValues,
+  useForm,
+  UseFormProps,
+} from "react-hook-form";
+import { AnyZodObject, z } from "zod";
 
 export function useAppForm({
   schema,
   defaultValues,
 }: {
-  schema: any;
-  defaultValues?: any;
+  schema?: AnyZodObject | undefined;
+  defaultValues?: DefaultValues<DeepPartial<FieldValues>>;
+  // defaultValues?: FieldValues | undefined;
 }) {
-  return useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  const params: UseFormProps = {};
+
+  if (schema) {
+    params.resolver = zodResolver(schema);
+  }
+
+  if (defaultValues) {
+    params.defaultValues = defaultValues;
+  }
+
+  return useForm<z.infer<typeof schema>>(params);
 }

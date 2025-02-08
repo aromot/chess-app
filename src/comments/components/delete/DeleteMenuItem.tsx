@@ -1,7 +1,7 @@
 "use client";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { useComment } from "./CommentProvider";
+import { useComment } from "../CommentProvider";
 
 const DeleteMenuItem = () => {
   const { openModalDelete } = useComment();

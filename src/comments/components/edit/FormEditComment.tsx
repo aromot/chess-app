@@ -1,0 +1,59 @@
+"use client";
+
+import AppForm from "@/components/forms/AppForm";
+import ButtonSubmit from "@/components/forms/ButtonSubmit";
+import { changeComment } from "../../actions";
+import { useAppForm } from "@/components/forms/useAppForm";
+import { CommentSchema, CommentFormValues } from "../../schema";
+import InputTextArea from "@/components/forms/InputTextArea";
+import { Comment } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { useComment } from "../CommentProvider";
+
+const FormEditComment = ({
+  comment,
+  onSuccess,
+}: {
+  comment: Comment;
+  onSuccess?: () => void;
+}) => {
+  const form = useAppForm({
+    schema: CommentSchema,
+    defaultValues: {
+      content: comment.content,
+    },
+  });
+  const { closeModalEdit } = useComment();
+
+  const onSubmit = async (values: CommentFormValues) => {
+    await changeComment(comment.id, values.content);
+    if (onSuccess) {
+      onSuccess();
+    }
+  };
+
+  return (
+    <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
+      <InputTextArea
+        label="Votre commentaire"
+        name="content"
+        placeholder="ici votre commentaire"
+      />
+
+      <div className="flex">
+        <div className="flex-1">
+          <ButtonSubmit loadingText="modification en cours...">
+            Modifier
+          </ButtonSubmit>
+        </div>
+        <div>
+          <Button variant="link" onClick={closeModalEdit}>
+            Annuler
+          </Button>
+        </div>
+      </div>
+    </AppForm>
+  );
+};
+
+export default FormEditComment;
