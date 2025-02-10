@@ -24,7 +24,6 @@ const ButtonAddDirectory = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Nouveau répertoire</DialogTitle>
-          {/* Si on retire cette balise, on a un warning :-( */}
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <FormAddDirectory
