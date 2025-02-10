@@ -1,19 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { Directory } from "@prisma/client";
+import { DialogDescription, DialogFooter } from "@/components/ui/dialog";
+
+import { Dialog } from "@/components/ui/dialog";
+import { DialogContent } from "@/components/ui/dialog";
+import { DialogHeader } from "@/components/ui/dialog";
+import { DialogTitle } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { removeDirectory } from "@/directories/actions";
+import { removeDirectory } from "../../actions";
+import { Directory } from "@prisma/client";
+import { useState } from "react";
+import { DialogTrigger } from "@/components/ui/dialog";
+
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface Props {
-  directory: Directory;
-}
-
-const ButtonDeleteDirectory: React.FC<Props> = ({ directory }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
+const ButtonDeleteDirectory = ({ directory }: { directory: Directory }) => {
   const router = useRouter();
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const closeModalDelete = () => {
+    setOpenModalDelete(false);
+  };
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -21,17 +30,30 @@ const ButtonDeleteDirectory: React.FC<Props> = ({ directory }) => {
     setIsDeleting(false);
     router.refresh();
   };
-
   return (
-    <Button
-      onClick={handleDelete}
-      disabled={isDeleting}
-      className="h-8 w-8 p-0"
-    >
-      <Trash className="h-4 w-4" />
-
-      {isDeleting ? "Suppression en cours..." : ""}
-    </Button>
+    <Dialog open={openModalDelete} onOpenChange={setOpenModalDelete}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <Trash size={16} />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Supprimer le répertoire</DialogTitle>
+        </DialogHeader>
+        <DialogDescription>
+          Êtes-vous sûr de vouloir supprimer le répertoire ?
+        </DialogDescription>
+        <DialogFooter>
+          <Button variant="destructive" onClick={handleDelete}>
+            Supprimer
+          </Button>
+          <Button variant="outline" onClick={closeModalDelete}>
+            Annuler
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
