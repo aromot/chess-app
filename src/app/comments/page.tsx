@@ -13,14 +13,14 @@ import ButtonRefresh from "@/comments/components/ButtonRefresh";
 const CommentPage = async () => {
   const comments: Comment[] = await getComments();
 
-  if (comments.length === 0) {
-    return (
-      <div className="space-y-3">
-        <Alert>Il n&apos;y a pas de commentaire</Alert>
-        <ButtonAddComment />
-      </div>
-    );
-  }
+  // if (comments.length === 0) {
+  //   return (
+  //     <div className="space-y-3">
+  //       <Alert>Il n&apos;y a pas de commentaire</Alert>
+  //       <ButtonAddComment />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -28,11 +28,20 @@ const CommentPage = async () => {
         <Title1 className="flex-1">Liste des commentaires</Title1>
         <div className="flex gap-5">
           <ButtonRefresh />
-          <ButtonAddComment />
+          {comments.length > 0 && <ButtonAddComment />}
         </div>
       </div>
       <CommentProvider>
-        <DataTable columns={columns} data={comments} />
+        <DataTable
+          columns={columns}
+          data={comments}
+          noDataEntry={
+            <div className="py-5 space-y-5">
+              <div>Aucun répertoire pour le moment</div>
+              <ButtonAddComment />
+            </div>
+          }
+        />
         <ModalEditComment />
         <ModalDeleteComment />
       </CommentProvider>
