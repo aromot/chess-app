@@ -14,10 +14,19 @@ export default async function DirectoriesPage() {
     <div className="container mx-auto my-10 px-20 w-[80%]">
       <div className="flex justify-between items-center mb-4">
         <Title1>Liste des répertoires</Title1>
-        <ButtonAddDirectory />
+        {directories.length > 0 && <ButtonAddDirectory />}
       </div>
       <DirectoryProvider>
-        <DataTable columns={columns} data={directories} />
+        <DataTable
+          columns={columns}
+          data={directories}
+          noDataEntry={
+            <div className="py-5 space-y-5">
+              <div>Aucun répertoire pour le moment</div>
+              <ButtonAddDirectory />
+            </div>
+          }
+        />
         <ModalEditDirectory />
         <ModalDeleteDirectory />
       </DirectoryProvider>
