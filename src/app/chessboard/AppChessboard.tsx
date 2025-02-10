@@ -45,14 +45,7 @@ const AppChessboard = () => {
         to: targetSquare,
         promotion: piece[1].toLowerCase() ?? "q",
       });
-      // console.log({ move });
-
-      // // illegal move => ça ne marche pas, on ne passe pas par là !
-      // if (move === null) {
-      //   return false;
-      // }
     } catch (error) {
-      console.log(error.message);
       console.log({ error });
       return false;
     }

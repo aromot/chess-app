@@ -1,17 +1,11 @@
 "use server";
 
 import { addComment, deleteComment, updateComment } from "./db-queries";
-import { z } from "zod";
-
-const formSchema = z.object({
-  content: z.string().min(2, {
-    message: "Votre message doit contenir au moins 2 caractères.",
-  }),
-});
+import { CommentSchema } from "./schema";
 
 export async function createComment(content: string) {
   try {
-    formSchema.safeParse({ content });
+    CommentSchema.safeParse({ content });
     await addComment(content);
     // return comment;
   } catch (error) {
@@ -22,7 +16,7 @@ export async function createComment(content: string) {
 
 export async function changeComment(id: number, content: string) {
   try {
-    formSchema.safeParse({ content });
+    CommentSchema.safeParse({ content });
     await updateComment(id, content);
     // return comment;
   } catch (error) {

@@ -2,6 +2,10 @@ import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 import { getDirectories } from "@/directories/db-queries";
 import ButtonAddDirectory from "@/directories/components/add/ButtonAddDirectory";
+import Title1 from "@/components/ui/title1";
+import ModalEditDirectory from "@/directories/components/edit/ModalEditDirectory";
+import DirectoryProvider from "@/directories/components/DirectoryProvider";
+import ModalDeleteDirectory from "@/directories/components/delete/ModalDeleteDirectory";
 
 export default async function DirectoriesPage() {
   const directories = await getDirectories();
@@ -9,10 +13,14 @@ export default async function DirectoriesPage() {
   return (
     <div className="container mx-auto my-10 px-20 w-[80%]">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Liste des répertoires</h1>
+        <Title1>Liste des répertoires</Title1>
         <ButtonAddDirectory />
       </div>
-      <DataTable columns={columns} data={directories} />
+      <DirectoryProvider>
+        <DataTable columns={columns} data={directories} />
+        <ModalEditDirectory />
+        <ModalDeleteDirectory />
+      </DirectoryProvider>
     </div>
   );
 }

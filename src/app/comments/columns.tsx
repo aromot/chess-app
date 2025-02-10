@@ -31,12 +31,8 @@ export const columns: ColumnDef<Comment>[] = [
 
       return (
         <div className="flex gap-3">
-          <div>
-            <ButtonEditComment comment={comment} />
-          </div>
-          <div>
-            <ButtonDeleteComment comment={comment} />
-          </div>
+          <ButtonEditComment comment={comment} />
+          <ButtonDeleteComment comment={comment} />
         </div>
       );
     },

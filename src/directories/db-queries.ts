@@ -8,12 +8,13 @@ export async function getDirectories() {
     },
   });
   return directories;
-
-
 }
 
 // Ajouter un nouveau directory
 export async function addDirectory(data: { name: string; white: boolean }) {
+  console.log("inside addDirectory");
+  console.log({ data });
+
   const directory = await prisma.directory.create({
     data: {
       name: data.name,

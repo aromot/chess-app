@@ -33,8 +33,8 @@ const CommentPage = async () => {
       </div>
       <CommentProvider>
         <DataTable columns={columns} data={comments} />
-        <ModalDeleteComment />
         <ModalEditComment />
+        <ModalDeleteComment />
       </CommentProvider>
     </>
   );

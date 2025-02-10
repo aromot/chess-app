@@ -1,18 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { DirectorySchema, DirectoryFormValues } from "../../schema";
 import { editDirectory } from "../../actions";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -22,6 +18,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Directory } from "@prisma/client";
+import { useAppForm } from "@/components/forms/useAppForm";
+import AppForm from "@/components/forms/AppForm";
+import FormInput from "@/components/forms/FormInput";
+import ButtonSubmit from "@/components/forms/ButtonSubmit";
+
 // Définir les props attendues par le composant
 interface FormEditDirectoryProps {
   onSuccess: () => void; // Callback pour gérer la fermeture du dialogue
@@ -32,8 +33,8 @@ export function FormEditDirectory({
   onSuccess,
   directory,
 }: FormEditDirectoryProps) {
-  const form = useForm<DirectoryFormValues>({
-    resolver: zodResolver(DirectorySchema),
+  const form = useAppForm({
+    schema: DirectorySchema,
     defaultValues: {
       name: directory.name,
       white: directory.white,
@@ -45,49 +46,35 @@ export function FormEditDirectory({
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nom</FormLabel>
+    <AppForm form={form} onSubmit={onSubmit} className="space-y-4">
+      <FormInput name="name" label="Nom" />
+      <FormField
+        control={form.control}
+        name="white"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Couleur</FormLabel>
+            <Select
+              onValueChange={(value) => field.onChange(value === "true")}
+              value={field.value ? "true" : "false"}
+            >
               <FormControl>
-                <Input {...field} />
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez une couleur" />
+                </SelectTrigger>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="white"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Couleur</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(value === "true")}
-                value={field.value ? "true" : "false"}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionnez une couleur" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="true">Blanc</SelectItem>
-                  <SelectItem value="false">Noir</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="mt-4">
-          Modifier
-        </Button>
-      </form>
-    </Form>
+              <SelectContent>
+                <SelectItem value="true">Blanc</SelectItem>
+                <SelectItem value="false">Noir</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <ButtonSubmit className="mt-4" loadingText="enregistrement en cours...">
+        Modifier
+      </ButtonSubmit>
+    </AppForm>
   );
 }

@@ -8,6 +8,8 @@ export async function createDirectory(name: string, white: boolean) {
   try {
     const result = DirectorySchema.safeParse({ name, white });
 
+    console.log({ result });
+
     if (!result.success) {
       return {
         error: result.error.errors[0].message,
@@ -43,6 +45,14 @@ export async function removeDirectory(id: number) {
 
 export async function editDirectory(id: number, name: string, white: boolean) {
   try {
+    const result = DirectorySchema.safeParse({ name, white });
+
+    if (!result.success) {
+      return {
+        error: result.error.errors[0].message,
+      };
+    }
+
     await updateDirectory(id, { name, white });
   } catch (error) {
     console.log("Une erreur s'est produite");

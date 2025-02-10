@@ -1,19 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { DirectorySchema, DirectoryFormValues } from "../../schema";
 import { createDirectory } from "../../actions";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -21,6 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppForm } from "@/components/forms/useAppForm";
+import AppForm from "@/components/forms/AppForm";
+import FormInput from "@/components/forms/FormInput";
+import ButtonSubmit from "@/components/forms/ButtonSubmit";
+import { sleep } from "@/lib/helpers";
 
 // Définir les props attendues par le composant
 interface FormAddDirectoryProps {
@@ -28,8 +28,8 @@ interface FormAddDirectoryProps {
 }
 
 export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
-  const form = useForm<DirectoryFormValues>({
-    resolver: zodResolver(DirectorySchema),
+  const form = useAppForm({
+    schema: DirectorySchema,
     defaultValues: {
       name: "",
       white: true,
@@ -41,49 +41,46 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nom</FormLabel>
+    <AppForm form={form} onSubmit={onSubmit} className="space-y-4">
+      <FormInput label="Nom" name="name" />
+
+      {/* <FormSelect
+        label="Couleur"
+        name="white"
+        options={[
+          { value: "true", label: "Blanc" },
+          { value: "false", label: "Noir" },
+        ]}
+        placeholder="Sélectionnez une couleur"
+      /> */}
+
+      <FormField
+        control={form.control}
+        name="white"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Couleur</FormLabel>
+            <Select
+              onValueChange={(value) => field.onChange(value === "true")}
+              value={field.value ? "true" : "false"}
+            >
               <FormControl>
-                <Input {...field} />
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionnez une couleur" />
+                </SelectTrigger>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="white"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Couleur</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(value === "true")}
-                value={field.value ? "true" : "false"}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionnez une couleur" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="true">Blanc</SelectItem>
-                  <SelectItem value="false">Noir</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="mt-4">
-          Ajouter
-        </Button>
-      </form>
-    </Form>
+              <SelectContent>
+                <SelectItem value="true">Blanc</SelectItem>
+                <SelectItem value="false">Noir</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <ButtonSubmit loadingText="ajout en cours..." className="mt-4">
+        Ajouter
+      </ButtonSubmit>
+    </AppForm>
   );
 }
