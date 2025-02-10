@@ -42,3 +42,17 @@ model Comment {
   createdAt DateTime
   content   String
 }
+
+// model Move {
+//   id           Int @id @default(autoincrement())
+//   directoryId
+//   parentMoveId
+//   content
+// }
+
+// model Position {
+//   id          Int @id @default(autoincrement())
+//   directoryId
+//   PGN
+//   parentPGN
+// }

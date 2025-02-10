@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import cloneDeep from "lodash/cloneDeep";
+import Title1 from "@/components/ui/title1";
 
 const AppChessboard = () => {
   const [game, setGame] = useState<Chess>(new Chess());
@@ -73,8 +74,11 @@ const AppChessboard = () => {
           />
         </div>
         <div className="flex-1 text-white py-5 px-3">
+          <Title1 className="mb-5">Ici le nom du répertoire</Title1>
           <div>Position :</div>
           <div>{game.history().join(" ")}</div>
+          <div className="mt-5">PGN :</div>
+          <div>{game.pgn()}</div>
         </div>
       </div>
     </div>

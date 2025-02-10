@@ -5,6 +5,7 @@ import { formatDateTime } from "@/lib/i18n";
 import { Directory } from "@prisma/client";
 import ButtonEditDirectory from "@/directories/components/edit/ButtonEditDirectory";
 import ButtonDeleteDirectory from "@/directories/components/delete/ButtonDeleteDirectory";
+import Link from "next/link";
 
 // export type Directory = {
 //   id: number;
@@ -21,6 +22,9 @@ export const columns: ColumnDef<Directory>[] = [
   {
     accessorKey: "name",
     header: "Nom",
+    cell: ({ renderValue, row }) => (
+      <Link href={`/directories/${row.original.id}`}>{renderValue()}</Link>
+    ),
   },
   {
     accessorKey: "white",
