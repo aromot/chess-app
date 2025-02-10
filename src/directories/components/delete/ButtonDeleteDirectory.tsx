@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Directory } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { removeDirectory } from "@/directories/actions";
-import { X } from "lucide-react";
+import { Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   directory: Directory;
@@ -22,15 +23,15 @@ const ButtonDeleteDirectory: React.FC<Props> = ({ directory }) => {
   };
 
   return (
-    <button
+    <Button
       onClick={handleDelete}
       disabled={isDeleting}
       className="h-8 w-8 p-0"
     >
-      <X className="h-4 w-4" />
+      <Trash className="h-4 w-4" />
 
       {isDeleting ? "Suppression en cours..." : ""}
-    </button>
+    </Button>
   );
 };
 

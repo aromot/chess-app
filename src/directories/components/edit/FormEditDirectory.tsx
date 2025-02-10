@@ -2,8 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DirectorySchema, DirectoryFormValues } from "../schema";
-import { createDirectory } from "../actions";
+import { DirectorySchema, DirectoryFormValues } from "../../schema";
+import { editDirectory } from "../../actions";
 import {
   Form,
   FormControl,
@@ -21,23 +21,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { Directory } from "@prisma/client";
 // Définir les props attendues par le composant
-interface FormAddDirectoryProps {
+interface FormEditDirectoryProps {
   onSuccess: () => void; // Callback pour gérer la fermeture du dialogue
+  directory: Directory;
 }
 
-export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
-
+export function FormEditDirectory({
+  onSuccess,
+  directory,
+}: FormEditDirectoryProps) {
   const form = useForm<DirectoryFormValues>({
     resolver: zodResolver(DirectorySchema),
     defaultValues: {
-      name: "",
-      white: true,
+      name: directory.name,
+      white: directory.white,
     },
   });
   const onSubmit = async (data: DirectoryFormValues) => {
-    await createDirectory(data.name, data.white);
+    await editDirectory(directory.id, data.name, data.white);
     onSuccess(); // Fermer le dialogue après un ajout réussi
   };
 
@@ -82,7 +85,7 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
           )}
         />
         <Button type="submit" className="mt-4">
-          Ajouter
+          Modifier
         </Button>
       </form>
     </Form>

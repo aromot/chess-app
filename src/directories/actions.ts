@@ -1,6 +1,6 @@
 "use server";
 
-import { addDirectory, deleteDirectory } from "./db-queries";
+import { addDirectory, deleteDirectory, updateDirectory } from "./db-queries";
 import { DirectorySchema } from "./schema";
 
 // Exporter les fonctions pour les utiliser dans les composants
@@ -35,5 +35,20 @@ export async function removeDirectory(id: number) {
   } catch (error) {
     console.log("Une erreur s'est produite");
     console.log({ error });
+    return {
+      error: "Une erreur s'est produite lors de la suppression du répertoire",
+    };
+  }
+}
+
+export async function editDirectory(id: number, name: string, white: boolean) {
+  try {
+    await updateDirectory(id, { name, white });
+  } catch (error) {
+    console.log("Une erreur s'est produite");
+    console.log({ error });
+    return {
+      error: "Une erreur s'est produite lors de la modification du répertoire",
+    };
   }
 }
