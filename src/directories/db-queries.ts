@@ -47,3 +47,12 @@ export async function updateDirectory(
   });
   return directory;
 }
+
+export async function getDirectory(id: number) {
+  const directory = await prisma.directory.findUnique({
+    where: {
+      id,
+    },
+  });
+  return directory;
+}

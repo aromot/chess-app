@@ -50,9 +50,15 @@ model Comment {
 //   content
 // }
 
-// model Position {
-//   id          Int @id @default(autoincrement())
-//   directoryId
-//   PGN
-//   parentPGN
-// }
+// SAN = Standard Algebraic Notation => https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
+// FEN = Forsyth–Edwards Notation => https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+// Pour la 1ère position d'un répertoire,
+//  => le parentPos peut être NULL 
+//  => le SAN peut être NULL
+model Position {
+  id          Int     @id @default(autoincrement())
+  directoryId Int
+  SAN         String?
+  FEN         String
+  parentPosId Int?
+}
