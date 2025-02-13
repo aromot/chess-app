@@ -31,10 +31,11 @@ model User {
 }
 
 model Directory {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   white     Boolean
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
+  Position  Position[]
 }
 
 model Comment {
@@ -43,22 +44,21 @@ model Comment {
   content   String
 }
 
-// model Move {
-//   id           Int @id @default(autoincrement())
-//   directoryId
-//   parentMoveId
-//   content
-// }
-
 // SAN = Standard Algebraic Notation => https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
 // FEN = Forsyth–Edwards Notation => https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-// Pour la 1ère position d'un répertoire,
-//  => le parentPos peut être NULL 
-//  => le SAN peut être NULL
 model Position {
-  id          Int     @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
+  fen         String    @unique // Format FEN simplifié (ex: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
+  directory   Directory @relation(fields: [directoryId], references: [id])
   directoryId Int
-  SAN         String?
-  FEN         String
-  parentPosId Int?
+  moves       Move[] // Coups possibles depuis cette position
+}
+
+model Move {
+  id             Int      @id @default(autoincrement())
+  san            String // Format SAN (ex: "e4")
+  evaluation     Json? // Données Stockfish (depth, cp, mate, etc.)
+  position       Position @relation(fields: [positionId], references: [id])
+  positionId     Int
+  nextPositionId Int? // Lien à la Position suivante (pour les arbres de variantes)
 }
