@@ -1,6 +1,13 @@
 import { Directory, Move, Position } from "@prisma/client";
 import { Chess } from "chess.js";
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import cloneDeep from "lodash/cloneDeep";
 import { addMove } from "@/positions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
@@ -39,11 +46,66 @@ const ChessboardProvider = ({
     console.log("Ici dans le useMemo de initPos, directory:", directory);
     return directory.Position[0]; // TODO pas top, à améliorer
   }, [directory]);
-  const initMove = initPos.moves[0] as Move;
+  const initMove = initPos?.moves[0] as Move;
 
   const [game, setGame] = useState<Chess>(new Chess(initPos.fen));
   const [position, setPosition] = useState<Position>(initPos);
   const [move, setMove] = useState<Move | null>(null);
+
+  const getNextMove = (move: Move) => {
+    const nextPos = getNextPosition(move);
+    return nextPos?.moves[0];
+  };
+
+  const onClickForward = useCallback(() => {
+    // Si on est en position initiale, alors il n'y a pas encore de move, donc on prend le 1er
+    // Sinon, on récupère le prochain move de la branche.
+    const nextMove: Move | null = move ? getNextMove(move) : initPos.moves[0];
+    console.log({ move, nextMove });
+    if (!nextMove) {
+      alert("Il n'y a pas de prochain coup (fin de la branche).");
+      console.log("Il n'y a pas de prochain coup (fin de la branche).");
+
+      return;
+    }
+    game.move(nextMove.san);
+    setGame((game) => cloneDeep(game));
+
+    const nextPosition = getNextPosition(nextMove);
+    setPosition(nextPosition);
+    setMove(nextMove);
+  }, [game, position, move]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      // if (event.defaultPrevented) {
+      //   return; // Ne devrait rien faire si l'événement de la touche était déjà consommé.
+      // }
+      switch (event.key) {
+        case "ArrowUp":
+          onClickReset();
+          break;
+        case "ArrowLeft":
+          onClickBackward();
+          break;
+        case "ArrowRight":
+          onClickForward();
+          break;
+      }
+
+      // Annuler l'action par défaut pour éviter qu'elle ne soit traitée deux fois.
+      // event.preventDefault();
+    },
+    [game, position, move]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 
   async function onDrop(sourceSquare, targetSquare, piece) {
     try {
@@ -111,11 +173,6 @@ const ChessboardProvider = ({
     );
   };
 
-  const getNextMove = (move: Move) => {
-    const nextPos = getNextPosition(move);
-    return nextPos?.moves[0];
-  };
-
   const onClickReset = () => {
     game.reset();
     setGame((game) => cloneDeep(game));
@@ -139,25 +196,6 @@ const ChessboardProvider = ({
       (_pos: Position) => _pos.moves[0]?.nextPositionId == pos.id
     );
     setMove(prevPos ? prevPos.moves[0] : null);
-  };
-
-  const onClickForward = () => {
-    // Si on est en position initiale, alors il n'y a pas encore de move, donc on prend le 1er
-    // Sinon, on récupère le prochain move de la branche.
-    const nextMove: Move | null = move ? getNextMove(move) : initPos.moves[0];
-    console.log({ move, nextMove });
-    if (!nextMove) {
-      alert("Il n'y a pas de prochain coup (fin de la branche).");
-      console.log("Il n'y a pas de prochain coup (fin de la branche).");
-
-      return;
-    }
-    game.move(nextMove.san);
-    setGame((game) => cloneDeep(game));
-
-    const nextPosition = getNextPosition(nextMove);
-    setPosition(nextPosition);
-    setMove(nextMove);
   };
 
   const ctx: ChessboardContextInterface = {
