@@ -1,23 +1,17 @@
-import { dbg } from "@/lib/helpers";
-import Link from "next/link";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { URLS } from "./urls";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect(URLS.dashboard);
+  }
+
   return (
-    <div className="p-3">
-      <ul>
-        <li>
-          <Link href="/directories">Répertoires</Link>
-        </li>
-        <li>
-          <Link href="/comments">Commentaires</Link>
-        </li>
-        <li>
-          <Link href="/ui">Charte graphique</Link>
-        </li>
-        <li>
-          <Link href="/chessboard">Chessboard</Link>
-        </li>
-      </ul>
+    <div className="p-3 text-5xl text-center">
+      Bienvenue sur la page d'accueil
     </div>
   );
 }

@@ -8,6 +8,7 @@ import PasswordInput from "@/components/forms/PasswordInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { dbg } from "@/lib/helpers";
 import { signIn } from "next-auth/react";
+import { URLS } from "@/app/urls";
 
 const FormSignIn = () => {
   const form = useAppForm({
@@ -25,7 +26,7 @@ const FormSignIn = () => {
       const res = await signIn("credentials", {
         email: values.email,
         password: values.password,
-        // redirectTo: "/",
+        redirectTo: URLS.dashboard,
       });
 
       dbg.info(res);

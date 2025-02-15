@@ -1,4 +1,3 @@
-import { Alert } from "@/components/ui/alert";
 import { Comment } from "@prisma/client";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
@@ -9,8 +8,11 @@ import CommentProvider from "@/comments/components/CommentProvider";
 import ModalDeleteComment from "@/comments/components/delete/ModalDeleteComment";
 import ModalEditComment from "@/comments/components/edit/ModalEditComment";
 import ButtonRefresh from "@/comments/components/ButtonRefresh";
+import { checkAuth } from "@/lib/helpers";
 
 const CommentPage = async () => {
+  await checkAuth();
+
   const comments: Comment[] = await getComments();
 
   // if (comments.length === 0) {

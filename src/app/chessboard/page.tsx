@@ -1,6 +1,9 @@
+import { checkAuth } from "@/lib/helpers";
 import AppChessboard from "./AppChessboard";
 
-const ChessBoardPage = () => {
+const ChessBoardPage = async () => {
+  await checkAuth();
+
   return <AppChessboard />;
 };
 

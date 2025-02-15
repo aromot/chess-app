@@ -1,7 +1,9 @@
 import AppChessboard from "@/app/chessboard/AppChessboard";
-import React from "react";
+import { checkAuth } from "@/lib/helpers";
 
-const DirectoryPage = () => {
+const DirectoryPage = async () => {
+  await checkAuth();
+
   return (
     <div>
       <AppChessboard />

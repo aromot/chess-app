@@ -1,3 +1,6 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -42,3 +45,11 @@ export const dbg = {
     console.log("%cdebug", dbgStyles("#9100bf"), props);
   },
 };
+
+export async function checkAuth() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/");
+  }
+}

@@ -6,8 +6,10 @@ import Title1 from "@/components/ui/title1";
 import ModalEditDirectory from "@/directories/components/edit/ModalEditDirectory";
 import DirectoryProvider from "@/directories/components/DirectoryProvider";
 import ModalDeleteDirectory from "@/directories/components/delete/ModalDeleteDirectory";
+import { checkAuth } from "@/lib/helpers";
 
 export default async function DirectoriesPage() {
+  await checkAuth();
   const directories = await getDirectories();
 
   return (
