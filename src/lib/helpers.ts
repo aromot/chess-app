@@ -27,36 +27,18 @@ const dbgStyles = (dbgColor: string) =>
 
 export const dbg = {
   error: function (props) {
-    // if(arguments.length === 1) {
-    //   label = 'error';
-    // }
     console.log("%cerror", dbgStyles("#f00"), props);
   },
-  // success: function (label, ...props) {
-  //   // if(arguments.length === 1) {
-  //   //   label = 'success';
-  //   // }
-  //   console.log("%c" + label, dbgStyles("#0a0"), ...props);
-  // },
-  // warn: function (label, ...props) {
-  //   // if(arguments.length === 1) {
-  //   //   label = 'warn';
-  //   // }
-  //   console.log("%c" + label, dbgStyles("#f60"), ...props);
-  // },
+  success: function (props) {
+    console.log("%csuccess", dbgStyles("#0a0"), props);
+  },
+  warn: function (props) {
+    console.log("%cwarn", dbgStyles("#f60"), props);
+  },
   info: function (props) {
-    // if(arguments.length === 1) {
-    //   label = 'info';
-    // }
     console.log("%cinfo", dbgStyles("#0288d1"), props);
   },
-  // primary: function (label, ...props) {
-  //   console.log("%c" + label, dbgStyles("#1976d2"), ...props);
-  // },
-  // secondary: function (label, ...props) {
-  //   console.log("%c" + label, dbgStyles("#777"), ...props);
-  // },
-  // debug: function (label, ...props) {
-  //   console.log("%c" + label, dbgStyles("#9100bf"), ...props);
-  // },
+  debug: function (props) {
+    console.log("%cdebug", dbgStyles("#9100bf"), props);
+  },
 };

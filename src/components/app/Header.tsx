@@ -10,7 +10,7 @@ import { dbg } from "@/lib/helpers";
 const Header = () => {
   const { data: session } = useSession();
 
-  dbg.info(session);
+  // dbg.info(session);
 
   return (
     <nav className="bg-slate-300 flex items-center p-3">
