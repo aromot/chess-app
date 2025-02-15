@@ -1,10 +1,8 @@
-import Title1 from "@/components/ui/title1";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div>
-      <Title1>Chess App</Title1>
+    <div className="p-3">
       <ul>
         <li>
           <Link href="/directories">Répertoires</Link>

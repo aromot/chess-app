@@ -10,12 +10,14 @@ import {
 import { Input } from "../ui/input";
 
 type Props = {
+  type: "text" | "email" | "password";
+  // type: HTMLInputElement["type"];
   label: string;
   name: string;
   placeholder?: string;
 };
 
-const FormInput = ({ label, name, placeholder }: Props) => {
+const FormInput = ({ type = "text", label, name, placeholder }: Props) => {
   const form = useFormContext();
 
   return (
@@ -26,7 +28,7 @@ const FormInput = ({ label, name, placeholder }: Props) => {
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input type={type} placeholder={placeholder} {...field} />
           </FormControl>
           <FormDescription></FormDescription>
           <FormMessage />
