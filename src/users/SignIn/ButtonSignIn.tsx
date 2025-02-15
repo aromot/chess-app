@@ -7,12 +7,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import FormSignIn from "@/users/SignIn/FormSignIn";
 import FormSignUp from "@/users/SignUp/FormSignUp";
 
 const ButtonSignIn = () => {
   const [open, setOpen] = useState(false);
+  // signUp = true => on affiche le formulaire d'inscription
+  // signUp = false => on affiche le formulaire de Sign In (=authentification)
   const [signUp, setSignUp] = useState(false);
 
   return (

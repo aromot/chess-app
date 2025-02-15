@@ -8,3 +8,9 @@ export async function insertUser(email: string, password: string) {
     },
   });
 }
+
+export async function getUserByEmail(email: string) {
+  return prisma.user.findUnique({
+    where: { email },
+  });
+}

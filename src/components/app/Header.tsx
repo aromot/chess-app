@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Title1 from "../ui/title1";
 import { useSession } from "next-auth/react";
-import ButtonSignIn from "../buttons/ButtonSignIn";
-import ButtonSignOut from "../buttons/ButtonSignOut";
+import ButtonSignIn from "../../users/SignIn/ButtonSignIn";
+import ButtonSignOut from "../../users/SignOut/ButtonSignOut";
 import { dbg } from "@/lib/helpers";
 
 const Header = () => {

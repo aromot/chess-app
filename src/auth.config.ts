@@ -1,7 +1,7 @@
 // import GitHub from "next-auth/providers/github";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { prisma } from "./lib/db";
+import { getUserByEmail } from "./users/db-queries";
 // import { ZodError } from "zod";
 
 /**
@@ -61,9 +61,7 @@ export default {
           throw new Error("Email and password are required.");
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
+        const user = await getUserByEmail(credentials.email as string);
 
         if (!user) {
           throw new Error("Invalid email or password.");

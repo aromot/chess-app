@@ -12,9 +12,9 @@ const FormSignUp = () => {
   const form = useAppForm({
     schema: signUpSchema,
     defaultValues: {
-      email: "aromot@gmail.com",
-      password: "azertyuiop",
-      password_confirm: "azertyuiop",
+      email: "",
+      password: "",
+      password_confirm: "",
     },
   });
 
@@ -22,7 +22,7 @@ const FormSignUp = () => {
     dbg.info({ ...values });
 
     if (values.password !== values.password_confirm) {
-      form.setError("root.password_confirm", {
+      form.setError("password_confirm", {
         type: "manual",
         message: "Erreur de confirmation de mot de passe",
       });
