@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -52,4 +53,8 @@ export async function checkAuth() {
   if (!session?.user) {
     redirect("/");
   }
+}
+
+export async function saltAndHashPassword(password: string) {
+  return await bcrypt.hash(password, 10);
 }

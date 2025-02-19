@@ -7,6 +7,10 @@ import PasswordInput from "@/components/forms/PasswordInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { signUp } from "../actions";
 import { signIn } from "next-auth/react";
+import FormGeneralError from "@/components/forms/FormGeneralError";
+import { ZodIssue } from "zod";
+
+export class ValidationError extends Error {}
 
 const FormSignUp = () => {
   const form = useAppForm({
@@ -21,23 +25,50 @@ const FormSignUp = () => {
   const onSubmit = async (values: SignUpFormValues) => {
     dbg.info({ ...values });
 
-    if (values.password !== values.password_confirm) {
-      form.setError("password_confirm", {
-        type: "manual",
-        message: "Erreur de confirmation de mot de passe",
-      });
+    try {
+      if (values.password !== values.password_confirm) {
+        form.setError("password_confirm", {
+          type: "manual",
+          message: "Erreur de confirmation de mot de passe",
+        });
+        return;
+      }
+
+      // Inscris l'utilisateur
+      const resClient = await signUp(values);
+      if (resClient?.error == "validation") {
+        resClient.errors.forEach((err: ZodIssue) => {
+          err.path.forEach((path) => {
+            form.setError(path, {
+              type: "manual",
+              message: err.message,
+            });
+          });
+        });
+      }
+
+      console.log({ resClient });
+
       return;
+
+      // Authentifie-le automatiquement
+      await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirectTo: "/",
+      });
+    } catch (error) {
+      console.log("--------------------------------------------");
+      console.log({ error });
+      console.log("error.cause:", error.cause);
+      console.log("error.errors:", error.errors);
+      console.log("typeof error:", typeof error);
+      console.log("--------------------------------------------");
+
+      form.setError("root", {
+        message: error.message,
+      });
     }
-
-    // Inscris l'utilisateur
-    await signUp(values);
-
-    // Authentifie-le automatiquement
-    await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirectTo: "/",
-    });
 
     // if (onSuccess) {
     //   onSuccess();
@@ -46,6 +77,8 @@ const FormSignUp = () => {
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
+      <FormGeneralError />
+
       <EmailInput
         label="E-mail"
         name="email"
