@@ -13,16 +13,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
   ...authConfig,
   // -- codegenixdev -------------------------------------------------------------
-  // callbacks: {
-  //   async jwt({ token, account }) {
-  //     console.log({ token, account });
-
-  //     if (account?.provider === "credentials") {
-  //       token.credentials = true;
-  //     }
-  //     return token;
-  //   },
-  // },
+  callbacks: {
+    // ici ça marche pas, account est vide (=undefined).
+    // async jwt({ token, account }) {
+    //   console.log("jwt", { token, account });
+    //   console.log("account:", account);
+    //   if (account?.provider === "credentials") {
+    //     token.credentials = true;
+    //   }
+    //   return token;
+    // },
+  },
   // jwt: {
   //   encode: async function (params) {
   //     console.log({ params });
