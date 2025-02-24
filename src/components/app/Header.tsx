@@ -1,15 +1,14 @@
-"use client";
-
 import Link from "next/link";
 import Title1 from "../ui/title1";
-import { useSession } from "next-auth/react";
-import ButtonSignIn from "../../users/SignIn/ButtonSignIn";
 import ButtonSignOut from "../../users/SignOut/ButtonSignOut";
-import ButtonSignUp from "@/users/SignUp/ButtonSignUp";
 import { URLS } from "@/app/urls";
+import { auth } from "@/lib/auth";
+import { Button } from "../ui/button";
 
-const Header = () => {
-  const { data: session } = useSession();
+const Header = async () => {
+  const session = await auth();
+
+  console.log("[header.tsx] session", { session });
 
   return (
     <nav className="bg-slate-300 flex items-center p-3">
@@ -23,8 +22,14 @@ const Header = () => {
           <ButtonSignOut />
         ) : (
           <div className="flex gap-5">
-            <ButtonSignIn />
-            <ButtonSignUp />
+            <Button asChild>
+              <Link href={URLS.login}>S'authentifier</Link>
+            </Button>
+            {/* <ButtonSignIn /> */}
+            {/* <ButtonSignUp /> */}
+            <Button asChild>
+              <Link href={URLS.register}>S'inscrire</Link>
+            </Button>
           </div>
         )}
       </div>

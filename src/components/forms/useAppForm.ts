@@ -6,7 +6,7 @@ import {
   useForm,
   UseFormProps,
 } from "react-hook-form";
-import { AnyZodObject, z } from "zod";
+import { AnyZodObject, z, ZodIssue } from "zod";
 
 export function useAppForm({
   schema,
@@ -26,5 +26,20 @@ export function useAppForm({
     params.defaultValues = defaultValues;
   }
 
-  return useForm<z.infer<typeof schema>>(params);
+  const form = useForm<z.infer<typeof schema>>(params);
+
+  form.handleServerValidationErrors = (res) => {
+    if (res?.error == "validation") {
+      res.errors.forEach((err: ZodIssue) => {
+        err.path.forEach((path) => {
+          form.setError(path, {
+            type: "manual",
+            message: err.message,
+          });
+        });
+      });
+    }
+  };
+
+  return form;
 }

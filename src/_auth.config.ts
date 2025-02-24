@@ -1,8 +1,19 @@
 // import GitHub from "next-auth/providers/github";
-import type { NextAuthConfig } from "next-auth";
+import { CredentialsSignin, type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { getUserByEmail } from "./users/db-queries";
-// import { ZodError } from "zod";
+import { signInSchema } from "./users/schema";
+import bcrypt from "bcryptjs";
+import { Prisma } from "@prisma/client";
+import { ZodError } from "zod";
+
+class InvalidLoginError extends CredentialsSignin {
+  constructor(code: string) {
+    super();
+    this.code = code;
+    this.message = code;
+  }
+}
 
 /**
  * Ici, l'adapter de la BDD n'est pas inclus INTENTIONNELLEMENT pour être "egde runtime compatible".
@@ -57,23 +68,39 @@ export default {
         // -- /codegenixdev -------------------------------------------------------------
         // https://medium.com/@askfaizanrathore/how-to-implement-authentication-with-nextauth-in-next-js-15-and-typescript-50b22baa1b5a
 
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required.");
+        try {
+          credentials.email = "dsfsf";
+          const validation = signInSchema.parse(credentials);
+          const { email, password } = validation;
+
+          const user = await getUserByEmail(email);
+
+          if (!user) {
+            throw new Error("Invalid email or password.");
+          }
+
+          const isPasswordValid = await bcrypt.compare(
+            password,
+            user.password as string
+          );
+          if (!isPasswordValid) {
+            throw new Error("Invalid email or password.");
+          }
+
+          return user;
+        } catch (error) {
+          if (
+            error instanceof Prisma.PrismaClientInitializationError ||
+            error instanceof Prisma.PrismaClientUnknownRequestError
+          )
+            throw new InvalidLoginError(
+              "System Error Occured. Please Contact Support Team"
+            );
+          if (error instanceof ZodError)
+            throw new InvalidLoginError(error.errors[0]?.message!);
+          throw error;
         }
 
-        const user = await getUserByEmail(credentials.email as string);
-
-        if (!user) {
-          throw new Error("Invalid email or password.");
-        }
-
-        // const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
-        const isPasswordValid = credentials.password == user.password;
-        if (!isPasswordValid) {
-          throw new Error("Invalid email or password.");
-        }
-
-        return user;
         // -- /@askfaizanrathore ------------------------------------------------------------
       },
     }),

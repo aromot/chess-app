@@ -1,10 +1,13 @@
 import { prisma } from "@/lib/db";
+import { saltAndHashPassword } from "@/lib/helpers";
 
-export async function insertUser(email: string, password: string) {
+export async function insertUser(email: string, passwordClear: string) {
+  const passwordEncrypted = await saltAndHashPassword(passwordClear);
+
   return prisma.user.create({
     data: {
       email,
-      password,
+      password: passwordEncrypted,
     },
   });
 }

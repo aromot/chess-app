@@ -21,8 +21,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modalLogin,
+  modalRegister,
 }: Readonly<{
   children: React.ReactNode;
+  modalLogin: React.ReactNode;
+  modalRegister: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -32,6 +36,8 @@ export default function RootLayout({
         <SessionProvider>
           <Header />
           {children}
+          {modalLogin}
+          {modalRegister}
         </SessionProvider>
       </body>
     </html>

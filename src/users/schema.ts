@@ -1,33 +1,40 @@
 import { z } from "zod";
 
+const msgEmailRequired = "L'e-mail est obligatoire.";
+const msgEmailInvalid = "L'e-mail doit être valide.";
+const msgPassRequired = "Le mot de passe est obligatoire.";
+const msgPassLength = "Le mot de passe doit contenir 6 à 32 caractères.";
+const msgPassConfirmRequired =
+  "La confirmation de mot de passe est obligatoire.";
+
 export const signInSchema = z.object({
   email: z
-    .string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+    .string({ required_error: msgEmailRequired })
+    .min(1, msgEmailRequired)
+    .email(msgEmailInvalid),
   password: z
-    .string({ required_error: "Password is required" })
-    .min(1, "Password is required")
-    .min(6, "Password must be more than 6 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .string({ required_error: msgPassRequired })
+    .min(1, msgPassRequired)
+    .min(6, msgPassLength)
+    .max(32, msgPassLength),
 });
 
 export type SignInFormValues = z.infer<typeof signInSchema>;
 
 export const signUpSchema = z.object({
   email: z
-    .string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("L'e-mail doit être valide."),
+    .string({ required_error: msgEmailRequired })
+    .min(1, msgEmailRequired)
+    .email(msgEmailInvalid),
   password: z
-    .string({ required_error: "Password is required" })
-    .min(1, "Password is required")
-    .min(6, "Password must be more than 6 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .string({ required_error: msgPassRequired })
+    .min(1, msgPassRequired)
+    .min(6, msgPassLength)
+    .max(32, msgPassLength),
   password_confirm: z
-    .string({ required_error: "Password confirmation is required" })
-    .min(1, "Password confirmation is required")
-    .min(6, "Password must be more than 6 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .string({ required_error: msgPassConfirmRequired })
+    .min(1, msgPassConfirmRequired)
+    .min(6, msgPassLength)
+    .max(32, msgPassLength),
 });
 export type SignUpFormValues = z.infer<typeof signUpSchema>;

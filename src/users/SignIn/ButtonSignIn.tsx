@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Dialog,
@@ -7,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import FormSignIn from "@/users/SignIn/FormSignIn";
 import FormSignUp from "@/users/SignUp/FormSignUp";
 
@@ -37,12 +39,7 @@ const ButtonSignIn = () => {
             <DialogDescription></DialogDescription>
           </DialogHeader>
 
-          <FormSignUp
-          // onSuccess={() => {
-          //   setOpen(false);
-          //   router.refresh();
-          // }}
-          />
+          <FormSignUp />
         </DialogContent>
       ) : (
         <DialogContent>
@@ -52,10 +49,9 @@ const ButtonSignIn = () => {
           </DialogHeader>
 
           <FormSignIn
-          // onSuccess={() => {
-          //   setOpen(false);
-          //   router.refresh();
-          // }}
+            onSuccess={() => {
+              setOpen(false);
+            }}
           />
           <div>
             <Button

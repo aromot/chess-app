@@ -1,5 +1,6 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import Title1 from "@/components/ui/title1";
+import { dbg } from "@/lib/helpers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -9,6 +10,8 @@ const DashboardPage = async () => {
   if (!session?.user) {
     redirect("/");
   }
+
+  dbg.info(session);
 
   return (
     <div>

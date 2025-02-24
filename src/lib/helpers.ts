@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
@@ -55,6 +55,6 @@ export async function checkAuth() {
   }
 }
 
-export async function saltAndHashPassword(password: string) {
+export async function saltAndHashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
 }

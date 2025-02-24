@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import authConfig from "./auth.config";
+import authConfig from "./_auth.config";
 
 // https://authjs.dev/guides/edge-compatibility
 // export { auth as middleware } from "@/auth";

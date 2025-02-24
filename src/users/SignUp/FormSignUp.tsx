@@ -1,3 +1,5 @@
+"use client";
+
 import { useAppForm } from "@/components/forms/useAppForm";
 import { SignUpFormValues, signUpSchema } from "../schema";
 import { dbg } from "@/lib/helpers";
@@ -35,9 +37,9 @@ const FormSignUp = () => {
       }
 
       // Inscris l'utilisateur
-      const resClient = await signUp(values);
-      if (resClient?.error == "validation") {
-        resClient.errors.forEach((err: ZodIssue) => {
+      const res = await signUp(values);
+      if (res?.error == "validation") {
+        res.errors.forEach((err: ZodIssue) => {
           err.path.forEach((path) => {
             form.setError(path, {
               type: "manual",
@@ -47,10 +49,6 @@ const FormSignUp = () => {
         });
       }
 
-      console.log({ resClient });
-
-      return;
-
       // Authentifie-le automatiquement
       await signIn("credentials", {
         email: values.email,
@@ -58,15 +56,10 @@ const FormSignUp = () => {
         redirectTo: "/",
       });
     } catch (error) {
-      console.log("--------------------------------------------");
       console.log({ error });
-      console.log("error.cause:", error.cause);
-      console.log("error.errors:", error.errors);
-      console.log("typeof error:", typeof error);
-      console.log("--------------------------------------------");
 
       form.setError("root", {
-        message: error.message,
+        message: "Une erreur s'est produite, essayez à nouveau plus tard.", //error.message,
       });
     }
 

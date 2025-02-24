@@ -7,7 +7,9 @@ import EmailInput from "@/components/forms/EmailInput";
 import PasswordInput from "@/components/forms/PasswordInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { dbg } from "@/lib/helpers";
-import { signIn } from "next-auth/react";
+import FormGeneralError from "@/components/forms/FormGeneralError";
+import { signInAction } from "../actions";
+import { ZodIssue } from "zod";
 import { URLS } from "@/app/urls";
 
 const FormSignIn = () => {
@@ -22,25 +24,31 @@ const FormSignIn = () => {
   const onSubmit = async (values: SignInFormValues) => {
     dbg.info({ ...values });
 
-    try {
-      const res = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirectTo: URLS.dashboard,
+    const res = await signInAction(values);
+    if (res?.error == "validation") {
+      res.errors.forEach((err: ZodIssue) => {
+        err.path.forEach((path) => {
+          form.setError(path, {
+            type: "manual",
+            message: err.message,
+          });
+        });
       });
-
-      dbg.info(res);
-    } catch (error) {
-      dbg.error(error);
+    } else if (res?.error === "general") {
+      form.setError("root", {
+        message:
+          res.message ||
+          "Une erreur s'est produite, essayez à nouveau plus tard.", //error.message,
+      });
     }
 
-    // if (onSuccess) {
-    //   onSuccess();
-    // }
+    window.location.href = URLS.dashboard;
   };
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
+      <FormGeneralError />
+
       <EmailInput
         label="E-mail"
         name="email"
