@@ -58,3 +58,7 @@ export async function checkAuth() {
 export async function saltAndHashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
 }
+
+export function isDev() {
+  return process.env.NODE_ENV === "development";
+}

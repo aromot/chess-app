@@ -9,6 +9,8 @@ import { getUserByEmail } from "../users/db-queries";
 import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
 import { ZodError } from "zod";
+import { URLS } from "@/app/urls";
+import { isDev } from "./helpers";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -24,6 +26,7 @@ class InvalidLoginError extends CredentialsSignin {
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter,
   session: { strategy: "jwt" },
+  debug: isDev(),
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -71,6 +74,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: URLS.login,
+  },
   // -- codegenixdev -------------------------------------------------------------
   // callbacks: {
   // ici ça marche pas, account est vide (=undefined).
