@@ -1,14 +1,14 @@
 import { Comment } from "@prisma/client";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
-import { getComments } from "@/comments/db-queries";
+import { getComments } from "@/app/comments/_db/db-queries";
 import Title1 from "@/components/ui/title1";
-import ButtonAddComment from "@/comments/components/add/ButtonAddComment";
-import CommentProvider from "@/comments/components/CommentProvider";
-import ModalDeleteComment from "@/comments/components/delete/ModalDeleteComment";
-import ModalEditComment from "@/comments/components/edit/ModalEditComment";
-import ButtonRefresh from "@/comments/components/ButtonRefresh";
+import ButtonAddComment from "@/app/comments/_components/add/ButtonAddComment";
+import ModalDeleteComment from "@/app/comments/_components/delete/ModalDeleteComment";
+import ModalEditComment from "@/app/comments/_components/edit/ModalEditComment";
+import ButtonRefresh from "@/app/comments/_components/ButtonRefresh";
 import { checkAuth } from "@/lib/helpers";
+import CommentProvider from "@/app/comments/_components/CommentProvider";
 
 const CommentPage = async () => {
   await checkAuth();

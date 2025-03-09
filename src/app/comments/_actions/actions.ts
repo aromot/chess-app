@@ -1,7 +1,7 @@
 "use server";
 
-import { addComment, deleteComment, updateComment } from "./db-queries";
-import { CommentSchema } from "./schema";
+import { addComment, deleteComment, updateComment } from "../_db/db-queries";
+import { CommentSchema } from "../_schemas/schema";
 
 export async function createComment(content: string) {
   try {

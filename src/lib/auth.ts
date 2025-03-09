@@ -32,7 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "E-mail", type: "email" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
@@ -76,6 +76,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   pages: {
     signIn: URLS.login,
+  },
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        // User is available during sign-in
+        token.id = user.id;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      session.user.id = token.id;
+      return session;
+    },
   },
   // -- codegenixdev -------------------------------------------------------------
   // callbacks: {

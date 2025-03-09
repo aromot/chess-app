@@ -2,13 +2,13 @@
 
 import AppForm from "@/components/forms/AppForm";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { changeComment } from "../../actions";
 import { useAppForm } from "@/components/forms/useAppForm";
-import { CommentSchema, CommentFormValues } from "../../schema";
+import { CommentSchema, CommentFormValues } from "../../_schemas/schema";
 import InputTextArea from "@/components/forms/InputTextArea";
 import { Comment } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { useComment } from "../CommentProvider";
+import { changeComment } from "../../_actions/actions";
 
 const FormEditComment = ({
   comment,

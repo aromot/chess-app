@@ -1,7 +1,7 @@
 "use client";
 
-import ButtonDeleteComment from "@/comments/components/delete/ButtonDeleteComment";
-import ButtonEditComment from "@/comments/components/edit/ButtonEditComment";
+import ButtonDeleteComment from "@/app/comments/_components/delete/ButtonDeleteComment";
+import ButtonEditComment from "@/app/comments/_components/edit/ButtonEditComment";
 import { formatDateTime } from "@/lib/i18n";
 import { Comment } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";

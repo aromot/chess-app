@@ -10,7 +10,7 @@ import {
 import { useComment } from "../CommentProvider";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { removeComment } from "../../actions";
+import { removeComment } from "../../_actions/actions";
 
 const ModalDeleteComment = () => {
   const {

@@ -10,8 +10,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="p-3 text-5xl text-center">
-      Bienvenue sur la page d'accueil
-    </div>
+    <>
+      <div className="p-3 text-5xl text-center">
+        Bienvenue sur la page d'accueil
+      </div>
+    </>
   );
 }

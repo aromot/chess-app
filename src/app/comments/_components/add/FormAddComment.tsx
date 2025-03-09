@@ -2,10 +2,10 @@
 
 import AppForm from "@/components/forms/AppForm";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { createComment } from "../../actions";
 import { useAppForm } from "@/components/forms/useAppForm";
-import { CommentSchema, CommentFormValues } from "../../schema";
+import { CommentSchema, CommentFormValues } from "../../_schemas/schema";
 import InputTextArea from "@/components/forms/InputTextArea";
+import { createComment } from "../../_actions/actions";
 
 const FormAddComment = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useAppForm({
