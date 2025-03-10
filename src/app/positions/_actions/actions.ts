@@ -1,7 +1,7 @@
 "use server";
 
-import { insertMove } from "@/moves/db-queries";
-import { addPosition } from "./db-queries";
+import { insertMove } from "@/app/moves/_db/db-queries";
+import { addPosition } from "../_db/db-queries";
 
 export async function addMove(
   directoryId: number,

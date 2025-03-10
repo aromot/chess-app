@@ -1,5 +1,5 @@
 import AppChessboard from "@/components/chess/AppChessboard";
-import { getDirectory } from "@/directories/db-queries";
+import { getDirectory } from "@/app/directories/_db/db-queries";
 import { Directory } from "@prisma/client";
 
 const DirectoryPage = async ({

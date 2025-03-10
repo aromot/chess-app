@@ -1,11 +1,11 @@
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
-import { getDirectories } from "@/directories/db-queries";
-import ButtonAddDirectory from "@/directories/components/add/ButtonAddDirectory";
+import { getDirectories } from "@/app/directories/_db/db-queries";
+import ButtonAddDirectory from "@/app/directories/_components/add/ButtonAddDirectory";
 import Title1 from "@/components/ui/title1";
-import ModalEditDirectory from "@/directories/components/edit/ModalEditDirectory";
-import DirectoryProvider from "@/directories/components/DirectoryProvider";
-import ModalDeleteDirectory from "@/directories/components/delete/ModalDeleteDirectory";
+import ModalEditDirectory from "@/app/directories/_components/edit/ModalEditDirectory";
+import DirectoryProvider from "@/app/directories/_components/DirectoryProvider";
+import ModalDeleteDirectory from "@/app/directories/_components/delete/ModalDeleteDirectory";
 import { checkAuth } from "@/lib/helpers";
 
 export default async function DirectoriesPage() {

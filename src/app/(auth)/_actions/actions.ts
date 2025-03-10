@@ -1,13 +1,13 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { getUserByEmail, insertUser } from "./db-queries";
+import { getUserByEmail, insertUser } from "../_db/db-queries";
 import {
   SignInFormValues,
   signInSchema,
   SignUpFormValues,
   signUpSchema,
-} from "./schema";
+} from "../_schemas/schema";
 import { signIn } from "@/lib/auth";
 import { AuthError, CredentialsSignin } from "next-auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";

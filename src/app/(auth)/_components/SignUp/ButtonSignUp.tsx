@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../../components/ui/button";
-import FormSignUp from "@/users/SignUp/FormSignUp";
+import { Button } from "@/components/ui/button";
+import FormSignUp from "./FormSignUp";
 
 const ButtonSignUp = () => {
   const [open, setOpen] = useState(false);

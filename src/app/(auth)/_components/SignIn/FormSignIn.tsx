@@ -1,16 +1,16 @@
 "use client";
 
 import { useAppForm } from "@/components/forms/useAppForm";
-import { SignInFormValues, signInSchema } from "../schema";
 import AppForm from "@/components/forms/AppForm";
 import EmailInput from "@/components/forms/EmailInput";
 import PasswordInput from "@/components/forms/PasswordInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { dbg } from "@/lib/helpers";
 import FormGeneralError from "@/components/forms/FormGeneralError";
-import { signInAction } from "../actions";
 import { ZodIssue } from "zod";
 import { URLS } from "@/app/urls";
+import { SignInFormValues, signInSchema } from "../../_schemas/schema";
+import { signInAction } from "../../_actions/actions";
 
 const FormSignIn = () => {
   const form = useAppForm({

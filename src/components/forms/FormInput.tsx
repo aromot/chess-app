@@ -10,7 +10,7 @@ import {
 import { Input } from "../ui/input";
 
 type Props = {
-  type: "text" | "email" | "password";
+  type?: "text" | "email" | "password";
   // type: HTMLInputElement["type"];
   label: string;
   name: string;

@@ -1,7 +1,7 @@
 "use client";
 
-import { DirectorySchema, DirectoryFormValues } from "../../schema";
-import { editDirectory } from "../../actions";
+import { DirectorySchema, DirectoryFormValues } from "../../_schemas/schema";
+import { editDirectory } from "../../_actions/actions";
 import {
   FormControl,
   FormField,
@@ -9,7 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,

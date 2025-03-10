@@ -1,8 +1,8 @@
 // import GitHub from "next-auth/providers/github";
 import { CredentialsSignin, type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { getUserByEmail } from "./users/db-queries";
-import { signInSchema } from "./users/schema";
+import { getUserByEmail } from "./app/(auth)/_db/db-queries";
+import { signInSchema } from "./app/(auth)/_schemas/schema";
 import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
 import { ZodError } from "zod";

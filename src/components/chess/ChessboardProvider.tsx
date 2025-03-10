@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import cloneDeep from "lodash/cloneDeep";
-import { addMove } from "@/positions/actions";
+import { addMove } from "@/app/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 
 interface ChessboardContextInterface {

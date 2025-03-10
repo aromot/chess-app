@@ -10,8 +10,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import FormSignIn from "@/users/SignIn/FormSignIn";
-import FormSignUp from "@/users/SignUp/FormSignUp";
+import FormSignUp from "../SignUp/FormSignUp";
+import FormSignIn from "./FormSignIn";
 
 const ButtonSignIn = () => {
   const [open, setOpen] = useState(false);

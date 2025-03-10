@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Title1 from "../ui/title1";
-import ButtonSignOut from "../../users/SignOut/ButtonSignOut";
+import ButtonSignOut from "../../app/(auth)/_components/SignOut/ButtonSignOut";
 import { URLS } from "@/app/urls";
 import { auth } from "@/lib/auth";
 import { Button } from "../ui/button";

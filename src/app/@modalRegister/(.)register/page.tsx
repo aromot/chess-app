@@ -1,5 +1,6 @@
 "use client";
 
+import FormSignUp from "@/app/(auth)/_components/SignUp/FormSignUp";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import FormSignUp from "@/users/SignUp/FormSignUp";
 import { useRouter } from "next/navigation";
 
 const ModalRegisterPage = () => {

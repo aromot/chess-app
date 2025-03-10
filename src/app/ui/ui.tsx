@@ -58,7 +58,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { auth } from "@/lib/auth";
 
 const ItemWrapper = ({
   title,

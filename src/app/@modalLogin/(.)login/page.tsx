@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import FormSignIn from "@/users/SignIn/FormSignIn";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { URLS } from "@/app/urls";
+import FormSignIn from "@/app/(auth)/_components/SignIn/FormSignIn";
 
 const ModalLoginPage = () => {
   const router = useRouter();

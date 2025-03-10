@@ -1,16 +1,16 @@
 "use client";
 
 import { useAppForm } from "@/components/forms/useAppForm";
-import { SignUpFormValues, signUpSchema } from "../schema";
 import { dbg } from "@/lib/helpers";
 import AppForm from "@/components/forms/AppForm";
 import EmailInput from "@/components/forms/EmailInput";
 import PasswordInput from "@/components/forms/PasswordInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { signUp } from "../actions";
 import { signIn } from "next-auth/react";
 import FormGeneralError from "@/components/forms/FormGeneralError";
 import { ZodIssue } from "zod";
+import { SignUpFormValues, signUpSchema } from "../../_schemas/schema";
+import { signUp } from "../../_actions/actions";
 
 export class ValidationError extends Error {}
 

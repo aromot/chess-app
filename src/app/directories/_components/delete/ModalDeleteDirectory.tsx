@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useDirectory } from "../DirectoryProvider";
 import { Button } from "@/components/ui/button";
-import { removeDirectory } from "@/directories/actions";
+import { removeDirectory } from "@/app/directories/_actions/actions";
 import { useRouter } from "next/navigation";
 
 const ModalDeleteDirectory = () => {

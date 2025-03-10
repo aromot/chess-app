@@ -1,7 +1,6 @@
 "use client";
 
-import { DirectorySchema, DirectoryFormValues } from "../../schema";
-import { createDirectory } from "../../actions";
+import { DirectorySchema, DirectoryFormValues } from "../../_schemas/schema";
 import {
   FormControl,
   FormField,
@@ -20,7 +19,7 @@ import { useAppForm } from "@/components/forms/useAppForm";
 import AppForm from "@/components/forms/AppForm";
 import FormInput from "@/components/forms/FormInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { sleep } from "@/lib/helpers";
+import { createDirectory } from "../../_actions/actions";
 
 // Définir les props attendues par le composant
 interface FormAddDirectoryProps {

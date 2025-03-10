@@ -1,5 +1,5 @@
 import Title1 from "@/components/ui/title1";
-import FormSignUp from "@/users/SignUp/FormSignUp";
+import FormSignUp from "../_components/SignUp/FormSignUp";
 
 const RegisterPage = () => {
   return (

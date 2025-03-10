@@ -1,7 +1,11 @@
 "use server";
 
-import { addDirectory, deleteDirectory, updateDirectory } from "./db-queries";
-import { DirectorySchema } from "./schema";
+import {
+  addDirectory,
+  deleteDirectory,
+  updateDirectory,
+} from "../_db/db-queries";
+import { DirectorySchema } from "../_schemas/schema";
 
 // Exporter les fonctions pour les utiliser dans les composants
 export async function createDirectory(name: string, white: boolean) {
