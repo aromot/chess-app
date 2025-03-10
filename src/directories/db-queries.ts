@@ -12,9 +12,6 @@ export async function getDirectories() {
 
 // Ajouter un nouveau directory
 export async function addDirectory(data: { name: string; white: boolean }) {
-  console.log("inside addDirectory");
-  console.log({ data });
-
   const directory = await prisma.directory.create({
     data: {
       name: data.name,
@@ -44,6 +41,22 @@ export async function updateDirectory(
       id,
     },
     data,
+  });
+  return directory;
+}
+
+export async function getDirectory(id: number) {
+  const directory = await prisma.directory.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      Position: {
+        include: {
+          moves: true,
+        },
+      },
+    },
   });
   return directory;
 }
