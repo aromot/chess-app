@@ -44,7 +44,7 @@ const ChessboardProvider = ({
 
   const initPos: Position = useMemo(() => {
     console.log("Ici dans le useMemo de initPos, directory:", directory);
-    return directory.Position[0]; // TODO pas top, à améliorer
+    return directory.positions[0]; // TODO pas top, à améliorer
   }, [directory]);
   const initMove = initPos?.moves[0] as Move;
 
@@ -122,7 +122,7 @@ const ChessboardProvider = ({
 
       // cherche si la nouvelle position existe déjà...
       // Pour ça, on cherche si la position courante existe ET SI elle contient le move courant.
-      const existingPos: Position | null = directory.Position.find(
+      const existingPos: Position | null = directory.positions.find(
         (pos: Position) => pos.fen == move.before
       );
       const existingMove: Move | null = existingPos?.moves.find(
@@ -133,7 +133,7 @@ const ChessboardProvider = ({
 
       if (existingMove) {
         console.log("LE MOVE EXISTE DEJA");
-        const nextPosition = directory.Position.find(
+        const nextPosition = directory.positions.find(
           (pos: Position) => pos.id == existingMove.nextPositionId
         );
         setPosition(nextPosition as Position);
@@ -162,13 +162,13 @@ const ChessboardProvider = ({
   }
 
   const getNextPosition = (move: Move) => {
-    return directory.Position.find(
+    return directory.positions.find(
       (pos: Position) => pos.id == move.nextPositionId
     );
   };
 
   const getPreviousPosition = (move: Move) => {
-    return directory.Position.find(
+    return directory.positions.find(
       (pos: Position) => pos.id == move.positionId
     );
   };
@@ -192,7 +192,7 @@ const ChessboardProvider = ({
 
     const pos = getPreviousPosition(move);
     setPosition(pos);
-    const prevPos = directory.Position.find(
+    const prevPos = directory.positions.find(
       (_pos: Position) => _pos.moves[0]?.nextPositionId == pos.id
     );
     setMove(prevPos ? prevPos.moves[0] : null);

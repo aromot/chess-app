@@ -77,7 +77,7 @@ export async function getDirectory(id: number) {
       id,
     },
     include: {
-      Position: {
+      positions: {
         include: {
           moves: true,
         },
