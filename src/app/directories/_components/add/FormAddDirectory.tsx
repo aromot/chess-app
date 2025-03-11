@@ -2,6 +2,7 @@
 
 import { DirectorySchema, DirectoryFormValues } from "../../_schemas/schema";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -32,6 +33,7 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
     defaultValues: {
       name: "",
       white: true,
+      fenPosInit: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     },
   });
   const onSubmit = async (data: DirectoryFormValues) => {
@@ -42,17 +44,6 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-4">
       <FormInput label="Nom" name="name" />
-
-      {/* <FormSelect
-        label="Couleur"
-        name="white"
-        options={[
-          { value: "true", label: "Blanc" },
-          { value: "false", label: "Noir" },
-        ]}
-        placeholder="Sélectionnez une couleur"
-      /> */}
-
       <FormField
         control={form.control}
         name="white"
@@ -77,6 +68,7 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
           </FormItem>
         )}
       />
+      <FormInput label="FEN DEPART" name="fenPosInit" disabled={true} />
       <ButtonSubmit loadingText="ajout en cours..." className="mt-4">
         Ajouter
       </ButtonSubmit>
