@@ -37,7 +37,7 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
     },
   });
   const onSubmit = async (data: DirectoryFormValues) => {
-    await createDirectory(data.name, data.white);
+    await createDirectory(data.name, data.white, data.fenPosInit);
     onSuccess(); // Fermer le dialogue après un ajout réussi
   };
 
@@ -68,7 +68,7 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
           </FormItem>
         )}
       />
-      <FormInput label="FEN DEPART" name="fenPosInit" disabled={true} />
+      <FormInput label="FEN DEPART" name="fenPosInit" disabled />
       <ButtonSubmit loadingText="ajout en cours..." className="mt-4">
         Ajouter
       </ButtonSubmit>

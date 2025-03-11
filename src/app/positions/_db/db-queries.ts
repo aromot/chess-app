@@ -12,3 +12,11 @@ export async function addPosition(directoryId: number, fen: string) {
 
   return position;
 }
+
+export async function deletePositionsByDirectoryId(directoryId: number) {
+  return await prisma.position.deleteMany({
+    where: {
+      directoryId,
+    },
+  });
+}

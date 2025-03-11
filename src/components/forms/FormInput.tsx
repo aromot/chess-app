@@ -16,10 +16,17 @@ type Props = {
   name: string;
   placeholder?: string;
   disabled?: boolean;
-  value?: string;
+  // value?: string;
 };
 
-const FormInput = ({ type = "text", label, name, placeholder, disabled, value }: Props) => {
+const FormInput = ({
+  type = "text",
+  label,
+  name,
+  placeholder,
+  disabled,
+}: // value,
+Props) => {
   const form = useFormContext();
 
   return (
@@ -30,7 +37,12 @@ const FormInput = ({ type = "text", label, name, placeholder, disabled, value }:
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input type={type} placeholder={placeholder} disabled={field.disabled} {...field} />
+            <Input
+              type={type}
+              placeholder={placeholder}
+              disabled={disabled}
+              {...field}
+            />
           </FormControl>
           <FormDescription></FormDescription>
           <FormMessage />
