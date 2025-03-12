@@ -16,7 +16,7 @@ const TreeNode = ({ node }: { node: Node }) => {
           <div key={i} className="flex gap-3">
             <div className="border-red-600 border-0">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 className={
                   isCurrent ? "px-2 rounded-sm bg-slate-700 font-bold" : "px-2"
