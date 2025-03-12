@@ -14,14 +14,14 @@ const TreeNode = ({ node }: { node: Node }) => {
 
         return (
           <div key={i} className="flex gap-3">
-            <div className="border-red-600 border-0 ">
+            <div className="border-red-600 border-0">
               <Button
                 variant="ghost"
                 size="sm"
                 className={
                   isCurrent ? "px-2 rounded-sm bg-slate-700 font-bold" : "px-2"
                 }
-                onClick={() => onClickGoToNode("abc")}
+                onClick={() => onClickGoToNode(childNode)}
               >
                 {i === 0 ? "-" : "+"}
                 {childNode.move?.san}

@@ -14,21 +14,21 @@ class Tree {
       (pos: Position) => pos.fen === directory.fenPosInit
     );
 
-    // La racine est un noeud qui représente la position de départ (posInit), donc sans coup initial (null).
+    // La racine est un noeud qui représente la position de départ (posInit), donc sans coup initial (null) ni noeud parent (null).
     this.root = new TreeNode(null, null, this.posInit);
 
     // Construit l'arbre à partir des données de la BDD.
-    const processPosition = (node: TreeNode) => {
+    const processNode = (node: TreeNode) => {
       node.position.moves.forEach((move: Move) => {
         const position = this.directory.positions.find(
           (pos: Position) => pos.id === move.nextPositionId
         );
         const newNode = node.add(move, position);
-        processPosition(newNode);
+        processNode(newNode);
       });
     };
 
-    processPosition(this.root);
+    processNode(this.root);
   }
 
   // from: https://javascripttoday.com/blog/tree-data-structure-with-javascript/
@@ -42,15 +42,15 @@ class Tree {
     }
   }
 
-  traverseDF(fn) {
-    const arr = [this.root];
-    while (arr.length) {
-      const node = arr.shift();
+  // traverseDF(fn) {
+  //   const arr = [this.root];
+  //   while (arr.length) {
+  //     const node = arr.shift();
 
-      arr.unshift(...node.children);
-      fn(node);
-    }
-  }
+  //     arr.unshift(...node.children);
+  //     fn(node);
+  //   }
+  // }
 }
 
 export default Tree;

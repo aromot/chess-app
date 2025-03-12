@@ -26,7 +26,7 @@ interface ChessboardContextInterface {
   onClickReset: () => void;
   onClickBackward: () => void;
   onClickForward: () => void;
-  onClickGoToNode: (nodeId: string) => void;
+  onClickGoToNode: (node: TreeNode) => void;
   isStart: boolean;
   isEndOfBranch: boolean;
 }
@@ -53,15 +53,13 @@ const ChessboardProvider = ({
   }, [directory]);
 
   const [game, setGame] = useState<Chess>(new Chess(directory.fenPosInit));
-  const [tree] = useState(initTree);
+  const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
   const [position, setPosition] = useState<Position>(tree.posInit);
   const [lastMove, setLastMove] = useState<Move | null>(null);
 
   // const onClickForward = useCallback(() => {
   const onClickForward = () => {
-    dbg.info("onClickForward");
-
     const nextNode = node.getNextNode();
 
     if (!nextNode) {
@@ -69,7 +67,14 @@ const ChessboardProvider = ({
       return;
     }
 
-    game.move(nextNode.move?.san);
+    if (!nextNode.move) {
+      alert(
+        "Erreur, comment un noeud de l'arbre ne peut pas avoir de move ???"
+      );
+      return;
+    }
+
+    game.move(nextNode.move.san);
     setGame((game) => cloneDeep(game));
     setNode(nextNode);
     setPosition(nextNode.position);
@@ -113,7 +118,6 @@ const ChessboardProvider = ({
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      // MAJ le moteur de jeu
       setGame((game) => cloneDeep(game));
 
       // A partir de la position courante, on cherche si le move enfant existe déjà
@@ -160,8 +164,8 @@ const ChessboardProvider = ({
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
-    setPosition(tree.posInit);
-    setLastMove(null);
+    setPosition(tree.root.position);
+    setLastMove(tree.root.move);
   };
 
   const onClickBackward = () => {
@@ -171,7 +175,6 @@ const ChessboardProvider = ({
     }
 
     game.undo();
-
     setGame((game) => cloneDeep(game));
 
     const parentNode = node.parentNode as TreeNode;
@@ -180,7 +183,28 @@ const ChessboardProvider = ({
     setLastMove(parentNode?.move);
   };
 
-  const onClickGoToNode = (nodeId: string) => {};
+  const onClickGoToNode = (node: TreeNode) => {
+    let _node = cloneDeep(node);
+    const parentNodes = [_node];
+    let i = 0;
+    while (_node.parentNode && i++ < 999999) {
+      parentNodes.unshift(_node.parentNode);
+      _node = _node.parentNode;
+    }
+    parentNodes.shift(); // on supprime le noeud racine du tableau
+
+    // on reset le game...
+    game.reset();
+    // et on parcourt les noeuds pour jouer chaque coup jusqu'à la position du coup demandé.
+    parentNodes.forEach((node: TreeNode) => {
+      game.move(node.move.san);
+    });
+    setGame((game) => cloneDeep(game));
+
+    setNode(node);
+    setPosition(node.position);
+    setLastMove(node.move);
+  };
 
   const ctx: ChessboardContextInterface = {
     game,
