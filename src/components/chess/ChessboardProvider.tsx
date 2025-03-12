@@ -14,10 +14,12 @@ import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 
 interface ChessboardContextInterface {
   directory: Directory;
+  tree: { position: Position };
   game: Chess;
-  initPos: Position;
+  node: unknown;
+  // initPos: Position;
   position: Position;
-  move: Move | null;
+  lastMove: Move | null;
   onDrop: (sourceSquare: Square, targetSquare: Square, piece: Piece) => boolean;
   getNextMove: (move: Move) => Move | null;
   onClickReset: () => void;
@@ -43,14 +45,37 @@ const ChessboardProvider = ({
   const { directory } = context;
 
   const initPos: Position = useMemo(() => {
-    console.log("Ici dans le useMemo de initPos, directory:", directory);
-    return directory.positions[0]; // TODO pas top, à améliorer
+    return directory.positions.find(
+      (pos: Position) => pos.fen === directory.fenPosInit
+    );
   }, [directory]);
-  const initMove = initPos?.moves[0] as Move;
 
-  const [game, setGame] = useState<Chess>(new Chess(initPos.fen));
+  const initTree = useMemo(() => {
+    // ici on construit l'arbre
+
+    function processPosition(position) {
+      position.moves.forEach((move) => {
+        move.position = directory.positions.find(
+          (pos) => pos.id === move.nextPositionId
+        );
+        processPosition(move.position);
+      });
+    }
+
+    processPosition(initPos);
+
+    console.log({ tree: { position: initPos } });
+
+    return {
+      position: initPos,
+    };
+  }, [directory]);
+
+  const [game, setGame] = useState<Chess>(new Chess(directory.fenPosInit));
+  const [tree, setTree] = useState(initTree);
+  const [node, setNode] = useState(tree.position);
   const [position, setPosition] = useState<Position>(initPos);
-  const [move, setMove] = useState<Move | null>(null);
+  const [lastMove, setLastMove] = useState<Move | null>(null);
 
   const getNextMove = (move: Move) => {
     const nextPos = getNextPosition(move);
@@ -60,8 +85,10 @@ const ChessboardProvider = ({
   const onClickForward = useCallback(() => {
     // Si on est en position initiale, alors il n'y a pas encore de move, donc on prend le 1er
     // Sinon, on récupère le prochain move de la branche.
-    const nextMove: Move | null = move ? getNextMove(move) : initPos.moves[0];
-    console.log({ move, nextMove });
+    const nextMove: Move | null = lastMove
+      ? getNextMove(lastMove)
+      : initPos.moves[0];
+    console.log({ move: lastMove, nextMove });
     if (!nextMove) {
       alert("Il n'y a pas de prochain coup (fin de la branche).");
       console.log("Il n'y a pas de prochain coup (fin de la branche).");
@@ -73,8 +100,8 @@ const ChessboardProvider = ({
 
     const nextPosition = getNextPosition(nextMove);
     setPosition(nextPosition);
-    setMove(nextMove);
-  }, [game, position, move]);
+    setLastMove(nextMove);
+  }, [game, position, lastMove]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -96,7 +123,7 @@ const ChessboardProvider = ({
       // Annuler l'action par défaut pour éviter qu'elle ne soit traitée deux fois.
       // event.preventDefault();
     },
-    [game, position, move]
+    [game, position, lastMove]
   );
 
   useEffect(() => {
@@ -116,9 +143,47 @@ const ChessboardProvider = ({
       });
 
       console.log({ move });
+      console.log({ position });
 
       // MAJ le moteur de jeu
       setGame((game) => cloneDeep(game));
+
+      // A partir de la position courante, on cherche si le move enfant existe déjà
+      const eeexistingMove = position.moves.find(
+        (_move: Move) => _move.san === move.san
+      );
+
+      if (eeexistingMove) {
+        console.log("LE MOVE EXISTE DEJA");
+
+        setPosition(eeexistingMove.position as Position);
+        setLastMove(eeexistingMove as Move);
+        const nodeMove = node.moves.find(
+          (_move: Move) => _move.san === move.san
+        );
+        setNode(nodeMove.position);
+      } else {
+        console.log("NOUVEAU MOVE à partir de cette position");
+
+        const [newPosition, newMove] = await addMove(
+          directory.id,
+          move.san,
+          move.after,
+          position.id
+        );
+        newPosition.moves = [];
+        console.log({ newPosition, newMove });
+        newMove.position = newPosition;
+        node.moves.push(newMove);
+        const _lastMove = node.moves[node.moves.length - 1];
+        setNode(_lastMove.position);
+        console.log({ node });
+
+        setPosition(newPosition as Position);
+        setLastMove(newMove as Move);
+      }
+
+      return;
 
       // cherche si la nouvelle position existe déjà...
       // Pour ça, on cherche si la position courante existe ET SI elle contient le move courant.
@@ -137,18 +202,18 @@ const ChessboardProvider = ({
           (pos: Position) => pos.id == existingMove.nextPositionId
         );
         setPosition(nextPosition as Position);
-        setMove(existingMove as Move);
+        setLastMove(existingMove as Move);
       } else {
         console.log("NOUVEAU MOVE, position:", position);
-        const [newPosition, newMove] = await addMove(
-          directory.id,
-          move.san,
-          move.after,
-          position.id
-        );
-        console.log({ newPosition, newMove });
-        setPosition(newPosition as Position);
-        setMove(newMove as Move);
+        // // const [newPosition, newMove] = await addMove(
+        // //   directory.id,
+        // //   move.san,
+        // //   move.after,
+        // //   position.id
+        // // );
+        // // console.log({ newPosition, newMove });
+        // setPosition(newPosition as Position);
+        // setLastMove(newMove as Move);
       }
     } catch (error) {
       console.log({ error });
@@ -177,11 +242,11 @@ const ChessboardProvider = ({
     game.reset();
     setGame((game) => cloneDeep(game));
     setPosition(initPos);
-    setMove(null);
+    setLastMove(null);
   };
 
   const onClickBackward = () => {
-    if (!move) {
+    if (!lastMove) {
       alert("Vous êtes déjà au début du répertoire.");
       return;
     }
@@ -190,27 +255,30 @@ const ChessboardProvider = ({
 
     setGame((game) => cloneDeep(game));
 
-    const pos = getPreviousPosition(move);
+    const pos = getPreviousPosition(lastMove);
     setPosition(pos);
     const prevPos = directory.positions.find(
       (_pos: Position) => _pos.moves[0]?.nextPositionId == pos.id
     );
-    setMove(prevPos ? prevPos.moves[0] : null);
+    setLastMove(prevPos ? prevPos.moves[0] : null);
   };
 
   const ctx: ChessboardContextInterface = {
     game,
-    initPos,
+    node,
+    tree,
+    // initPos,
     position,
-    move,
+    lastMove,
     directory,
     onDrop,
     getNextMove,
     onClickReset,
     onClickBackward,
     onClickForward,
-    isStart: !move,
-    isEndOfBranch: !(move ? getNextMove(move) : initPos.moves[0]),
+    isStart: !lastMove,
+    // isEndOfBranch: !(lastMove ? getNextMove(lastMove) : initPos.moves[0]),
+    isEndOfBranch: true,
   };
 
   return <Context value={ctx}>{children}</Context>;

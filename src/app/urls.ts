@@ -3,4 +3,5 @@ export const URLS = {
   login: "/login",
   register: "/register",
   dashboard: "/welcome",
+  directories: "/directories",
 };

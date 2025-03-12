@@ -12,11 +12,7 @@ const DirectoryPage = async ({
 
   console.log({ directory });
 
-  return (
-    <div>
-      <AppChessboard directory={directory} />
-    </div>
-  );
+  return <AppChessboard directory={directory} />;
 };
 
 export default DirectoryPage;

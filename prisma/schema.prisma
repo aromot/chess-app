@@ -14,9 +14,9 @@ model Directory {
   white      Boolean
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  positions  Position[]
   fenPosInit String     @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-  Move       Move[]
+  positions  Position[]
+  moves      Move[]
 }
 
 model Comment {

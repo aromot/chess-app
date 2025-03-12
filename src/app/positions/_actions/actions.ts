@@ -27,7 +27,7 @@ export async function addMove(
     const newPosition = await addPosition(directoryId, fen);
     console.log("new position (server action):", newPosition);
 
-    const move = await insertMove(san, positionId, newPosition.id);
+    const move = await insertMove(directoryId, san, positionId, newPosition.id);
     console.log("new move (server action):", move);
 
     return [newPosition, move];

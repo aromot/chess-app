@@ -5,14 +5,15 @@ import Tree from "./Tree";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, ChevronsLeft } from "lucide-react";
 import DebugBox from "../dev/DebugBox";
+import { URLS } from "@/app/urls";
 
 const PanelInfos = () => {
   const {
     directory,
+    node,
     position,
-    move,
+    lastMove,
     game,
-    initPos,
     onClickReset,
     onClickBackward,
     onClickForward,
@@ -24,14 +25,14 @@ const PanelInfos = () => {
     <div className="text-white py-5 px-3">
       <div className="mb-5">
         <Title1>Répertoire {`"${directory.name}"`}</Title1>
-        <Link href="/directories">&laquo; retour aux répertoires</Link>
+        <Link href={URLS.directories}>&laquo; retour aux répertoires</Link>
       </div>
       <div className="mb-3">Position (FEN) : {game.fen()}</div>
 
       <div>
         <div>Arbre :</div>
-        <div className="h-5">
-          <Tree startPos={initPos} />
+        <div>
+          <Tree />
         </div>
       </div>
 
@@ -66,7 +67,10 @@ const PanelInfos = () => {
         <div>Debug</div>
         <div className="flex gap-3">
           <DebugBox title="position">{position}</DebugBox>
-          <DebugBox title="move">{move}</DebugBox>
+          <DebugBox title="lastMove">{lastMove}</DebugBox>
+        </div>
+        <div>
+          <DebugBox title="node">{node}</DebugBox>
         </div>
       </div>
     </div>

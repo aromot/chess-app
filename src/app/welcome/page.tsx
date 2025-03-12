@@ -3,6 +3,7 @@ import Title1 from "@/components/ui/title1";
 import { dbg } from "@/lib/helpers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { URLS } from "../urls";
 
 const DashboardPage = async () => {
   const session = await auth();
@@ -20,7 +21,7 @@ const DashboardPage = async () => {
       <div className="p-3">
         <ul>
           <li>
-            <Link href="/directories">Répertoires</Link>
+            <Link href={URLS.directories}>Répertoires</Link>
           </li>
           <li>
             <Link href="/comments">Commentaires</Link>

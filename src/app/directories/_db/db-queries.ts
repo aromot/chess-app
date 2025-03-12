@@ -82,6 +82,7 @@ export async function getDirectory(id: number) {
           moves: true,
         },
       },
+      moves: true,
     },
   });
   return directory;
