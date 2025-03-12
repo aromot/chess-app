@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, ChevronsLeft } from "lucide-react";
 import DebugBox from "../dev/DebugBox";
 import { URLS } from "@/app/urls";
+import { isDev } from "@/lib/helpers";
 
 const PanelInfos = () => {
   const {
@@ -31,7 +32,7 @@ const PanelInfos = () => {
 
       <div>
         <div>Arbre :</div>
-        <div>
+        <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
         </div>
       </div>
@@ -39,7 +40,7 @@ const PanelInfos = () => {
       {/* <div>History :</div>
       <div>{game.history().join(" ")}</div> */}
 
-      <div>
+      <div className="mt-3">
         <div>PGN :</div>
         <div className="h-5">{game.pgn()}</div>
       </div>
@@ -63,16 +64,18 @@ const PanelInfos = () => {
           <ChevronRight />
         </Button>
       </div>
-      <div>
-        <div>Debug</div>
-        <div className="flex gap-3">
-          <DebugBox title="position">{position}</DebugBox>
-          <DebugBox title="lastMove">{lastMove}</DebugBox>
-        </div>
+      {/* {isDev() && (
         <div>
-          <DebugBox title="node">{node}</DebugBox>
+          <div>Debug</div>
+          <div className="flex gap-3">
+            <DebugBox title="position">{position}</DebugBox>
+            <DebugBox title="lastMove">{lastMove}</DebugBox>
+          </div>
+          {/* <div>
+            <DebugModal label="node">{node}</DebugModal>
+          </div> * /}
         </div>
-      </div>
+      )} */}
     </div>
   );
 };
