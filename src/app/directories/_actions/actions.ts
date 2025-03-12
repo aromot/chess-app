@@ -1,10 +1,6 @@
 "use server";
 
 import {
-  addPosition,
-  deletePositionsByDirectoryId,
-} from "@/app/positions/_db/db-queries";
-import {
   addDirectory,
   deleteDirectory,
   updateDirectory,
