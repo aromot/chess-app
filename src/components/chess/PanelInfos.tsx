@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft } from "lucide-react";
 import DebugBox from "../dev/DebugBox";
 import { URLS } from "@/app/urls";
 import { isDev } from "@/lib/helpers";
+import TreeGraph from "./TreeGraph";
 
 const PanelInfos = () => {
   const {
@@ -32,6 +33,9 @@ const PanelInfos = () => {
 
       <div>
         <div>Arbre :</div>
+        <div>
+          <TreeGraph />
+        </div>
         <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
         </div>

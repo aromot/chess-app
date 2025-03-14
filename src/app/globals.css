@@ -68,3 +68,56 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .tree-graph {
+    --main-line-color: #1ba1e2;
+    --move-border-color: #1171a1;
+    --dot-size: 10px;
+    --line-height: 32px;
+    --junction-width: 2px;
+    --junction-length: 20px;
+  }
+  .dot {
+    /* @apply absolute top-1/2 transform translate-y-[-50%]; */
+    background-color: var(--main-line-color);
+    margin-top: calc(var(--line-height) / 2 - var(--dot-size) / 2);
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+  }
+  .dot.selected {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+    box-shadow: 0px 0px 5px #ffffff;
+  }
+  .junctions {
+    @apply relative;
+  }
+  .junctions .line {
+    /* @apply absolute top-1/2 transform translate-y-[-50%]; */
+    background-color: var(--main-line-color);
+    margin-top: calc(var(--line-height) / 2 - var(--junction-width) / 2);
+    height: var(--junction-width);
+    width: var(--junction-length);
+  }
+  .junctions .curve {
+    position: absolute;
+    margin-top: calc(var(--line-height) / 2 - var(--junction-width) / 2);
+    top: 0;
+    left: 0;
+  }
+  .moves {
+    /* border: 1px solid #f00; */
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+  }
+  .move {
+    @apply rounded-md flex justify-center items-center;
+    border: 2px solid var(--move-border-color);
+    /* @apply absolute top-1/2 transform translate-y-[-50%]; */
+    height: var(--line-height);
+    width: 32px;
+  }
+}
