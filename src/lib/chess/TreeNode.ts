@@ -1,4 +1,5 @@
 import { Move, Position } from "@prisma/client";
+import cloneDeep from "lodash/cloneDeep";
 
 class TreeNode {
   parentNode: TreeNode | null;
@@ -39,6 +40,18 @@ class TreeNode {
 
   getNextNode(): TreeNode | undefined {
     return this.children[0];
+  }
+
+  getParentNodes(): TreeNode[] {
+    let _node = this as TreeNode;
+    const parentNodes = [];
+    let i = 0;
+    while (_node.parentNode && i++ < 999999) {
+      parentNodes.unshift(_node.parentNode);
+      _node = _node.parentNode;
+    }
+
+    return parentNodes;
   }
 }
 

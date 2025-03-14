@@ -1,19 +1,11 @@
 import { Directory, Move, Position } from "@prisma/client";
 import { Chess } from "chess.js";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import cloneDeep from "lodash/cloneDeep";
 import { addMove } from "@/app/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
-import { dbg } from "@/lib/helpers";
 
 interface ChessboardContextInterface {
   directory: Directory;
@@ -184,13 +176,7 @@ const ChessboardProvider = ({
   };
 
   const onClickGoToNode = (node: TreeNode) => {
-    let _node = cloneDeep(node);
-    const parentNodes = [_node];
-    let i = 0;
-    while (_node.parentNode && i++ < 999999) {
-      parentNodes.unshift(_node.parentNode);
-      _node = _node.parentNode;
-    }
+    const parentNodes = node.getParentNodes();
     parentNodes.shift(); // on supprime le noeud racine du tableau
 
     // on reset le game...
@@ -199,6 +185,7 @@ const ChessboardProvider = ({
     parentNodes.forEach((node: TreeNode) => {
       game.move(node.move.san);
     });
+    game.move(node.move.san);
     setGame((game) => cloneDeep(game));
 
     setNode(node);

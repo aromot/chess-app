@@ -1,6 +1,4 @@
-import TreeNode from "@/lib/chess/TreeNode";
 import { useChessboard } from "./ChessboardProvider";
-import React from "react";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;
@@ -19,75 +17,10 @@ const Curve = ({ index }: { index: number }) => {
 };
 
 const TreeGraph = () => {
-  const { node } = useChessboard();
-  const parentNodes = node.getParentNodes().slice(-5);
-
-  console.log({ node, parentNodes });
-
   return (
     <div className="tree-graph border-gray-500 border-2 mb-3 rounded-md relative p-2">
       <div className="flex relative">
-        {/* --- Ici les noeuds parents --- */}
-        {parentNodes.map((pNode: TreeNode, i: number) => {
-          return (
-            <React.Fragment key={i}>
-              {pNode.move && (
-                <>
-                  <div className="moves">
-                    <div className="move">{pNode.move?.san}</div>
-                  </div>
-                  <div className="junctions">
-                    <div className="line"></div>
-                  </div>
-                </>
-              )}
-              <div className="dot"></div>
-              <div className="junctions">
-                <div className="line"></div>
-              </div>
-            </React.Fragment>
-          );
-        })}
-
-        {/* --- Ici le noeud courant --- */}
-        {node.move && (
-          <>
-            <div className="moves">
-              <div className="move">{node.move?.san}</div>
-            </div>
-            <div className="junctions">
-              <div className="line"></div>
-            </div>
-          </>
-        )}
         <div className="dot selected"></div>
-
-        {/* --- Ici les noeud enfants --- */}
-        {node.hasChildren() && (
-          <>
-            <div className="junctions">
-              {node.children.map((childNode: TreeNode, i: number) => {
-                if (i === 0) {
-                  return <div key={i} className="line"></div>;
-                }
-                return (
-                  <div key={i} className="curve">
-                    <Curve index={i} />
-                  </div>
-                );
-              })}
-            </div>
-            <div className="moves">
-              {node.children.map((childNode: TreeNode, i: number) => (
-                <div key={i} className="move">
-                  {childNode.move?.san}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* <div className="dot"></div>
         <div className="junctions">
           <div className="line"></div>
           <div className="curve">
@@ -135,7 +68,7 @@ const TreeGraph = () => {
         </div>
         <div className="moves">
           <div className="move">e5</div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
