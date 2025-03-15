@@ -20,9 +20,12 @@ model Directory {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime
-  content   String
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime
+  updatedAt  DateTime @updatedAt
+  content    String
+  positionId Int
+  position   Position @relation(fields: [positionId], references: [id])
 }
 
 model Position {
@@ -31,6 +34,7 @@ model Position {
   directory   Directory @relation(fields: [directoryId], references: [id])
   directoryId Int
   moves       Move[] // Coups possibles depuis cette position
+  comments    Comment[]
 }
 
 model Move {
