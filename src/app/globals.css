@@ -71,7 +71,6 @@ body {
 
 @layer components {
   .tree-graph {
-    /* font-family: "FreeSerif", sans-serif; */
     font-size: 0.9rem;
 
     --main-line-color: #1ba1e2;
@@ -81,6 +80,10 @@ body {
     --junction-width: 2px;
     --junction-length: 20px;
   }
+  .piece {
+    font-family: "FreeSerif", sans-serif;
+    font-size: 1.3rem;
+  }
   .dot {
     background-color: var(--main-line-color);
     margin-top: calc(var(--line-height) / 2 - var(--dot-size) / 2);
@@ -88,7 +91,7 @@ body {
     height: var(--dot-size);
     border-radius: 50%;
     &:hover:not(.selected) {
-      outline: 2px solid #aaa;
+      outline: 2px solid #eee;
       outline-offset: 3px;
       box-shadow: 0px 0px 10px 12px #1ba1e255;
     }
