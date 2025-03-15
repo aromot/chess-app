@@ -18,6 +18,15 @@ const Curve = ({ index }: { index: number }) => {
   );
 };
 
+function formatSAN(san: string): string {
+  return san
+    .replace("N", "♞")
+    .replace("K", "♚")
+    .replace("Q", "♛")
+    .replace("R", "♜")
+    .replace("B", "♝");
+}
+
 const TreeGraph = () => {
   const { node } = useChessboard();
   const parentNodes = node.getParentNodes().slice(-5);
@@ -34,7 +43,7 @@ const TreeGraph = () => {
               {pNode.move && (
                 <>
                   <div className="moves">
-                    <div className="move">{pNode.move?.san}</div>
+                    <div className="move">{formatSAN(pNode.move?.san)}</div>
                   </div>
                   <div className="junctions">
                     <div className="line"></div>
@@ -53,7 +62,7 @@ const TreeGraph = () => {
         {node.move && (
           <>
             <div className="moves">
-              <div className="move">{node.move?.san}</div>
+              <div className="move">{formatSAN(node.move?.san)}</div>
             </div>
             <div className="junctions">
               <div className="line"></div>
@@ -80,7 +89,7 @@ const TreeGraph = () => {
             <div className="moves">
               {node.children.map((childNode: TreeNode, i: number) => (
                 <div key={i} className="move">
-                  {childNode.move?.san}
+                  {formatSAN(childNode.move?.san)}
                 </div>
               ))}
             </div>

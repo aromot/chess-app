@@ -71,6 +71,9 @@ body {
 
 @layer components {
   .tree-graph {
+    /* font-family: "FreeSerif", sans-serif; */
+    font-size: 0.9rem;
+
     --main-line-color: #1ba1e2;
     --move-border-color: #1171a1;
     --dot-size: 10px;
