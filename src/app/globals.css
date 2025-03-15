@@ -82,14 +82,13 @@ body {
     --junction-length: 20px;
   }
   .dot {
-    /* @apply absolute top-1/2 transform translate-y-[-50%]; */
     background-color: var(--main-line-color);
     margin-top: calc(var(--line-height) / 2 - var(--dot-size) / 2);
     width: var(--dot-size);
     height: var(--dot-size);
     border-radius: 50%;
     &:hover:not(.selected) {
-      outline: 2px solid #eee;
+      outline: 2px solid #aaa;
       outline-offset: 3px;
       box-shadow: 0px 0px 10px 12px #1ba1e255;
     }
@@ -103,7 +102,6 @@ body {
     @apply relative;
   }
   .junctions .line {
-    /* @apply absolute top-1/2 transform translate-y-[-50%]; */
     background-color: var(--main-line-color);
     margin-top: calc(var(--line-height) / 2 - var(--junction-width) / 2);
     height: var(--junction-width);
@@ -116,7 +114,6 @@ body {
     left: 0;
   }
   .moves {
-    /* border: 1px solid #f00; */
     display: flex;
     flex-direction: column;
     row-gap: 5px;
@@ -124,12 +121,11 @@ body {
   .move {
     @apply rounded-md flex justify-center items-center;
     border: 2px solid var(--move-border-color);
-    /* @apply absolute top-1/2 transform translate-y-[-50%]; */
     height: var(--line-height);
-    width: 32px;
+    width: 36px;
 
     &:hover:enabled {
-      @apply bg-slate-700;
+      @apply bg-white text-cyan-950;
     }
   }
 }
