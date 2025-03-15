@@ -1,6 +1,7 @@
 import TreeNode from "@/lib/chess/TreeNode";
 import { useChessboard } from "./ChessboardProvider";
 import React from "react";
+import clsx from "clsx";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;
@@ -27,6 +28,30 @@ function formatSAN(san: string): string {
     .replace("B", "♝");
 }
 
+const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
+  const { onClickGoToNode } = useChessboard();
+  return (
+    <button
+      onClick={() => onClickGoToNode(node)}
+      className="move"
+      disabled={disabled}
+    >
+      {formatSAN(node.move?.san || "")}
+    </button>
+  );
+};
+
+const Position = ({ node, current }: { node: TreeNode; current?: boolean }) => {
+  const { onClickGoToNode } = useChessboard();
+  return (
+    <button
+      onClick={() => onClickGoToNode(node)}
+      className={clsx("dot", current && "selected")}
+      disabled={current}
+    />
+  );
+};
+
 const TreeGraph = () => {
   const { node } = useChessboard();
   const parentNodes = node.getParentNodes().slice(-5);
@@ -43,14 +68,14 @@ const TreeGraph = () => {
               {pNode.move && (
                 <>
                   <div className="moves">
-                    <div className="move">{formatSAN(pNode.move?.san)}</div>
+                    <Move node={pNode} disabled />
                   </div>
                   <div className="junctions">
                     <div className="line"></div>
                   </div>
                 </>
               )}
-              <div className="dot"></div>
+              <Position node={pNode} />
               <div className="junctions">
                 <div className="line"></div>
               </div>
@@ -62,14 +87,14 @@ const TreeGraph = () => {
         {node.move && (
           <>
             <div className="moves">
-              <div className="move">{formatSAN(node.move?.san)}</div>
+              <Move node={node} disabled />
             </div>
             <div className="junctions">
               <div className="line"></div>
             </div>
           </>
         )}
-        <div className="dot selected"></div>
+        <Position node={node} current />
 
         {/* --- Ici les noeud enfants --- */}
         {node.hasChildren() && (
@@ -88,63 +113,11 @@ const TreeGraph = () => {
             </div>
             <div className="moves">
               {node.children.map((childNode: TreeNode, i: number) => (
-                <div key={i} className="move">
-                  {formatSAN(childNode.move?.san)}
-                </div>
+                <Move key={i} node={childNode} />
               ))}
             </div>
           </>
         )}
-
-        {/* <div className="dot"></div>
-        <div className="junctions">
-          <div className="line"></div>
-          <div className="curve">
-            <Curve index={1} />
-          </div>
-          <div className="curve">
-            <Curve index={2} />
-          </div>
-          <div className="curve">
-            <Curve index={3} />
-          </div>
-          <div className="curve">
-            <Curve index={4} />
-          </div>
-          <div className="curve">
-            <Curve index={5} />
-          </div>
-          <div className="curve">
-            <Curve index={6} />
-          </div>
-          <div className="curve">
-            <Curve index={7} />
-          </div>
-          <div className="curve">
-            <Curve index={8} />
-          </div>
-        </div>
-        <div className="moves">
-          <div className="move">e4</div>
-          <div className="move">d4</div>
-          <div className="move">a4</div>
-          <div className="move">h4</div>
-          <div className="move">Nf3</div>
-          <div className="move">c4</div>
-          <div className="move">b4</div>
-          <div className="move">g4</div>
-          <div className="move">g4</div>
-        </div>
-        <div className="junctions">
-          <div className="line"></div>
-        </div>
-        <div className="dot"></div>
-        <div className="junctions">
-          <div className="line"></div>
-        </div>
-        <div className="moves">
-          <div className="move">e5</div>
-        </div> */}
       </div>
     </div>
   );

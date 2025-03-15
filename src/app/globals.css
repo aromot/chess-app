@@ -88,6 +88,11 @@ body {
     width: var(--dot-size);
     height: var(--dot-size);
     border-radius: 50%;
+    &:hover:not(.selected) {
+      outline: 2px solid #eee;
+      outline-offset: 3px;
+      box-shadow: 0px 0px 10px 12px #1ba1e255;
+    }
   }
   .dot.selected {
     outline: 2px solid #ffffff;
@@ -122,5 +127,9 @@ body {
     /* @apply absolute top-1/2 transform translate-y-[-50%]; */
     height: var(--line-height);
     width: 32px;
+
+    &:hover:enabled {
+      @apply bg-slate-700;
+    }
   }
 }

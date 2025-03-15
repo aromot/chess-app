@@ -183,9 +183,13 @@ const ChessboardProvider = ({
     game.reset();
     // et on parcourt les noeuds pour jouer chaque coup jusqu'à la position du coup demandé.
     parentNodes.forEach((node: TreeNode) => {
-      game.move(node.move.san);
+      if (node.move) {
+        game.move(node.move.san);
+      }
     });
-    game.move(node.move.san);
+    if (node.move) {
+      game.move(node.move.san);
+    }
     setGame((game) => cloneDeep(game));
 
     setNode(node);
