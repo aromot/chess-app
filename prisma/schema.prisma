@@ -44,6 +44,11 @@ model Move {
   directoryId    Int
 }
 
+enum Role {
+  member
+  admin
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -52,6 +57,7 @@ model User {
   password      String?
   emailVerified DateTime?
   image         String?
+  role          Role      @default(member)
   accounts      Account[]
   sessions      Session[]
 
