@@ -2,6 +2,7 @@ import TreeNode from "@/lib/chess/TreeNode";
 import { useChessboard } from "./ChessboardProvider";
 import React from "react";
 import clsx from "clsx";
+import MoveSAN from "./MoveSAN";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;
@@ -19,15 +20,6 @@ const Curve = ({ index }: { index: number }) => {
   );
 };
 
-function formatSAN(san: string): string {
-  return san
-    .replace("N", "♞")
-    .replace("K", "♚")
-    .replace("Q", "♛")
-    .replace("R", "♜")
-    .replace("B", "♝");
-}
-
 const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
   const { onClickGoToNode } = useChessboard();
   return (
@@ -36,7 +28,8 @@ const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
       className="move"
       disabled={disabled}
     >
-      {formatSAN(node.move?.san || "")}
+      <MoveSAN san={node.move?.san || ""} />
+      {/* {formatSAN(node.move?.san || "")} */}
     </button>
   );
 };

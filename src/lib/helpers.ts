@@ -62,3 +62,12 @@ export async function saltAndHashPassword(password: string): Promise<string> {
 export function isDev() {
   return process.env.NODE_ENV === "development";
 }
+
+export function formatSAN(san: string): string {
+  return san
+    .replace("N", "♞")
+    .replace("K", "♚")
+    .replace("Q", "♛")
+    .replace("R", "♜")
+    .replace("B", "♝");
+}

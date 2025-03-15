@@ -1,27 +1,11 @@
 import Link from "next/link";
 import Title1 from "../ui/title1";
 import { useChessboard } from "./ChessboardProvider";
-import Tree from "./Tree";
-import { Button } from "../ui/button";
-import { ChevronLeft, ChevronRight, ChevronsLeft } from "lucide-react";
-import DebugBox from "../dev/DebugBox";
 import { URLS } from "@/app/urls";
-import { isDev } from "@/lib/helpers";
 import TreeGraph from "./TreeGraph";
 
 const PanelInfos = () => {
-  const {
-    directory,
-    node,
-    position,
-    lastMove,
-    game,
-    onClickReset,
-    onClickBackward,
-    onClickForward,
-    isStart,
-    isEndOfBranch,
-  } = useChessboard();
+  const { directory, game } = useChessboard();
 
   return (
     <div className="text-white py-5 px-3">
@@ -33,12 +17,10 @@ const PanelInfos = () => {
 
       <div>
         <div>Arbre :</div>
-        <div>
-          <TreeGraph />
-        </div>
-        <div className="border-slate-500 rounded-md border-2 p-2">
+        <TreeGraph />
+        {/* <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
-        </div>
+        </div> */}
       </div>
 
       {/* <div>History :</div>
@@ -49,7 +31,7 @@ const PanelInfos = () => {
         <div className="h-5">{game.pgn()}</div>
       </div>
 
-      <div className="flex gap-3 mt-5">
+      {/* <div className="flex gap-3 mt-5">
         <Button variant="secondary" onClick={onClickReset} disabled={isStart}>
           <ChevronsLeft />
         </Button>
@@ -67,7 +49,8 @@ const PanelInfos = () => {
         >
           <ChevronRight />
         </Button>
-      </div>
+      </div> */}
+
       {/* {isDev() && (
         <div>
           <div>Debug</div>
