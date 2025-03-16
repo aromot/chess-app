@@ -5,6 +5,7 @@ import ChessboardProvider from "./ChessboardProvider";
 import ChessboardWrapper from "./ChessboardWrapper";
 import PanelInfos from "./PanelInfos";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { checkAuth } from "@/lib/helpers";
 
 const queryClient = new QueryClient();
 
