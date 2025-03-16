@@ -38,3 +38,23 @@ export const signUpSchema = z.object({
     .max(32, msgPassLength),
 });
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
+
+export const changePasswordSchema = z.object({
+  old_password: z
+    .string({ required_error: msgPassRequired })
+    .min(1, msgPassRequired)
+    .min(6, msgPassLength)
+    .max(32, msgPassLength),
+  new_password: z
+    .string({ required_error: msgPassRequired })
+    .min(1, msgPassRequired)
+    .min(6, msgPassLength)
+    .max(32, msgPassLength),
+  new_password_confirm: z
+    .string({ required_error: msgPassConfirmRequired })
+    .min(1, msgPassConfirmRequired)
+    .min(6, msgPassLength)
+    .max(32, msgPassLength),
+});
+export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+

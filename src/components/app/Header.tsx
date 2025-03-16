@@ -1,9 +1,10 @@
 import Link from "next/link";
-import Title1 from "../ui/title1";
-import ButtonSignOut from "../../app/(auth)/_components/SignOut/ButtonSignOut";
+import Title1 from "@/components/ui/title1";
+import ButtonSignOut from "@/app/(auth)/_components/SignOut/ButtonSignOut";
 import { URLS } from "@/app/urls";
 import { auth } from "@/lib/auth";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import ButtonChangePassword from "@/app/(auth)/_components/ChangePassword/ButtonChangePassword";
 
 const Header = async () => {
   const session = await auth();
@@ -19,7 +20,10 @@ const Header = async () => {
       </div>
       <div>
         {session ? (
-          <ButtonSignOut />
+          <div className="flex gap-5">
+            <ButtonSignOut />
+            <ButtonChangePassword />
+          </div>
         ) : (
           <div className="flex gap-5">
             <Button asChild>
