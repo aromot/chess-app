@@ -3,6 +3,7 @@ import Title1 from "../ui/title1";
 import { useChessboard } from "./ChessboardProvider";
 import { URLS } from "@/app/urls";
 import TreeGraph from "./TreeGraph";
+import CommentHandler from "./CommentHandler";
 
 const PanelInfos = () => {
   const { directory, game } = useChessboard();
@@ -29,6 +30,11 @@ const PanelInfos = () => {
       <div className="mt-3">
         <div>PGN :</div>
         <div className="h-5">{game.pgn()}</div>
+      </div>
+
+      <div className="mt-3">
+        <div>Commentaires :</div>
+        <CommentHandler />
       </div>
 
       {/* <div className="flex gap-3 mt-5">
