@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { getUserByEmail, insertUser } from "../_db/db-queries";
+import { getUserByEmail, insertUser } from "@/app/(auth)/_db/db-queries";
 import {
   SignInFormValues,
   signInSchema,
@@ -11,6 +11,9 @@ import {
 import { signIn } from "@/lib/auth";
 import { AuthError, CredentialsSignin } from "next-auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { changePasswordSchema } from "@/app/(auth)/_schemas/schema";
+import { updateUserPassword } from "@/app/(auth)/_db/db-queries";
+import { auth } from "@/lib/auth";
 
 // ZodType
 
@@ -90,5 +93,46 @@ export async function signInAction(data: SignInFormValues) {
         success: true,
       };
     }
+  }
+}
+
+export async function changePassword(old_password: string, new_password: string, new_password_confirm: string) {
+  try {
+  const session = await auth();
+  
+  const validation = changePasswordSchema.safeParse({ old_password, new_password, new_password_confirm });
+  if (!validation.success) {
+    return {
+      error: "validation",
+      errors: validation.error.errors,
+    };
+  }
+
+  const user = await getUserByEmail(session!.user?.email as string);
+  if (!user) {
+    return { error: "auth", message: "Utilisateur introuvable" };
+  }
+
+  const isPasswordValid = await bcrypt.compare(old_password, user.password as string);
+  if (!isPasswordValid) {
+    return { error: "auth", message: "Mot de passe actuel invalide" };
+  }
+
+  if (new_password !== new_password_confirm) {
+    return { error: "validation", message: "Les mots de passe ne correspondent pas" };
+  }
+
+  const hashedPassword = await bcrypt.hash(new_password, 10);
+  await updateUserPassword(user.id, hashedPassword);
+
+  return {
+    success: true,
+  };
+  } catch (error) {
+    console.error("Erreur lors du changement de mot de passe:", error);
+    return {
+      error: "server",
+      message: "Une erreur s'est produite lors du changement de mot de passe, essayez à nouveau plus tard.",
+    };
   }
 }
