@@ -4,21 +4,26 @@ import { Directory } from "@prisma/client";
 import ChessboardProvider from "./ChessboardProvider";
 import ChessboardWrapper from "./ChessboardWrapper";
 import PanelInfos from "./PanelInfos";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const AppChessboard = ({ directory }: { directory: Directory }) => {
   return (
-    <ChessboardProvider context={{ directory }}>
-      <div className="h-screen bg-zinc-900">
-        <div className="flex">
-          <div className="w-[600px] p-5">
-            <ChessboardWrapper />
-          </div>
-          <div className="flex-1">
-            <PanelInfos />
+    <QueryClientProvider client={queryClient}>
+      <ChessboardProvider context={{ directory }}>
+        <div className="h-screen bg-zinc-900">
+          <div className="flex">
+            <div className="w-[600px] p-5">
+              <ChessboardWrapper />
+            </div>
+            <div className="flex-1">
+              <PanelInfos />
+            </div>
           </div>
         </div>
-      </div>
-    </ChessboardProvider>
+      </ChessboardProvider>
+    </QueryClientProvider>
   );
 };
 
