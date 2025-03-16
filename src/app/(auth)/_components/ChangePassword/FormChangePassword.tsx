@@ -14,7 +14,7 @@ import { useAppForm } from "@/components/forms/useAppForm";
 import AppForm from "@/components/forms/AppForm";
 import FormInput from "@/components/forms/FormInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { changePassword } from "../../_actions/actions";
+import { changePassword } from "@/app/(auth)/_actions/actions";
 
 // Définir les props attendues par le composant
 interface FormChangePasswordProps {
@@ -25,12 +25,13 @@ export function FormChangePassword({ onSuccess }: FormChangePasswordProps) {
   const form = useAppForm({
     schema: changePasswordSchema,
     defaultValues: {
-      password: "",
-      password_confirm: "",
+      old_password: "",
+      new_password: "",
+      new_password_confirm: "",
     },
   });
   const onSubmit = async (data: ChangePasswordFormValues) => {
-    await changePassword(data.password, data.password_confirm);
+    await changePassword(data.old_password, data.new_password, data.new_password_confirm);
     onSuccess(); // Fermer le dialogue après un ajout réussi
   };
 
@@ -57,7 +58,7 @@ export function FormChangePassword({ onSuccess }: FormChangePasswordProps) {
               onChange={field.onChange}
               onBlur={field.onBlur}
             />
-            <FormLabel>Confirmation du mot de passe</FormLabel>
+            <FormLabel>Confirmation du nouveau mot de passe</FormLabel>
             <FormInput
               type="password"
               name="new_password_confirm"

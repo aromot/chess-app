@@ -13,7 +13,24 @@ export async function insertUser(email: string, passwordClear: string) {
 }
 
 export async function getUserByEmail(email: string) {
-  return prisma.user.findUnique({
-    where: { email },
-  });
+  try {
+    return await prisma.user.findUnique({
+      where: { email },
+    });
+  } catch (error) {
+    console.error("Error fetching user by email:", error);
+    throw new Error("Database error");
+  }
+}
+
+export async function updateUserPassword(id: string, password: string) {
+  try {
+    return await prisma.user.update({
+      where: { id },
+      data: { password },
+    });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    throw new Error("Database error");
+  }
 }
