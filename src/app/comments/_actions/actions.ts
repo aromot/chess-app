@@ -3,10 +3,10 @@
 import { addComment, deleteComment, updateComment } from "../_db/db-queries";
 import { CommentSchema } from "../_schemas/schema";
 
-export async function createComment(content: string) {
+export async function createComment(positionId: number, content: string) {
   try {
     CommentSchema.safeParse({ content });
-    await addComment(content);
+    await addComment(positionId, content);
     // return comment;
   } catch (error) {
     console.log("Une erreur s'est produite");

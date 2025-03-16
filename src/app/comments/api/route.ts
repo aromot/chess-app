@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const positionId = parseInt(searchParams.get("positionId") as string);
 
-  const comments = prisma.comment.findMany({
+  const comments = await prisma.comment.findMany({
     where: {
       positionId,
     },
@@ -15,10 +15,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const newComment = prisma.comment.create({
+  const inputs = await request.json();
+
+  const newComment = await prisma.comment.create({
     data: {
-      content: "My comment " + new Date().toDateString(),
-      positionId: 37,
+      content: inputs.content,
+      positionId: inputs.positionId,
     },
   });
 

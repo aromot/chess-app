@@ -7,23 +7,23 @@ import { CommentSchema, CommentFormValues } from "../../_schemas/schema";
 import InputTextArea from "@/components/forms/InputTextArea";
 import { Comment } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { useComment } from "../CommentProvider";
 import { changeComment } from "../../_actions/actions";
 
-const FormEditComment = ({
-  comment,
-  onSuccess,
-}: {
+type Props = {
   comment: Comment;
   onSuccess?: () => void;
-}) => {
+  onCancel?: () => void;
+};
+
+const FormEditComment = ({ comment, onSuccess, onCancel }: Props) => {
   const form = useAppForm({
     schema: CommentSchema,
     defaultValues: {
+      positionId: comment.positionId,
       content: comment.content,
     },
   });
-  const { closeModalEdit } = useComment();
+  // const { closeModalEdit } = useComment();
 
   const onSubmit = async (values: CommentFormValues) => {
     await changeComment(comment.id, values.content);
@@ -33,7 +33,7 @@ const FormEditComment = ({
   };
 
   return (
-    <AppForm form={form} onSubmit={onSubmit} className="space-y-3">
+    <AppForm form={form} onSubmit={onSubmit} className="space-y-1">
       <InputTextArea
         label="Votre commentaire"
         name="content"
@@ -46,11 +46,13 @@ const FormEditComment = ({
             Modifier
           </ButtonSubmit>
         </div>
-        <div>
-          <Button variant="link" onClick={closeModalEdit}>
-            Annuler
-          </Button>
-        </div>
+        {onCancel && (
+          <div>
+            <Button variant="link" onClick={onCancel}>
+              Annuler
+            </Button>
+          </div>
+        )}
       </div>
     </AppForm>
   );

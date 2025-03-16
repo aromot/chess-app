@@ -10,12 +10,13 @@ import {
 import { Textarea } from "../ui/textarea";
 
 type Props = {
-  label: string;
+  label?: string;
   name: string;
   placeholder: string;
+  rows?: number;
 };
 
-const InputTextArea = ({ label, name, placeholder }: Props) => {
+const InputTextArea = ({ label, name, placeholder, rows = 3 }: Props) => {
   const form = useFormContext();
 
   return (
@@ -26,7 +27,7 @@ const InputTextArea = ({ label, name, placeholder }: Props) => {
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Textarea placeholder={placeholder} {...field} />
+            <Textarea rows={rows} placeholder={placeholder} {...field} />
           </FormControl>
           <FormDescription></FormDescription>
           <FormMessage />

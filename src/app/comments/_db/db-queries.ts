@@ -4,11 +4,9 @@ export async function getComments() {
   return await prisma.comment.findMany();
 }
 
-export async function addComment(content: string) {
-  const createdAt = new Date().toISOString();
-
+export async function addComment(positionId: number, content: string) {
   return prisma.comment.create({
-    data: { content, createdAt },
+    data: { content, positionId },
   });
 }
 

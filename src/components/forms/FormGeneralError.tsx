@@ -1,6 +1,5 @@
-import { TriangleAlert } from "lucide-react";
-import { Alert } from "../ui/alert";
 import { useFormContext } from "react-hook-form";
+import GeneralError from "../errors/GeneralError";
 
 const FormGeneralError = () => {
   const form = useFormContext();
@@ -9,16 +8,7 @@ const FormGeneralError = () => {
     return;
   }
 
-  return (
-    <Alert variant="destructive">
-      <div className="flex gap-3 items-center">
-        <div>
-          <TriangleAlert className="h-4 w-4" />
-        </div>
-        <div>{form.formState.errors.root.message}</div>
-      </div>
-    </Alert>
-  );
+  return <GeneralError>{form.formState.errors.root.message}</GeneralError>;
 };
 
 export default FormGeneralError;
