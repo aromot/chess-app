@@ -9,22 +9,31 @@ import {
 } from "@/components/ui/dialog";
 import { useComment } from "../CommentProvider";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { removeComment } from "../../_actions/actions";
+import { Comment } from "@prisma/client";
 
-const ModalDeleteComment = () => {
+type Props = {
+  onSuccess?: (comment: Comment) => void;
+};
+
+const ModalDeleteComment = ({ onSuccess }: Props) => {
   const {
     modalDeleteOpen,
     toggleModalDelete,
     closeModalDelete,
     commentDelete,
   } = useComment();
-  const router = useRouter();
 
   const clickDelete = async () => {
-    await removeComment(commentDelete.id);
+    if (!commentDelete) {
+      alert("No comment to delete!");
+      throw new Error("No comment to delete!");
+    }
+    await removeComment(commentDelete.id as number);
     closeModalDelete();
-    router.refresh();
+    if (onSuccess) {
+      onSuccess(commentDelete);
+    }
   };
 
   if (!commentDelete) return;

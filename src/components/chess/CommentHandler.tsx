@@ -11,6 +11,9 @@ import FormAddComment from "@/app/comments/_components/add/FormAddComment";
 import FormEditComment from "@/app/comments/_components/edit/FormEditComment";
 import Spinner from "../loaders/Spinner";
 import GeneralError from "../errors/GeneralError";
+import ButtonDeleteComment from "@/app/comments/_components/delete/ButtonDeleteComment";
+import CommentProvider from "@/app/comments/_components/CommentProvider";
+import ModalDeleteComment from "@/app/comments/_components/delete/ModalDeleteComment";
 
 const CommentHandler = () => {
   const { node, directory } = useChessboard();
@@ -70,17 +73,33 @@ const CommentHandler = () => {
   }
 
   return (
-    <div className="bg-slate-800 p-2 rounded-md">
-      <div>{comment.content}</div>
-      <div className="text-xs mt-2">
-        ajouté le {formatDateTime(comment.createdAt)}
+    <CommentProvider>
+      <div className="bg-slate-800 p-2 rounded-md">
+        <div>{comment.content}</div>
+        <div className="text-xs mt-2">
+          ajouté le {formatDateTime(comment.createdAt)}
+        </div>
+        <div className="mt-2 flex">
+          <div className="flex-1">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setEditMode(true)}
+            >
+              modifier
+            </Button>
+          </div>
+          <div>
+            <ButtonDeleteComment comment={comment} />
+          </div>
+        </div>
       </div>
-      <div className="mt-2">
-        <Button size="sm" variant="outline" onClick={() => setEditMode(true)}>
-          modifier
-        </Button>
-      </div>
-    </div>
+      <ModalDeleteComment
+        onSuccess={() => {
+          refetch();
+        }}
+      />
+    </CommentProvider>
   );
 };
 
