@@ -44,6 +44,14 @@ export async function removeBranch(moveId: number) {
   console.log("delPositions: " + posIds.join(", "));
 
   await prisma.$transaction(async (tx) => {
+    await tx.comment.deleteMany({
+      where: {
+        positionId: {
+          in: posIds,
+        },
+      },
+    });
+
     await tx.move.deleteMany({
       where: {
         id: {
