@@ -1,5 +1,4 @@
 import { Move, Position } from "@prisma/client";
-import cloneDeep from "lodash/cloneDeep";
 
 class TreeNode {
   parentNode: TreeNode | null;
@@ -52,6 +51,12 @@ class TreeNode {
     }
 
     return parentNodes;
+  }
+
+  removeBranch(move: Move) {
+    this.children = this.children.filter(
+      (childNode: TreeNode) => childNode.move?.san !== move.san
+    );
   }
 }
 

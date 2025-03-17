@@ -21,6 +21,12 @@ interface ChessboardContextInterface {
   onClickGoToNode: (node: TreeNode) => void;
   isStart: boolean;
   isEndOfBranch: boolean;
+  openModalDeleteBranch: (move: Move) => void;
+  modalDelBranchOpen: boolean;
+  toggleModalDeleteBranch: (open: boolean) => void;
+  closeModalDeleteBranch: () => void;
+  moveDelete: Move | undefined;
+  removeBranch: (move: Move) => void;
 }
 
 const Context = createContext<ChessboardContextInterface | undefined>(
@@ -44,11 +50,24 @@ const ChessboardProvider = ({
     return tree;
   }, [directory]);
 
+  const [modalDelBranchOpen, setModalDelBranchOpen] = useState<boolean>(false);
+  const [moveDelete, setMoveDelete] = useState<Move | undefined>();
   const [game, setGame] = useState<Chess>(new Chess(directory.fenPosInit));
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
   const [position, setPosition] = useState<Position>(tree.posInit);
   const [lastMove, setLastMove] = useState<Move | null>(null);
+
+  const openModalDeleteBranch = (move: Move) => {
+    setMoveDelete(move);
+    setModalDelBranchOpen(true);
+  };
+  const closeModalDeleteBranch = () => {
+    setMoveDelete(undefined);
+    setModalDelBranchOpen(false);
+  };
+  const toggleModalDeleteBranch = (open: boolean) =>
+    setModalDelBranchOpen(open);
 
   // const onClickForward = useCallback(() => {
   const onClickForward = () => {
@@ -197,6 +216,13 @@ const ChessboardProvider = ({
     setLastMove(node.move);
   };
 
+  const removeBranch = (move: Move) => {
+    setNode((node: TreeNode) => {
+      node.removeBranch(move);
+      return node;
+    });
+  };
+
   const ctx: ChessboardContextInterface = {
     game,
     node,
@@ -211,6 +237,12 @@ const ChessboardProvider = ({
     onClickGoToNode,
     isStart: !lastMove,
     isEndOfBranch: !node.hasChildren(),
+    openModalDeleteBranch,
+    modalDelBranchOpen,
+    toggleModalDeleteBranch,
+    closeModalDeleteBranch,
+    moveDelete,
+    removeBranch,
   };
 
   return <Context value={ctx}>{children}</Context>;
