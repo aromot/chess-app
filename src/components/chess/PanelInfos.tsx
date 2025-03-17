@@ -12,7 +12,9 @@ const PanelInfos = () => {
     <div className="text-white py-5 px-3">
       <div className="mb-5">
         <Title1>Répertoire {`"${directory.name}"`}</Title1>
-        <Link href={URLS.directories}>&laquo; retour aux répertoires</Link>
+        <Link href={URLS.dashboard}>
+          &laquo; retour à votre tableau de bord
+        </Link>
       </div>
       <div className="mb-3">Position (FEN) : {game.fen()}</div>
 
