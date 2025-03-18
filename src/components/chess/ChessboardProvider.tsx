@@ -1,11 +1,19 @@
 import { Directory, Move, Position } from "@prisma/client";
 import { Chess } from "chess.js";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import cloneDeep from "lodash/cloneDeep";
 import { addMove } from "@/app/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
+import { dbg } from "@/lib/helpers";
 
 interface ChessboardContextInterface {
   directory: Directory;
@@ -27,6 +35,7 @@ interface ChessboardContextInterface {
   closeModalDeleteBranch: () => void;
   moveDelete: Move | undefined;
   removeBranch: (move: Move) => void;
+  handleKeyDown: (event: KeyboardEvent) => void;
 }
 
 const Context = createContext<ChessboardContextInterface | undefined>(
@@ -43,6 +52,8 @@ const ChessboardProvider = ({
   children: React.ReactNode;
 }>) => {
   const { directory } = context;
+
+  console.log("Render ChessboardProvider");
 
   const initTree = useMemo(() => {
     const tree = new Tree(directory);
@@ -68,58 +79,6 @@ const ChessboardProvider = ({
   };
   const toggleModalDeleteBranch = (open: boolean) =>
     setModalDelBranchOpen(open);
-
-  // const onClickForward = useCallback(() => {
-  const onClickForward = () => {
-    const nextNode = node.getNextNode();
-
-    if (!nextNode) {
-      alert("Il n'y a pas de prochain coup (fin de la branche).");
-      return;
-    }
-
-    if (!nextNode.move) {
-      alert(
-        "Erreur, comment un noeud de l'arbre ne peut pas avoir de move ???"
-      );
-      return;
-    }
-
-    game.move(nextNode.move.san);
-    setGame((game) => cloneDeep(game));
-    setNode(nextNode);
-    setPosition(nextNode.position);
-    setLastMove(nextNode.move);
-  };
-  // }, [node, game, position, lastMove]);
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    // if (event.defaultPrevented) {
-    //   return; // Ne devrait rien faire si l'événement de la touche était déjà consommé.
-    // }
-    switch (event.key) {
-      case "ArrowUp":
-        onClickReset();
-        break;
-      case "ArrowLeft":
-        onClickBackward();
-        break;
-      case "ArrowRight":
-        onClickForward();
-        break;
-    }
-
-    // Annuler l'action par défaut pour éviter qu'elle ne soit traitée deux fois.
-    // event.preventDefault();
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown, true);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
 
   async function onDrop(sourceSquare, targetSquare, piece) {
     try {
@@ -171,28 +130,61 @@ const ChessboardProvider = ({
     return true;
   }
 
-  const onClickReset = () => {
+  const onClickReset = useCallback(() => {
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
     setPosition(tree.root.position);
     setLastMove(tree.root.move);
-  };
+  }, [game, tree]);
 
-  const onClickBackward = () => {
+  const onClickForward = useCallback(() => {
+    dbg.debug("onClickForward");
+    const nextNode = node.getNextNode();
+
+    if (!nextNode) {
+      alert("Il n'y a pas de prochain coup (fin de la branche).");
+      throw new Error("Il n'y a pas de prochain coup (fin de la branche).");
+    }
+
+    if (!nextNode.move) {
+      alert(
+        "Erreur, comment un noeud de l'arbre ne peut pas avoir de move ???"
+      );
+      throw new Error("Le noeud de l'arbre n'a pas de move.");
+    }
+
+    game.move(nextNode.move.san);
+    setGame((game) => cloneDeep(game));
+    setNode(nextNode);
+    setPosition(nextNode.position);
+    setLastMove(nextNode.move);
+  }, [node, game]);
+
+  const onClickBackward = useCallback(() => {
+    dbg.debug("onClickBackward");
+
+    console.log("lastMove:", JSON.stringify(lastMove));
+
     if (!lastMove) {
       alert("Vous êtes déjà au début du répertoire.");
-      return;
+      throw new Error("Vous êtes déjà au début du répertoire.");
+    }
+
+    const parentNode = node.parentNode as TreeNode;
+
+    if (!parentNode) {
+      alert("Il n'y a pas de position parente dans le répertoire.");
+      throw new Error("Il n'y a pas de position parente dans le répertoire.");
     }
 
     game.undo();
     setGame((game) => cloneDeep(game));
 
-    const parentNode = node.parentNode as TreeNode;
     setNode(parentNode);
-    setPosition(parentNode?.position);
-    setLastMove(parentNode?.move);
-  };
+    setPosition(parentNode.position);
+    setLastMove(parentNode.move);
+  }, [game, lastMove, node]);
 
   const onClickGoToNode = (node: TreeNode) => {
     const parentNodes = node.getParentNodes();
@@ -223,6 +215,45 @@ const ChessboardProvider = ({
     });
   };
 
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.defaultPrevented) {
+        return; // Ne devrait rien faire si l'événement de la touche était déjà consommé.
+      }
+
+      try {
+        switch (event.key) {
+          case "ArrowUp":
+            onClickReset();
+            break;
+          case "ArrowLeft":
+            onClickBackward();
+            break;
+          case "ArrowRight":
+            onClickForward();
+            break;
+        }
+
+        // Annuler l'action par défaut pour éviter qu'elle ne soit traitée deux fois.
+        event.preventDefault();
+
+        document.removeEventListener("keydown", handleKeyDown);
+      } catch (error) {
+        console.log("Error while processing keyboard event.");
+        console.log(error);
+      }
+    },
+    [onClickReset, onClickBackward, onClickForward]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
   const ctx: ChessboardContextInterface = {
     game,
     node,
@@ -243,6 +274,7 @@ const ChessboardProvider = ({
     closeModalDeleteBranch,
     moveDelete,
     removeBranch,
+    handleKeyDown,
   };
 
   return <Context value={ctx}>{children}</Context>;

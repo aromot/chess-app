@@ -29,7 +29,7 @@ const CommentHandler = () => {
   });
 
   useEffect(() => {
-    dbg.debug("request comments for position: " + node.position.id);
+    // dbg.debug("request comments for position: " + node.position.id);
     refetch();
   }, [node]);
 
