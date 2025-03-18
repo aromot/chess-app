@@ -25,6 +25,8 @@ const ChessboardWrapper = () => {
         customBoardStyle={{
           borderRadius: "10px",
         }}
+        areArrowsAllowed={true}
+        // customArrows={[["e2", "e4", "#444444"]]}
       />
       <div className="flex gap-3 mt-5">
         <Button variant="secondary" onClick={onClickReset} disabled={isStart}>
