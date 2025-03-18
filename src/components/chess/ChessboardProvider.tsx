@@ -16,6 +16,7 @@ import TreeNode from "@/lib/chess/TreeNode";
 
 const audios = {
   move: new Audio("/move.mp3"),
+  capture: new Audio("/capture.webm"),
 };
 
 interface ChessboardContextInterface {
