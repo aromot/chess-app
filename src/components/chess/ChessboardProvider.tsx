@@ -13,7 +13,10 @@ import { addMove } from "@/app/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
-import { dbg } from "@/lib/helpers";
+
+const audios = {
+  move: new Audio("/move.mp3"),
+};
 
 interface ChessboardContextInterface {
   directory: Directory;
@@ -86,6 +89,8 @@ const ChessboardProvider = ({
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
+      audios.move.play();
+
       setGame((game) => cloneDeep(game));
 
       // A partir de la position courante, on cherche si le move enfant existe déjà
@@ -129,6 +134,7 @@ const ChessboardProvider = ({
   }
 
   const onClickReset = useCallback(() => {
+    audios.move.play();
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
@@ -152,6 +158,7 @@ const ChessboardProvider = ({
     }
 
     game.move(nextNode.move.san);
+    audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(nextNode);
     setPosition(nextNode.position);
@@ -172,6 +179,7 @@ const ChessboardProvider = ({
     }
 
     game.undo();
+    audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(parentNode);
     setPosition(parentNode.position);
@@ -194,6 +202,7 @@ const ChessboardProvider = ({
       game.move(node.move.san);
     }
     setGame((game) => cloneDeep(game));
+    audios.move.play();
 
     setNode(node);
     setPosition(node.position);
