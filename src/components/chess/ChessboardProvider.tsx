@@ -53,11 +53,9 @@ const ChessboardProvider = ({
 }>) => {
   const { directory } = context;
 
-  console.log("Render ChessboardProvider");
-
   const initTree = useMemo(() => {
     const tree = new Tree(directory);
-    console.log("initTree:", tree);
+    // console.log("initTree:", tree);
     return tree;
   }, [directory]);
 
@@ -139,7 +137,6 @@ const ChessboardProvider = ({
   }, [game, tree]);
 
   const onClickForward = useCallback(() => {
-    dbg.debug("onClickForward");
     const nextNode = node.getNextNode();
 
     if (!nextNode) {
@@ -162,10 +159,6 @@ const ChessboardProvider = ({
   }, [node, game]);
 
   const onClickBackward = useCallback(() => {
-    dbg.debug("onClickBackward");
-
-    console.log("lastMove:", JSON.stringify(lastMove));
-
     if (!lastMove) {
       alert("Vous êtes déjà au début du répertoire.");
       throw new Error("Vous êtes déjà au début du répertoire.");
@@ -180,7 +173,6 @@ const ChessboardProvider = ({
 
     game.undo();
     setGame((game) => cloneDeep(game));
-
     setNode(parentNode);
     setPosition(parentNode.position);
     setLastMove(parentNode.move);
