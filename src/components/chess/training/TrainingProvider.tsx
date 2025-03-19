@@ -115,7 +115,7 @@ const TrainingProvider = ({ context, children }: Props) => {
           if (childNode?.hasChildren()) {
             makeRandomMove(childNode.children);
           }
-        }, 1000);
+        }, 100);
 
         setNode(childNode as TreeNode);
         setCurrentTimeout(newTimeout);

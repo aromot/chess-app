@@ -2,13 +2,12 @@ import Title1 from "@/components/ui/title1";
 import { useTraining } from "./TrainingProvider";
 import Link from "next/link";
 import { URLS } from "@/app/urls";
-import TrainingTreeGraph from "./TrainingTreeGraph";
+// import TrainingTreeGraph from "./TrainingTreeGraph";
 import Scores from "./Scores";
 
 const PanelInfos = () => {
   const {
     directory,
-    isStart,
     game,
     isWaitingForUserMove,
     isTrainerAnswers,
@@ -49,11 +48,11 @@ const PanelInfos = () => {
         </div>
       )}
 
-      {!isStart && (
+      {/* {!isStart  && (
         <div className="mt-3">
           <TrainingTreeGraph />
         </div>
-      )}
+      )} */}
 
       {PGN && (
         <div className="mt-3">
