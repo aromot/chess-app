@@ -4,4 +4,5 @@ export const URLS = {
   register: "/register",
   dashboard: "/welcome",
   directories: "/directories",
+  training: "/directories/:id/train",
 };

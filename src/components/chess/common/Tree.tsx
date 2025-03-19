@@ -1,5 +1,5 @@
-import { Button } from "../ui/button";
-import { useChessboard } from "./ChessboardProvider";
+import { Button } from "../../ui/button";
+import { useChessboard } from "../edit/EditChessboardProvider";
 import Node from "@/lib/chess/TreeNode";
 
 const TreeNode = ({ node }: { node: Node }) => {

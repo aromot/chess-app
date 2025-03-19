@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useChessboard } from "./ChessboardProvider";
+import { useChessboard } from "./EditChessboardProvider";
 import { Move } from "@prisma/client";
 import { removeBranch } from "@/app/moves/_actions/actions";
 

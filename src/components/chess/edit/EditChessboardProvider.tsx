@@ -13,11 +13,12 @@ import { addMove } from "@/app/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
+import { cloneDeep } from "lodash";
 
-const audios = {
-  move: new Audio("/move.mp3"),
-  capture: new Audio("/capture.webm"),
-};
+// const audios = {
+//   move: new Audio("/move.mp3"),
+//   capture: new Audio("/capture.webm"),
+// };
 
 interface ChessboardContextInterface {
   directory: Directory;
@@ -46,15 +47,14 @@ const Context = createContext<ChessboardContextInterface | undefined>(
   undefined
 );
 
-const ChessboardProvider = ({
-  context,
-  children,
-}: Readonly<{
+type Props = Readonly<{
   context: {
     directory: Directory;
   };
   children: React.ReactNode;
-}>) => {
+}>;
+
+const EditChessboardProvider = ({ context, children }: Props) => {
   const { directory } = context;
 
   const initTree = useMemo(() => {
@@ -63,13 +63,13 @@ const ChessboardProvider = ({
     return tree;
   }, [directory]);
 
-  const game = useMemo(() => {
+  const initGame = useMemo(() => {
     return new Chess(directory.fenPosInit);
   }, [directory]);
 
   const [modalDelBranchOpen, setModalDelBranchOpen] = useState<boolean>(false);
   const [moveDelete, setMoveDelete] = useState<Move | undefined>();
-  // const [game, setGame] = useState<Chess>(new Chess(directory.fenPosInit));
+  const [game, setGame] = useState<Chess>(initGame);
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
   const [position, setPosition] = useState<Position>(tree.posInit);
@@ -86,7 +86,11 @@ const ChessboardProvider = ({
   const toggleModalDeleteBranch = (open: boolean) =>
     setModalDelBranchOpen(open);
 
-  async function onDrop(sourceSquare, targetSquare, piece) {
+  async function onDrop(
+    sourceSquare: Square,
+    targetSquare: Square,
+    piece: Piece
+  ) {
     try {
       const move = game.move({
         from: sourceSquare,
@@ -94,9 +98,9 @@ const ChessboardProvider = ({
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      audios.move.play();
+      // audios.move.play();
 
-      // setGame((game) => cloneDeep(game));
+      setGame((game) => cloneDeep(game));
 
       // A partir de la position courante, on cherche si le move enfant existe déjà
       const isExistingMove = node.hasMove(move.san);
@@ -140,9 +144,9 @@ const ChessboardProvider = ({
   }
 
   const onClickReset = useCallback(() => {
-    audios.move.play();
+    // audios.move.play();
     game.reset();
-    // setGame((game) => cloneDeep(game));
+    setGame((game) => cloneDeep(game));
     setNode(tree.root);
     setPosition(tree.root.position);
     setLastMove(tree.root.move);
@@ -164,8 +168,8 @@ const ChessboardProvider = ({
     }
 
     game.move(nextNode.move.san);
-    audios.move.play();
-    // setGame((game) => cloneDeep(game));
+    // audios.move.play();
+    setGame((game) => cloneDeep(game));
     setNode(nextNode);
     setPosition(nextNode.position);
     setLastMove(nextNode.move);
@@ -185,8 +189,8 @@ const ChessboardProvider = ({
     }
 
     game.undo();
-    audios.move.play();
-    // setGame((game) => cloneDeep(game));
+    // audios.move.play();
+    setGame((game) => cloneDeep(game));
     setNode(parentNode);
     setPosition(parentNode.position);
     setLastMove(parentNode.move);
@@ -207,8 +211,8 @@ const ChessboardProvider = ({
     if (node.move) {
       game.move(node.move.san);
     }
-    // setGame((game) => cloneDeep(game));
-    audios.move.play();
+    setGame((game) => cloneDeep(game));
+    // audios.move.play();
 
     setNode(node);
     setPosition(node.position);
@@ -291,4 +295,4 @@ export function useChessboard() {
   return useContext(Context) as ChessboardContextInterface;
 }
 
-export default ChessboardProvider;
+export default EditChessboardProvider;

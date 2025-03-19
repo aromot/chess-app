@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useChessboard } from "./ChessboardProvider";
+import { useChessboard } from "./EditChessboardProvider";
 import { dbg } from "@/lib/helpers";
 import { Comment } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { formatDateTime } from "@/lib/i18n";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import FormAddComment from "@/app/comments/_components/add/FormAddComment";
 import FormEditComment from "@/app/comments/_components/edit/FormEditComment";
-import Spinner from "../loaders/Spinner";
-import GeneralError from "../errors/GeneralError";
+import Spinner from "../../loaders/Spinner";
+import GeneralError from "../../errors/GeneralError";
 import ButtonDeleteComment from "@/app/comments/_components/delete/ButtonDeleteComment";
 import CommentProvider from "@/app/comments/_components/CommentProvider";
 import ModalDeleteComment from "@/app/comments/_components/delete/ModalDeleteComment";

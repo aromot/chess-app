@@ -1,4 +1,4 @@
-import { useChessboard } from "./ChessboardProvider";
+import { useChessboard } from "../edit/EditChessboardProvider";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;

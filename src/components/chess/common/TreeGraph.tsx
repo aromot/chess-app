@@ -1,13 +1,8 @@
 import TreeNode from "@/lib/chess/TreeNode";
-import { useChessboard } from "./ChessboardProvider";
 import React from "react";
-import clsx from "clsx";
-import MoveSAN from "./MoveSAN";
-import { Button } from "../ui/button";
-import { Trash2 } from "lucide-react";
-import ModalDeleteBranch from "./ModalDeleteBranch";
+import ModalDeleteBranch from "../edit/ModalDeleteBranch";
 import { useRouter } from "next/navigation";
-import { Move } from "@prisma/client";
+import { Move as ModelMove } from "@prisma/client";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;
@@ -25,55 +20,29 @@ const Curve = ({ index }: { index: number }) => {
   );
 };
 
-const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
-  const { onClickGoToNode, openModalDeleteBranch } = useChessboard();
-  return (
-    <div className="flex group">
-      <button
-        onClick={() => onClickGoToNode(node)}
-        className="move"
-        disabled={disabled}
-      >
-        <MoveSAN san={node.move?.san || ""} />
-        {/* {formatSAN(node.move?.san || "")} */}
-      </button>
-      {!disabled && (
-        <Button
-          size="sm"
-          variant="ghost"
-          className="invisible group-hover:visible"
-          onClick={() => {
-            if (!node.move) {
-              alert("No move to delete!");
-              throw new Error("No move to delete.");
-            }
-            openModalDeleteBranch(node.move);
-          }}
-        >
-          <Trash2 />
-        </Button>
-      )}
-    </div>
-  );
+type Props = {
+  node: TreeNode;
+  removeBranch?: (move: ModelMove) => void;
+  Position: React.ComponentType<{
+    node: TreeNode;
+    current?: boolean;
+  }>;
+  Move: React.ComponentType<{
+    node: TreeNode;
+    disabled?: boolean;
+  }>;
+  showChildren?: boolean;
 };
 
-const Position = ({ node, current }: { node: TreeNode; current?: boolean }) => {
-  const { onClickGoToNode } = useChessboard();
-  return (
-    <button
-      onClick={() => onClickGoToNode(node)}
-      className={clsx("dot", current && "selected")}
-      disabled={current}
-    />
-  );
-};
-
-const TreeGraph = () => {
-  const { node, removeBranch } = useChessboard();
+const TreeGraph = ({
+  node,
+  removeBranch,
+  Position,
+  Move,
+  showChildren = true,
+}: Props) => {
   const parentNodes = node.getParentNodes().slice(-5);
   const router = useRouter();
-
-  // console.log({ node, parentNodes });
 
   return (
     <>
@@ -115,7 +84,7 @@ const TreeGraph = () => {
           <Position node={node} current />
 
           {/* --- Ici les noeud enfants --- */}
-          {node.hasChildren() && (
+          {showChildren && node.hasChildren() && (
             <>
               <div className="junctions">
                 {node.children.map((childNode: TreeNode, i: number) => {
@@ -138,13 +107,14 @@ const TreeGraph = () => {
           )}
         </div>
       </div>
-      <ModalDeleteBranch
-        onSuccess={(move: Move) => {
-          console.log("REFRESH ROUTE", move);
-          router.refresh();
-          removeBranch(move);
-        }}
-      />
+      {removeBranch && (
+        <ModalDeleteBranch
+          onSuccess={(move: ModelMove) => {
+            router.refresh();
+            removeBranch(move);
+          }}
+        />
+      )}
     </>
   );
 };

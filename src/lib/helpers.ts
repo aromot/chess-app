@@ -71,3 +71,28 @@ export function formatSAN(san: string): string {
     .replace("R", "♜")
     .replace("B", "♝");
 }
+
+type ContextObject = {
+  [key: string]: string | number;
+};
+
+export function formatUrl(path: string, context: ContextObject) {
+  if (Object.keys(context).length === 0) return path;
+
+  for (const k in context)
+    path = path.replace(new RegExp(":" + k + "\\??"), context[k].toString());
+
+  return path;
+}
+
+export function getRandomItemFromArray(arr: any[]) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function formatPercentage(perc: number, precision: number = 2) {
+  return new Intl.NumberFormat("fr-FR", {
+    style: "percent",
+    maximumFractionDigits: precision,
+    minimumFractionDigits: precision,
+  }).format(perc);
+}

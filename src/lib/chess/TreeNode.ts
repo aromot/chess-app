@@ -58,6 +58,10 @@ class TreeNode {
       (childNode: TreeNode) => childNode.move?.san !== move.san
     );
   }
+
+  getChildrenSANs() {
+    this.children.map((childNode: TreeNode) => childNode.move?.san);
+  }
 }
 
 export default TreeNode;

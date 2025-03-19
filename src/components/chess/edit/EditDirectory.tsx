@@ -1,30 +1,30 @@
 "use client";
 
 import { Directory } from "@prisma/client";
-import ChessboardProvider from "./ChessboardProvider";
-import ChessboardWrapper from "./ChessboardWrapper";
+import EditChessboardProvider from "./EditChessboardProvider";
+import EditableChessboard from "./EditableChessboard";
 import PanelInfos from "./PanelInfos";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
-const AppChessboard = ({ directory }: { directory: Directory }) => {
+const EditDirectory = ({ directory }: { directory: Directory }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChessboardProvider context={{ directory }}>
+      <EditChessboardProvider context={{ directory }}>
         <div className="h-screen bg-zinc-900">
           <div className="flex">
             <div className="w-[600px] p-5">
-              <ChessboardWrapper />
+              <EditableChessboard />
             </div>
             <div className="flex-1">
               <PanelInfos />
             </div>
           </div>
         </div>
-      </ChessboardProvider>
+      </EditChessboardProvider>
     </QueryClientProvider>
   );
 };
 
-export default AppChessboard;
+export default EditDirectory;

@@ -1,13 +1,14 @@
 import Link from "next/link";
-import Title1 from "../ui/title1";
-import { useChessboard } from "./ChessboardProvider";
+import Title1 from "../../ui/title1";
+import { useChessboard } from "./EditChessboardProvider";
 import { URLS } from "@/app/urls";
-import TreeGraph from "./TreeGraph";
 import CommentHandler from "./CommentHandler";
+import EditableTreeGraph from "./EditableTreeGraph";
 
 const PanelInfos = () => {
   const { directory, game } = useChessboard();
 
+  const PGN = game.pgn();
   return (
     <div className="text-white py-5 px-3">
       <div className="mb-5">
@@ -16,11 +17,9 @@ const PanelInfos = () => {
           &laquo; retour à votre tableau de bord
         </Link>
       </div>
-      <div className="mb-3">Position (FEN) : {game.fen()}</div>
 
-      <div>
-        <div>Arbre :</div>
-        <TreeGraph />
+      <div className="mt-3">
+        <EditableTreeGraph />
         {/* <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
         </div> */}
@@ -29,15 +28,18 @@ const PanelInfos = () => {
       {/* <div>History :</div>
       <div>{game.history().join(" ")}</div> */}
 
-      <div className="mt-3">
-        <div>PGN :</div>
-        <div className="h-5">{game.pgn()}</div>
-      </div>
+      {PGN && (
+        <div className="mt-3">
+          <div>PGN :</div>
+          <div className="h-5">{PGN}</div>
+        </div>
+      )}
 
       <div className="mt-3">
-        <div>Commentaires :</div>
         <CommentHandler />
       </div>
+
+      <div className="mt-3">Position (FEN) : {game.fen()}</div>
 
       {/* <div className="flex gap-3 mt-5">
         <Button variant="secondary" onClick={onClickReset} disabled={isStart}>
