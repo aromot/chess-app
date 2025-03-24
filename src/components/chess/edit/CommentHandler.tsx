@@ -7,13 +7,13 @@ import { Comment } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { formatDateTime } from "@/lib/i18n";
 import { Button } from "../../ui/button";
-import FormAddComment from "@/app/comments/_components/add/FormAddComment";
-import FormEditComment from "@/app/comments/_components/edit/FormEditComment";
+import FormAddComment from "@/app/(private)/comments/_components/add/FormAddComment";
+import FormEditComment from "@/app/(private)/comments/_components/edit/FormEditComment";
 import Spinner from "../../loaders/Spinner";
 import GeneralError from "../../errors/GeneralError";
-import ButtonDeleteComment from "@/app/comments/_components/delete/ButtonDeleteComment";
-import CommentProvider from "@/app/comments/_components/CommentProvider";
-import ModalDeleteComment from "@/app/comments/_components/delete/ModalDeleteComment";
+import ButtonDeleteComment from "@/app/(private)/comments/_components/delete/ButtonDeleteComment";
+import CommentProvider from "@/app/(private)/comments/_components/CommentProvider";
+import ModalDeleteComment from "@/app/(private)/comments/_components/delete/ModalDeleteComment";
 
 const CommentHandler = () => {
   const { node, directory } = useChessboard();

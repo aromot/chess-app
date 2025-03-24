@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { useDirectory } from "../DirectoryProvider";
 import { Button } from "@/components/ui/button";
-import { removeDirectory } from "@/app/directories/_actions/actions";
 import { useRouter } from "next/navigation";
+import { removeDirectory } from "../../_actions/actions";
 
 const ModalDeleteDirectory = () => {
   const { openDelete, setOpenDelete, directory } = useDirectory();

@@ -1,7 +1,7 @@
 import EditDirectory from "@/components/chess/edit/EditDirectory";
-import { getDirectory } from "@/app/directories/_db/db-queries";
 import { Directory } from "@prisma/client";
 import { checkAuth } from "@/lib/helpers";
+import { getDirectory } from "../_db/db-queries";
 
 type Props = {
   params: Promise<{ id: string }>;

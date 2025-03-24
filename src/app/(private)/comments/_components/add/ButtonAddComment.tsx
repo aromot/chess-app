@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import FormAddComment from "@/app/comments/_components/add/FormAddComment";
+import FormAddComment from "@/app/(private)/comments/_components/add/FormAddComment";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

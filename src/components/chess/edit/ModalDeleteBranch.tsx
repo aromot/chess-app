@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useChessboard } from "./EditChessboardProvider";
 import { Move } from "@prisma/client";
-import { removeBranch } from "@/app/moves/_actions/actions";
+import { removeBranch } from "@/app/(private)/moves/_actions/actions";
 
 type Props = {
   onSuccess?: (move: Move) => void;

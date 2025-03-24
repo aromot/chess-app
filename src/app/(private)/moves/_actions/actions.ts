@@ -2,7 +2,7 @@
 
 import { Move, Position } from "@prisma/client";
 import { findMoveOrThrow, selectMovesOfDirectory } from "../_db/db-queries";
-import { selectPositionsOfDirectory } from "@/app/positions/_db/db-queries";
+import { selectPositionsOfDirectory } from "@/app/(private)/positions/_db/db-queries";
 import { prisma } from "@/lib/db";
 
 export async function removeBranch(moveId: number) {

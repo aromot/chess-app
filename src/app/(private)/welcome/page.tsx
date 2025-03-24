@@ -1,5 +1,5 @@
 import Title1 from "@/components/ui/title1";
-import { checkAuth, dbg } from "@/lib/helpers";
+import { checkAuth } from "@/lib/helpers";
 import { getDirectories } from "../directories/_db/db-queries";
 import ButtonAddDirectory from "../directories/_components/add/ButtonAddDirectory";
 import DirectoryProvider from "../directories/_components/DirectoryProvider";
@@ -7,6 +7,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { columns } from "../directories/columns";
 import ModalEditDirectory from "../directories/_components/edit/ModalEditDirectory";
 import ModalDeleteDirectory from "../directories/_components/delete/ModalDeleteDirectory";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const DashboardPage = async () => {
   await checkAuth();
@@ -14,7 +15,9 @@ const DashboardPage = async () => {
 
   return (
     <div>
-      <Title1>Tableau de bord</Title1>
+      <Title1>
+        <SidebarTrigger /> Tableau de bord
+      </Title1>
 
       <div className="container mx-auto my-10 px-20 w-[80%]">
         <div className="flex justify-between items-center mb-4">

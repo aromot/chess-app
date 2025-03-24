@@ -3,9 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "@/lib/i18n";
 import { Directory } from "@prisma/client";
-import ButtonEditDirectory from "@/app/directories/_components/edit/ButtonEditDirectory";
-import ButtonDeleteDirectory from "@/app/directories/_components/delete/ButtonDeleteDirectory";
 import Link from "next/link";
+import ButtonEditDirectory from "./_components/edit/ButtonEditDirectory";
+import ButtonDeleteDirectory from "./_components/delete/ButtonDeleteDirectory";
 
 export const columns: ColumnDef<Directory>[] = [
   {

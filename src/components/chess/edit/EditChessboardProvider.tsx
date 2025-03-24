@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 // import cloneDeep from "lodash/cloneDeep";
-import { addMove } from "@/app/positions/_actions/actions";
+import { addMove } from "@/app/(private)/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
