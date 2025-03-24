@@ -32,7 +32,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader>
           <div className="flex gap-2 items-center">
             <Image
-              src="/logo.svg"
+              src="/logo-outline.svg"
               width={32}
               height={40}
               alt="logo"
@@ -47,7 +47,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarFooter style={{ pointerEvents: "all" }}>
           <NavUser
             onClickChangePassword={() => {
-              // document.body.style.pointerEvents = null;
               document.body.style.removeProperty("pointer-events");
               setOpen(true);
             }}
