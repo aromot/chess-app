@@ -36,13 +36,7 @@ export async function addDirectory(data: {
 // Supprimer un directory par son ID
 // = supprimer le directory + toutes ses positions + tous ses moves.
 export async function deleteDirectory(id: number) {
-  const delDirectory = prisma.directory.delete({
-    where: {
-      id,
-    },
-  });
-
-  const delPositions = prisma.position.deleteMany({
+  const delComments = prisma.comment.deleteMany({
     where: {
       directoryId: id,
     },
@@ -54,7 +48,24 @@ export async function deleteDirectory(id: number) {
     },
   });
 
-  await prisma.$transaction([delMoves, delPositions, delDirectory]);
+  const delPositions = prisma.position.deleteMany({
+    where: {
+      directoryId: id,
+    },
+  });
+
+  const delDirectory = prisma.directory.delete({
+    where: {
+      id,
+    },
+  });
+
+  await prisma.$transaction([
+    delComments,
+    delMoves,
+    delPositions,
+    delDirectory,
+  ]);
 }
 
 // Mettre à jour un directory par son ID
