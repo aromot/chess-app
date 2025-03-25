@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { FormChangePassword } from "@/app/(auth)/_components/ChangePassword/FormChangePassword";
 import { useRouter } from "next/navigation";
+import { URLS } from "@/app/urls";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open: sidebarOpen } = useSidebar();
@@ -30,14 +31,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <>
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <div className="flex gap-2 items-center">
-            <Image
-              src="/logo-outline.svg"
-              width={32}
-              height={40}
-              alt="logo"
-              style={{ height: "auto" }}
-            />
+          <div className="flex gap-2 items-center mt-2">
+            <div
+              onClick={() => {
+                router.push(URLS.dashboard);
+              }}
+              className="flex justify-center hover:cursor-pointer"
+              style={{ width: sidebarOpen ? "auto" : "var(--sidebar-width)" }}
+            >
+              <Image
+                src="/logo-fill.svg"
+                width={20}
+                height={32}
+                alt="logo"
+                style={{ height: "auto" }}
+              />
+            </div>
             {sidebarOpen && (
               <span className="text-2xl font-bold truncate">Chess App</span>
             )}

@@ -6,27 +6,29 @@ import { Directory } from "@prisma/client";
 import Link from "next/link";
 import ButtonEditDirectory from "./_components/edit/ButtonEditDirectory";
 import ButtonDeleteDirectory from "./_components/delete/ButtonDeleteDirectory";
+import { formatUrl } from "@/lib/helpers";
+import { URLS } from "@/app/urls";
+import { Button } from "@/components/ui/button";
+import ButtonTrain from "./_components/train/ButtonTrain";
 
 export const columns: ColumnDef<Directory>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
-  },
-  {
     accessorKey: "name",
-    header: "Nom",
+    header: "Name",
     cell: ({ renderValue, row }) => (
-      <Link href={`/directories/${row.original.id}`}>{renderValue()}</Link>
+      <Link href={formatUrl(URLS.editDirectory, { id: row.original.id })}>
+        {renderValue()}
+      </Link>
     ),
   },
   {
     accessorKey: "white",
-    header: "Couleur",
+    header: "Play as",
     cell: ({ row }) => (row.original.white ? "Blanc" : "Noir"),
   },
   {
     accessorKey: "createdAt",
-    header: "Date d'ajout",
+    header: "Added on",
     cell: ({ renderValue }) => formatDateTime(renderValue() as string),
   },
   {
@@ -37,6 +39,7 @@ export const columns: ColumnDef<Directory>[] = [
       return (
         <div className="flex gap-3">
           <ButtonEditDirectory directory={directory} />
+          <ButtonTrain directory={directory} />
           <ButtonDeleteDirectory directory={directory} />
         </div>
       );

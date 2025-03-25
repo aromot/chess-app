@@ -82,13 +82,13 @@ export function NavUser({
                   }}
                 >
                   <BadgeCheck />
-                  Changer votre mot de passe
+                  Change your password
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut />
-                Se déconnecter
+                Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

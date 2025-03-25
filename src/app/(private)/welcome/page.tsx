@@ -14,14 +14,14 @@ const DashboardPage = async () => {
   const directories = await getDirectories();
 
   return (
-    <div>
+    <div className="pt-3 px-2">
       <Title1>
-        <SidebarTrigger /> Tableau de bord
+        <SidebarTrigger /> Your dashboard
       </Title1>
 
       <div className="container mx-auto my-10 px-20 w-[80%]">
         <div className="flex justify-between items-center mb-4">
-          <Title1>Vos répertoires</Title1>
+          <Title1>Your repertoires</Title1>
           {directories.length > 0 && <ButtonAddDirectory />}
         </div>
         <DirectoryProvider>
@@ -30,7 +30,7 @@ const DashboardPage = async () => {
             data={directories}
             noDataEntry={
               <div className="py-5 space-y-5">
-                <div>Aucun répertoire pour le moment</div>
+                <div>No repertoire saved for the moment</div>
                 <ButtonAddDirectory />
               </div>
             }

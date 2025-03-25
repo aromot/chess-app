@@ -12,10 +12,13 @@ const EditDirectory = ({ directory }: { directory: Directory }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <EditChessboardProvider context={{ directory }}>
-        <div className="flex h-screen bg-zinc-900">
-          <EditableChessboard />
-          <div className="flex-1 max-w-[48rem]">
-            <PanelInfos />
+        <div className="h-screen bg-zinc-900">
+          <div className="text-3xl px-5 pt-3">{directory.name}</div>
+          <div className="flex">
+            <EditableChessboard />
+            <div className="flex-1 max-w-[48rem]">
+              <PanelInfos />
+            </div>
           </div>
         </div>
       </EditChessboardProvider>

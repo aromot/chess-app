@@ -2,7 +2,6 @@
 
 import { DirectorySchema, DirectoryFormValues } from "../../_schemas/schema";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -43,34 +42,34 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-4">
-      <FormInput label="Nom" name="name" />
+      <FormInput label="Name" name="name" />
       <FormField
         control={form.control}
         name="white"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Couleur</FormLabel>
+            <FormLabel>Color</FormLabel>
             <Select
               onValueChange={(value) => field.onChange(value === "true")}
               value={field.value ? "true" : "false"}
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez une couleur" />
+                  <SelectValue placeholder="Select a color" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="true">Blanc</SelectItem>
-                <SelectItem value="false">Noir</SelectItem>
+                <SelectItem value="true">White</SelectItem>
+                <SelectItem value="false">Black</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage />
           </FormItem>
         )}
       />
-      <FormInput label="FEN DEPART" name="fenPosInit" />
-      <ButtonSubmit loadingText="ajout en cours..." className="mt-4">
-        Ajouter
+      <FormInput label="Initial FEN" name="fenPosInit" />
+      <ButtonSubmit loadingText="saving..." className="mt-4">
+        Add this new repertoire
       </ButtonSubmit>
     </AppForm>
   );

@@ -20,11 +20,11 @@ const ButtonAddDirectory = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Ajouter un répertoire</Button>
+        <Button>Make a new repertoire</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nouveau répertoire</DialogTitle>
+          <DialogTitle>New repertoire</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <FormAddDirectory

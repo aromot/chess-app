@@ -11,12 +11,12 @@ const PanelInfos = () => {
   const PGN = game.pgn();
   return (
     <div className="text-white py-5 px-3">
-      <div className="mb-5">
+      {/* <div className="mb-5">
         <Title1>Répertoire {`"${directory.name}"`}</Title1>
         <Link href={URLS.dashboard}>
           &laquo; retour à votre tableau de bord
         </Link>
-      </div>
+      </div> */}
 
       <div className="mt-3">
         <EditableTreeGraph />
