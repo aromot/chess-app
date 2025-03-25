@@ -44,3 +44,4 @@ next-env.d.ts
 stricly-local-file.md
 docs/meetings/next-meeting.md
 src/app/test/
+src/app/test/*.tsx
