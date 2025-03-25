@@ -1,7 +1,4 @@
-import Link from "next/link";
-import Title1 from "../../ui/title1";
 import { useChessboard } from "./EditChessboardProvider";
-import { URLS } from "@/app/urls";
 import CommentHandler from "./CommentHandler";
 import EditableTreeGraph from "./EditableTreeGraph";
 

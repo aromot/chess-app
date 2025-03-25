@@ -19,6 +19,10 @@ class TreeNode {
     this.children = [];
   }
 
+  isRoot(): boolean {
+    return !this.parentNode;
+  }
+
   add(move: Move, position: Position) {
     const node = new TreeNode(this, move, position);
     this.children.push(node);

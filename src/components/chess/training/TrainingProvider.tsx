@@ -37,6 +37,7 @@ const Context = createContext<TrainingContextInterface | undefined>(undefined);
 type Props = Readonly<{
   context: {
     directory: Directory;
+    positionId: number | null;
   };
   children: React.ReactNode;
 }>;
@@ -47,17 +48,17 @@ type TypeStats = {
 };
 
 const TrainingProvider = ({ context, children }: Props) => {
-  const { directory } = context;
+  const { directory, positionId } = context;
 
   const initTree = useMemo(() => {
-    const tree = new Tree(directory);
+    const tree = new Tree(directory, positionId);
     // console.log("initTree:", tree);
     return tree;
-  }, [directory]);
+  }, [directory, positionId]);
 
   const initGame = useMemo(() => {
-    return new Chess(directory.fenPosInit);
-  }, [directory]);
+    return new Chess(initTree.posInit.fen);
+  }, [initTree]);
 
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);

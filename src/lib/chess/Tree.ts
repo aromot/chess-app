@@ -6,13 +6,19 @@ class Tree {
   posInit: Position;
   root: TreeNode;
 
-  constructor(directory: Directory) {
+  constructor(directory: Directory, positionId?: number | null) {
     this.directory = directory;
 
-    // Pour l'instant, la position initiale est celle qui a le même FEN que le FEN initial du directory.
-    this.posInit = this.directory.positions.find(
-      (pos: Position) => pos.fen === directory.fenPosInit
-    );
+    // Pour la position initiale, 2 possibilités:
+    // 1. si le positionId est défini: la position initiale est celle de l'id fourni.
+    // 2. sinon: la position initiale est celle qui a le même FEN que le FEN initial du directory.
+    this.posInit = positionId
+      ? this.directory.positions.find((pos: Position) => pos.id === positionId)
+      : this.directory.positions.find(
+          (pos: Position) => pos.fen === directory.fenPosInit
+        );
+
+    console.log(this.posInit);
 
     // La racine est un noeud qui représente la position de départ (posInit), donc sans coup initial (null) ni noeud parent (null).
     this.root = new TreeNode(null, null, this.posInit);

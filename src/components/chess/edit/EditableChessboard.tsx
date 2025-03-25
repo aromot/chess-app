@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import { URLS } from "@/app/urls";
 import defaultBoardStyle from "../common/defaultBoardStyle";
 import { formatUrl } from "@/lib/helpers";
+import { Color } from "chess.js";
 
 const EditableChessboard = () => {
   const {
     game,
+    node,
     onDrop,
     directory,
     onClickReset,
@@ -19,6 +21,8 @@ const EditableChessboard = () => {
     isEndOfBranch,
   } = useChessboard();
   const router = useRouter();
+  const userColor: Color = directory.white ? "w" : "b";
+  const isUserTurn = game.turn() === userColor;
 
   return (
     <div className="flex flex-col">
@@ -59,13 +63,25 @@ const EditableChessboard = () => {
             </Button>
           </div>
         </div>
-        <div>
+        <div className="flex gap-3">
+          {!isStart && isUserTurn && (
+            <Button
+              onClick={() => {
+                const url =
+                  formatUrl(URLS.training, { id: directory.id }) +
+                  `?positionId=${node.position.id}`;
+                router.push(url);
+              }}
+            >
+              Train from this position
+            </Button>
+          )}
           <Button
             onClick={() => {
               router.push(formatUrl(URLS.training, { id: directory.id }));
             }}
           >
-            S'entrainer
+            Train
           </Button>
         </div>
       </div>
