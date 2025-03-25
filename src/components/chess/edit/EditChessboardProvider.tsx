@@ -102,8 +102,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      console.log({ move });
-
       // audios.move.play();
 
       setGame((game) => cloneDeep(game));
@@ -116,8 +114,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
         const childNode = node.getChildBySan(move.san);
 
         setNode(childNode as TreeNode);
-        // setPosition(childNode?.position as Position);
-        // setLastMove(childNode?.move as Move);
       } else {
         const [newPosition, newMove] = await addMove(
           directory.id,
@@ -130,8 +126,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
         // console.log({ newPosition, newMove });
         const newNode = node.add(newMove, newPosition);
         setNode(newNode);
-        // setPosition(newPosition as Position);
-        // setLastMove(newMove as Move);
       }
     } catch (error) {
       console.log({ error });
@@ -146,8 +140,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
-    // setPosition(tree.root.position);
-    // setLastMove(tree.root.move);
   }, [game, tree]);
 
   const onClickForward = useCallback(() => {
@@ -185,8 +177,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     // audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(parentNode);
-    // setPosition(parentNode.position);
-    // setLastMove(parentNode.move);
   }, [game, node]);
 
   const onClickGoToNode = (node: TreeNode) => {
@@ -208,8 +198,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     // audios.move.play();
 
     setNode(node);
-    // setPosition(node.position);
-    // setLastMove(node.move);
   };
 
   const removeBranch = (move: Move) => {
