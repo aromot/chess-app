@@ -13,10 +13,8 @@ const EditDirectory = ({ directory }: { directory: Directory }) => {
     <QueryClientProvider client={queryClient}>
       <EditChessboardProvider context={{ directory }}>
         <div className="flex h-screen bg-zinc-900">
-          <div className="max-w-[100dvh] max-h-[100dvh] aspect-square p-5">
-            <EditableChessboard />
-          </div>
-          <div className="flex-1">
+          <EditableChessboard />
+          <div className="flex-1 max-w-[48rem]">
             <PanelInfos />
           </div>
         </div>

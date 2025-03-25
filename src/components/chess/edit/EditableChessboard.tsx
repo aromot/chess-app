@@ -21,17 +21,19 @@ const EditableChessboard = () => {
   const router = useRouter();
 
   return (
-    <>
-      <Chessboard
-        id="chessboard"
-        position={game.fen()}
-        onPieceDrop={onDrop}
-        boardOrientation={directory.white ? "white" : "black"}
-        customBoardStyle={defaultBoardStyle}
-        areArrowsAllowed={true}
-        // customArrows={[["e2", "e4", "#444444"]]}
-      />
-      <div className="flex mt-5">
+    <div className="flex flex-col">
+      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[48rem] aspect-square p-5">
+        <Chessboard
+          id="chessboard"
+          position={game.fen()}
+          onPieceDrop={onDrop}
+          boardOrientation={directory.white ? "white" : "black"}
+          customBoardStyle={defaultBoardStyle}
+          areArrowsAllowed={true}
+          // customArrows={[["e2", "e4", "#444444"]]}
+        />
+      </div>
+      <div className="flex p-5">
         <div className="flex-1">
           <div className="flex gap-3">
             <Button
@@ -67,7 +69,7 @@ const EditableChessboard = () => {
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

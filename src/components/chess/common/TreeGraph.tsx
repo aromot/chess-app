@@ -41,7 +41,7 @@ const TreeGraph = ({
   Move,
   showChildren = true,
 }: Props) => {
-  const parentNodes = node.getParentNodes().slice(-5);
+  const parentNodes = node.getParentNodes().slice(-6);
   const router = useRouter();
 
   return (

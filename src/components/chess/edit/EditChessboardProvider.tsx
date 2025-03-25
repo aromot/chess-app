@@ -108,7 +108,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
 
       // A partir de la position courante, on cherche si le move enfant existe déjà
       const isExistingMove = node.hasMove(move.san);
-      console.log({ move });
 
       if (isExistingMove) {
         const childNode = node.getChildBySan(move.san);
@@ -123,7 +122,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
           move.to,
           node.position.id
         );
-        // console.log({ newPosition, newMove });
         const newNode = node.add(newMove, newPosition);
         setNode(newNode);
       }

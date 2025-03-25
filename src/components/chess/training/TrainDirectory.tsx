@@ -9,10 +9,8 @@ const TrainDirectory = ({ directory }: { directory: Directory }) => {
   return (
     <TrainingProvider context={{ directory }}>
       <div className="flex h-screen bg-zinc-900">
-        <div className="max-w-[100dvh] max-h-[100dvh] aspect-square p-5">
-          <TrainingChessboard />
-        </div>
-        <div className="flex-1">
+        <TrainingChessboard />
+        <div className="flex-1 max-w-[48rem]">
           <PanelInfos />
         </div>
       </div>
