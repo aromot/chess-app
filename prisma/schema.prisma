@@ -31,6 +31,7 @@ model Comment {
 model Position {
   id          Int       @id @default(autoincrement())
   fen         String    @unique // Format FEN simplifié (ex: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
+  name        String
   directory   Directory @relation(fields: [directoryId], references: [id])
   directoryId Int
   moves       Move[] // Coups possibles depuis cette position
@@ -40,6 +41,8 @@ model Position {
 model Move {
   id             Int       @id @default(autoincrement())
   san            String // Format SAN (ex: "e4")
+  squareFrom     String
+  squareTo       String
   evaluation     Json? // Données Stockfish (depth, cp, mate, etc.)
   position       Position  @relation(fields: [positionId], references: [id])
   positionId     Int
