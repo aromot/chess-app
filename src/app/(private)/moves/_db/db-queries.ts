@@ -3,6 +3,8 @@ import { prisma } from "@/lib/db";
 export async function insertMove(
   directoryId: number,
   san: string,
+  squareFrom: string,
+  squareTo: string,
   positionId: number,
   nextPositionId: number | null = null
 ) {
@@ -10,6 +12,8 @@ export async function insertMove(
     data: {
       directoryId,
       san,
+      squareFrom,
+      squareTo,
       positionId,
       nextPositionId,
     },

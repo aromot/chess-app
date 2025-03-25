@@ -68,7 +68,7 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
           </FormItem>
         )}
       />
-      <FormInput label="FEN DEPART" name="fenPosInit" disabled />
+      <FormInput label="FEN DEPART" name="fenPosInit" />
       <ButtonSubmit loadingText="ajout en cours..." className="mt-4">
         Ajouter
       </ButtonSubmit>

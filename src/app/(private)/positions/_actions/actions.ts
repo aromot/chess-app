@@ -7,10 +7,10 @@ export async function addMove(
   directoryId: number,
   san: string,
   fen: string,
+  from: string,
+  to: string,
   positionId: number
 ) {
-  console.log("[addMove]", { directoryId, san, fen, positionId });
-
   try {
     // const result = DirectorySchema.safeParse({ name, white });
 
@@ -25,10 +25,17 @@ export async function addMove(
     // TODO vérifie si le coup existe déjà
 
     const newPosition = await addPosition(directoryId, fen);
-    console.log("new position (server action):", newPosition);
+    // console.log("new position (server action):", newPosition);
 
-    const move = await insertMove(directoryId, san, positionId, newPosition.id);
-    console.log("new move (server action):", move);
+    const move = await insertMove(
+      directoryId,
+      san,
+      from,
+      to,
+      positionId,
+      newPosition.id
+    );
+    // console.log("new move (server action):", move);
 
     return [newPosition, move];
   } catch (error) {

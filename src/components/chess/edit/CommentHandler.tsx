@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useChessboard } from "./EditChessboardProvider";
-import { dbg } from "@/lib/helpers";
 import { Comment } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { formatDateTime } from "@/lib/i18n";

@@ -3,14 +3,14 @@ import { useChessboard } from "../edit/EditChessboardProvider";
 import Node from "@/lib/chess/TreeNode";
 
 const TreeNode = ({ node }: { node: Node }) => {
-  const { lastMove, onClickGoToNode } = useChessboard();
+  const { node: currentNode, onClickGoToNode } = useChessboard();
 
   if (!node.hasChildren()) return;
 
   return (
     <div className="border-teal-100 border-0">
       {node.children.map((childNode: Node, i) => {
-        const isCurrent = lastMove?.id === childNode.move?.id;
+        const isCurrent = currentNode.move?.id === childNode.move?.id;
 
         return (
           <div key={i} className="flex gap-3">

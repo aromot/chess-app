@@ -1,4 +1,4 @@
-import { Directory, Move, Position } from "@prisma/client";
+import { Directory, Move } from "@prisma/client";
 import { Chess } from "chess.js";
 import {
   createContext,
@@ -25,9 +25,13 @@ interface ChessboardContextInterface {
   tree: Tree;
   game: Chess;
   node: TreeNode;
-  position: Position;
-  lastMove: Move | null;
-  onDrop: (sourceSquare: Square, targetSquare: Square, piece: Piece) => boolean;
+  // position: Position;
+  // lastMove: Move | null;
+  onDrop: (
+    sourceSquare: Square,
+    targetSquare: Square,
+    piece: Piece
+  ) => Promise<boolean>;
   onClickReset: () => void;
   onClickBackward: () => void;
   onClickForward: () => void;
@@ -72,8 +76,8 @@ const EditChessboardProvider = ({ context, children }: Props) => {
   const [game, setGame] = useState<Chess>(initGame);
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
-  const [position, setPosition] = useState<Position>(tree.posInit);
-  const [lastMove, setLastMove] = useState<Move | null>(null);
+  // const [position, setPosition] = useState<Position>(tree.posInit);
+  // const [lastMove, setLastMove] = useState<Move | null>(null);
 
   const openModalDeleteBranch = (move: Move) => {
     setMoveDelete(move);
@@ -98,6 +102,8 @@ const EditChessboardProvider = ({ context, children }: Props) => {
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
+      console.log({ move });
+
       // audios.move.play();
 
       setGame((game) => cloneDeep(game));
@@ -107,39 +113,31 @@ const EditChessboardProvider = ({ context, children }: Props) => {
       console.log({ move });
 
       if (isExistingMove) {
-        console.log(
-          "LE MOVE EXISTE DEJA à partir de cette position:",
-          move.san
-        );
-
         const childNode = node.getChildBySan(move.san);
 
         setNode(childNode as TreeNode);
-        setPosition(childNode?.position as Position);
-        setLastMove(childNode?.move as Move);
+        // setPosition(childNode?.position as Position);
+        // setLastMove(childNode?.move as Move);
       } else {
-        console.log("NOUVEAU MOVE à partir de cette position:", move.san);
-
         const [newPosition, newMove] = await addMove(
           directory.id,
           move.san,
           move.after,
-          position.id
+          move.from,
+          move.to,
+          node.position.id
         );
-        console.log({ newPosition, newMove });
+        // console.log({ newPosition, newMove });
         const newNode = node.add(newMove, newPosition);
         setNode(newNode);
-        setPosition(newPosition as Position);
-        setLastMove(newMove as Move);
+        // setPosition(newPosition as Position);
+        // setLastMove(newMove as Move);
       }
     } catch (error) {
       console.log({ error });
       return false;
     }
 
-    // store timeout so it can be cleared on undo/reset so computer doesn't execute move
-    // const newTimeout = setTimeout(makeRandomMove, 200);
-    // setCurrentTimeout(newTimeout);
     return true;
   }
 
@@ -148,8 +146,8 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
-    setPosition(tree.root.position);
-    setLastMove(tree.root.move);
+    // setPosition(tree.root.position);
+    // setLastMove(tree.root.move);
   }, [game, tree]);
 
   const onClickForward = useCallback(() => {
@@ -171,30 +169,25 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     // audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(nextNode);
-    setPosition(nextNode.position);
-    setLastMove(nextNode.move);
+    // setPosition(nextNode.position);
+    // setLastMove(nextNode.move);
   }, [node, game]);
 
   const onClickBackward = useCallback(() => {
-    if (!lastMove) {
+    if (!node.parentNode) {
       alert("Vous êtes déjà au début du répertoire.");
       throw new Error("Vous êtes déjà au début du répertoire.");
     }
 
     const parentNode = node.parentNode as TreeNode;
 
-    if (!parentNode) {
-      alert("Il n'y a pas de position parente dans le répertoire.");
-      throw new Error("Il n'y a pas de position parente dans le répertoire.");
-    }
-
     game.undo();
     // audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(parentNode);
-    setPosition(parentNode.position);
-    setLastMove(parentNode.move);
-  }, [game, lastMove, node]);
+    // setPosition(parentNode.position);
+    // setLastMove(parentNode.move);
+  }, [game, node]);
 
   const onClickGoToNode = (node: TreeNode) => {
     const parentNodes = node.getParentNodes();
@@ -215,8 +208,8 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     // audios.move.play();
 
     setNode(node);
-    setPosition(node.position);
-    setLastMove(node.move);
+    // setPosition(node.position);
+    // setLastMove(node.move);
   };
 
   const removeBranch = (move: Move) => {
@@ -269,15 +262,15 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     game,
     node,
     tree,
-    position,
-    lastMove,
+    // position,
+    // lastMove,
     directory,
     onDrop,
     onClickReset,
     onClickBackward,
     onClickForward,
     onClickGoToNode,
-    isStart: !lastMove,
+    isStart: !node.parentNode,
     isEndOfBranch: !node.hasChildren(),
     openModalDeleteBranch,
     modalDelBranchOpen,
