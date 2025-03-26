@@ -33,7 +33,7 @@ model Comment {
 
 model Position {
   id          Int       @id @default(autoincrement())
-  fen         String    @unique // Format FEN simplifié (ex: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
+  fen         String // Format FEN simplifié (ex: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
   name        String?
   directory   Directory @relation(fields: [directoryId], references: [id])
   directoryId Int

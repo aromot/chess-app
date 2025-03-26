@@ -35,7 +35,7 @@ export async function createDirectory(
     return { success: true };
   } catch (error) {
     console.log("Une erreur s'est produite");
-    console.log({ error });
+    console.log(error?.stack);
     return {
       error: "Une erreur s'est produite lors de la création du répertoire",
     };
