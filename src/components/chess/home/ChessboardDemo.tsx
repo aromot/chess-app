@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Tree from "@/lib/chess/Tree";
 import { Chess } from "chess.js";
 import TreeNode from "@/lib/chess/TreeNode";
-import { getRandomItemFromArray } from "@/lib/helpers";
+import { getRandomInt, getRandomItemFromArray } from "@/lib/helpers";
 import { cloneDeep } from "lodash";
 
 const ChessboardDemo = ({ directory }: { directory: Directory }) => {
@@ -58,19 +58,22 @@ const ChessboardDemo = ({ directory }: { directory: Directory }) => {
   }, [tree]);
 
   useEffect(() => {
-    const newTimeout = window.setTimeout(() => {
-      if (node.hasChildren()) {
-        makeRandomMove(node.children);
-      } else {
-        resetGame();
-      }
-    }, 3000);
+    const newTimeout = window.setTimeout(
+      () => {
+        if (node.hasChildren()) {
+          makeRandomMove(node.children);
+        } else {
+          resetGame();
+        }
+      },
+      node.hasChildren() ? getRandomInt(300, 1800) : getRandomInt(1500, 3000)
+    );
     // setCurrentTimeout(newTimeout);
 
     return () => {
       clearTimeout(currentTimeout);
     };
-  }, [node, makeRandomMove, currentTimeout]);
+  }, [node, makeRandomMove, currentTimeout, resetGame]);
 
   return <Chessboard directory={directory} game={game} />;
 };

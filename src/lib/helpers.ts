@@ -96,3 +96,9 @@ export function formatPercentage(perc: number, precision: number = 2) {
     minimumFractionDigits: precision,
   }).format(perc);
 }
+
+export function getRandomInt(min: number, max: number): number {
+  min = Math.ceil(min); // Round up the min value
+  max = Math.floor(max); // Round down the max value
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
