@@ -50,10 +50,19 @@ const ChessboardDemo = ({ directory }: { directory: Directory }) => {
     [currentTimeout]
   );
 
+  const resetGame = useCallback(() => {
+    safeGameMutate((game: Chess) => {
+      game.reset();
+    });
+    setNode(tree.root);
+  }, [tree]);
+
   useEffect(() => {
     const newTimeout = window.setTimeout(() => {
       if (node.hasChildren()) {
         makeRandomMove(node.children);
+      } else {
+        resetGame();
       }
     }, 3000);
     // setCurrentTimeout(newTimeout);
