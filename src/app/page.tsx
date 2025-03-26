@@ -1,10 +1,12 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { URLS } from "./urls";
-import HomeChessboard from "@/components/chess/home/HomeChessboard";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getDirectoryByName } from "./(private)/directories/_db/db-queries";
+import ChessboardDemo from "@/components/chess/home/ChessboardDemo";
+import { Directory } from "@prisma/client";
 
 export default async function Home() {
   const session = await auth();
@@ -13,10 +15,12 @@ export default async function Home() {
     redirect(URLS.dashboard);
   }
 
+  const directory = await getDirectoryByName("HOMEPAGE");
+
   return (
     <div className="flex h-screen">
       <div className="p-20 w-[48%]">
-        <HomeChessboard />
+        <ChessboardDemo directory={directory as Directory} />
       </div>
       <div className="flex-1 py-10 text-white pr-20 mt-10">
         <div className="flex items-end gap-10">

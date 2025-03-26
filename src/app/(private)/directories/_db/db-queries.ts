@@ -98,3 +98,20 @@ export async function getDirectory(id: number) {
   });
   return directory;
 }
+
+export async function getDirectoryByName(name: string) {
+  const directory = await prisma.directory.findFirst({
+    where: {
+      name,
+    },
+    include: {
+      positions: {
+        include: {
+          moves: true,
+        },
+      },
+      moves: true,
+    },
+  });
+  return directory;
+}
