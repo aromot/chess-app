@@ -1,7 +1,8 @@
 import { useTraining } from "./TrainingProvider";
 import Scores from "./Scores";
-import { TriangleAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SquarePlay, TriangleAlert } from "lucide-react";
+import { useEffect } from "react";
+import ModalResults from "./ModalResults";
 
 const PanelInfos = () => {
   const {
@@ -10,8 +11,14 @@ const PanelInfos = () => {
     isTrainerAnswers,
     trainerAnswer,
     isEndOfBranch,
-    reset,
+    openModalResult,
   } = useTraining();
+
+  useEffect(() => {
+    if (isEndOfBranch) {
+      openModalResult();
+    }
+  }, [isEndOfBranch, openModalResult]);
 
   const PGN = game.pgn();
 
@@ -20,56 +27,24 @@ const PanelInfos = () => {
       <div className="mb-5">
         {isWaitingForUserMove && (
           <div className="text-2xl text-sky-950 flex gap-3 items-center bg-white p-5 rounded-lg">
-            <div
-              className="text-3xl"
-              // style={{ textShadow: "0px 0px 5px #000000" }}
-            >
-              It's your turn
-            </div>
+            <SquarePlay size={32} />
+            <div className="text-3xl">It's your turn...</div>
           </div>
         )}
         {isTrainerAnswers && trainerAnswer && (
           <div className="text-2xl text-green-700 flex gap-3 items-center bg-green-100 p-5 rounded-lg">
-            <div
-              className="text-3xl"
-              // style={{ textShadow: "0px 0px 5px #000000" }}
-            >
-              🎉 Good!
-            </div>
+            <div className="text-3xl">🎉 Good!</div>
           </div>
         )}
         {isTrainerAnswers && !trainerAnswer && (
           <div className="text-2xl text-red-700 flex gap-3 items-center bg-red-100 p-5 rounded-lg">
-            <TriangleAlert size={32} className="" />
-            <div
-              className="text-3xl"
-              // style={{ textShadow: "0px 0px 5px #000000" }}
-            >
-              No, try again
-            </div>
-          </div>
-        )}
-        {isEndOfBranch && (
-          <div>
-            Fin de la branche{" "}
-            <Button
-              onClick={() => {
-                reset();
-              }}
-            >
-              RESTART
-            </Button>
+            <TriangleAlert size={32} />
+            <div className="text-3xl">No, try again</div>
           </div>
         )}
       </div>
 
       <Scores />
-
-      {/* {!isStart  && (
-        <div className="mt-3">
-          <TrainingTreeGraph />
-        </div>
-      )} */}
 
       {PGN && (
         <div className="mt-5 rounded-lg bg-zinc-800 p-3">
@@ -77,6 +52,8 @@ const PanelInfos = () => {
           <div className="h-5">{PGN}</div>
         </div>
       )}
+
+      <ModalResults />
     </div>
   );
 };

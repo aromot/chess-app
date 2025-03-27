@@ -19,7 +19,7 @@ const ModalEditComment = () => {
   if (!commentEdit) return;
 
   return (
-    <Dialog open={modalEditOpen} onOpenChange={toggleModalEdit}>
+    <Dialog open={modalEditOpen} onOpenChange={toggleModalEdit} modal={false}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Supprimer un commentaire</DialogTitle>

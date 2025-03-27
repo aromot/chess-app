@@ -90,7 +90,7 @@ export function getRandomItemFromArray(arr: any[]) {
 }
 
 export function formatPercentage(perc: number, precision: number = 2) {
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat("en-US", {
     style: "percent",
     maximumFractionDigits: precision,
     minimumFractionDigits: precision,

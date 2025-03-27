@@ -32,6 +32,9 @@ interface TrainingContextInterface {
   stats: TypeStats;
   wrongNodes: TreeNode[];
   reset: () => void;
+  modalResultIsOpen: boolean;
+  openModalResult: () => void;
+  closeModalResult: () => void;
 }
 
 const Context = createContext<TrainingContextInterface | undefined>(undefined);
@@ -78,6 +81,7 @@ const TrainingProvider = ({ context, children }: Props) => {
   const [currentTimeout, setCurrentTimeout] = useState<number | undefined>();
   const [stats, setStats] = useState<TypeStats>(initStats);
   const [wrongNodes, setWrongNodes] = useState<TreeNode[]>([]);
+  const [modalResultIsOpen, setModalResultIsOpen] = useState<boolean>(false);
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((game: Chess) => {
@@ -96,6 +100,13 @@ const TrainingProvider = ({ context, children }: Props) => {
     });
     setNode(randomNode);
     setTrainingState(TrainingState.wait_user_move);
+  }
+
+  function openModalResult() {
+    setModalResultIsOpen(true);
+  }
+  function closeModalResult() {
+    setModalResultIsOpen(false);
   }
 
   function onDrop(sourceSquare: Square, targetSquare: Square, piece: Piece) {
@@ -168,6 +179,9 @@ const TrainingProvider = ({ context, children }: Props) => {
     stats,
     wrongNodes,
     reset,
+    modalResultIsOpen,
+    openModalResult,
+    closeModalResult,
   };
 
   return <Context value={ctx}>{children}</Context>;
