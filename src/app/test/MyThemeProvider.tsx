@@ -8,8 +8,8 @@ type ThemeType = {
 
 const ThemeContext = createContext<ThemeType | null>(null);
 
-const MyThemeProvider = ({ children }) => {
-  const [name, setName] = useState<"dark" | "light">("light");
+const MyThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [name, setName] = useState<ThemeType["name"]>("light");
   const switchToLight = () => setName("light");
   const switchToDark = () => setName("dark");
 
