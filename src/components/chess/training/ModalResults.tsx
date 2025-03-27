@@ -41,7 +41,7 @@ const ModalResults = () => {
 
   return (
     <Dialog open={modalResultIsOpen}>
-      <DialogContent hideCloseButton>
+      <DialogContent hideCloseButton={true}>
         <DialogHeader>
           <DialogTitle>Variation completed!</DialogTitle>
           <DialogDescription></DialogDescription>
