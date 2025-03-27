@@ -5,11 +5,11 @@ import TrainingProvider from "./TrainingProvider";
 import TrainingChessboard from "./TrainingChessboard";
 import PanelInfos from "./PanelInfos";
 import { useSearchParams } from "next/navigation";
+import "./train.css";
 
 const TrainDirectory = ({ directory }: { directory: Directory }) => {
   const params = useSearchParams();
   const positionId = parseInt(params.get("positionId") as string);
-  console.log({ positionId });
 
   return (
     <TrainingProvider context={{ directory, positionId }}>

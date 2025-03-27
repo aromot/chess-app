@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Celebration Animation</title>
+  <style>
+    /* Container to hold the stars */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0c0c0c; /* Dark background for better visibility */
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* Title for the celebration */
+    h1 {
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+      font-size: 48px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    /* Sparkle/Star style */
+    .sparkle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: transparent;
+      animation: sparkle 1.5s infinite, float 5s infinite;
+    }
+
+    /* SVG Star shape */
+    .sparkle svg {
+      fill: gold;
+      width: 100%;
+      height: 100%;
+      animation: shine 1s infinite alternate;
+    }
+
+    /* Star sparkle animation (fade in/out effect) */
+    @keyframes sparkle {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(360deg);
+      }
+    }
+
+    /* Random floating effect */
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        transform: translateY(-500px) scale(1.5);
+      }
+    }
+
+    /* Shine animation (to give the star a glowing effect) */
+    @keyframes shine {
+      0% {
+        fill: #ffd700;
+      }
+      100% {
+        fill: #ffffe0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Congratulations!</h1>
+
+  <!-- Multiple Sparkles -->
+  <div class="sparkle" style="top: 30%; left: 50%;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.4l5.6 3.3-1.5-6.2 4.8-4.3-6.3-.5L12 2l-2 6.7-6.3.5 4.8 4.3-1.5 6.2L12 17.4z"/></svg></div>
+  <div class="sparkle" style="top: 40%; left: 30%;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.4l5.6 3.3-1.5-6.2 4.8-4.3-6.3-.5L12 2l-2 6.7-6.3.5 4.8 4.3-1.5 6.2L12 17.4z"/></svg></div>
+  <div class="sparkle" style="top: 20%; left: 20%;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.4l5.6 3.3-1.5-6.2 4.8-4.3-6.3-.5L12 2l-2 6.7-6.3.5 4.8 4.3-1.5 6.2L12 17.4z"/></svg></div>
+  <div class="sparkle" style="top: 50%; left: 70%;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.4l5.6 3.3-1.5-6.2 4.8-4.3-6.3-.5L12 2l-2 6.7-6.3.5 4.8 4.3-1.5 6.2L12 17.4z"/></svg></div>
+  <div class="sparkle" style="top: 10%; left: 80%;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.4l5.6 3.3-1.5-6.2 4.8-4.3-6.3-.5L12 2l-2 6.7-6.3.5 4.8 4.3-1.5 6.2L12 17.4z"/></svg></div>
+
+</body>
+</html>

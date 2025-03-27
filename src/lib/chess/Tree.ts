@@ -18,8 +18,6 @@ class Tree {
           (pos: Position) => pos.fen === directory.fenPosInit
         );
 
-    console.log(this.posInit);
-
     // La racine est un noeud qui représente la position de départ (posInit), donc sans coup initial (null) ni noeud parent (null).
     this.root = new TreeNode(null, null, this.posInit);
 

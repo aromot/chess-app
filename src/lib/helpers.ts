@@ -102,3 +102,55 @@ export function getRandomInt(min: number, max: number): number {
   max = Math.floor(max); // Round down the max value
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function createStarExplosion(elt: HTMLElement) {
+  const numberOfStars = 10; // Number of stars in the explosion
+  const buttonRect = elt.getBoundingClientRect(); // Get button position: ;
+  console.log({ buttonRect });
+  const starExists = classExistsInCSS("star");
+  console.log({ starExists });
+
+  for (let i = 0; i < numberOfStars; i++) {
+    const star = document.createElement("div");
+    star.classList.add("star");
+
+    const xOffset = Math.random() * 400 - 200; // Random X offset
+    const yOffset = Math.random() * 400 - 200; // Random Y offset
+    star.style.setProperty("--x", `${xOffset}px`);
+    star.style.setProperty("--y", `${yOffset}px`);
+
+    // SVG star shape
+    star.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 17.4l5.6 3.3-1.5-6.2 4.8-4.3-6.3-.5L12 2l-2 6.7-6.3.5 4.8 4.3-1.5 6.2L12 17.4z"/>
+      </svg>
+    `;
+
+    // Position the star at the button's center
+    star.style.left = `${buttonRect.left + buttonRect.width / 2 - 10}px`;
+    star.style.top = `${buttonRect.top + buttonRect.height / 2 - 10}px`;
+
+    document.body.appendChild(star);
+
+    // Remove the star after animation
+    setTimeout(() => {
+      star.remove();
+    }, 1500);
+  }
+}
+
+export function classExistsInCSS(className: string) {
+  const stylesheets = document.styleSheets;
+
+  for (let i = 0; i < stylesheets.length; i++) {
+    const rules = stylesheets[i].cssRules || stylesheets[i].rules;
+
+    for (let j = 0; j < rules.length; j++) {
+      if (rules[j].selectorText === `.${className}`) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}

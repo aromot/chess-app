@@ -27,6 +27,7 @@ interface TrainingContextInterface {
   isEndOfBranch: boolean;
   isWaitingForUserMove: boolean;
   isTrainerAnswers: boolean;
+  trainingState: TrainingState;
   trainerAnswer: boolean | undefined;
   stats: TypeStats;
   wrongNodes: TreeNode[];
@@ -46,6 +47,8 @@ type TypeStats = {
   nbOk: number;
   nbKo: number;
 };
+
+const OPPONENT_SPEED = 1000;
 
 const TrainingProvider = ({ context, children }: Props) => {
   const { directory, positionId } = context;
@@ -85,14 +88,12 @@ const TrainingProvider = ({ context, children }: Props) => {
   function makeRandomMove(nodes: TreeNode[]) {
     const randomNode = getRandomItemFromArray(nodes) as TreeNode;
 
-    // dbg.debug("computer plays: " + randomNode.move?.san);
     safeGameMutate((game: Chess) => {
       const move = game.move(randomNode.move?.san);
       // console.log({ move });
     });
     setNode(randomNode);
     setTrainingState(TrainingState.wait_user_move);
-    // clearTimeout(currentTimeout);
   }
 
   function onDrop(sourceSquare: Square, targetSquare: Square, piece: Piece) {
@@ -116,7 +117,7 @@ const TrainingProvider = ({ context, children }: Props) => {
           if (childNode?.hasChildren()) {
             makeRandomMove(childNode.children);
           }
-        }, 100);
+        }, OPPONENT_SPEED);
 
         setNode(childNode as TreeNode);
         setCurrentTimeout(newTimeout);
@@ -151,6 +152,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     isEndOfBranch: !node.hasChildren(),
     isWaitingForUserMove: trainingState === TrainingState.wait_user_move,
     isTrainerAnswers: trainingState === TrainingState.trainer_answers,
+    trainingState,
     trainerAnswer,
     stats,
     wrongNodes,
