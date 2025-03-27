@@ -104,18 +104,17 @@ export function getRandomInt(min: number, max: number): number {
 }
 
 export function createStarExplosion(elt: HTMLElement) {
-  const numberOfStars = 10; // Number of stars in the explosion
+  const numberOfStars = 15; // Number of stars in the explosion
   const buttonRect = elt.getBoundingClientRect(); // Get button position: ;
-  console.log({ buttonRect });
-  const starExists = classExistsInCSS("star");
-  console.log({ starExists });
 
   for (let i = 0; i < numberOfStars; i++) {
     const star = document.createElement("div");
     star.classList.add("star");
 
-    const xOffset = Math.random() * 400 - 200; // Random X offset
-    const yOffset = Math.random() * 400 - 200; // Random Y offset
+    // const xOffset = Math.random() * 400 - 200; // Random X offset
+    // const yOffset = Math.random() * 400 - 200; // Random Y offset
+    const xOffset = Math.random() * 130 - 65;
+    const yOffset = Math.random() * 130 - 65;
     star.style.setProperty("--x", `${xOffset}px`);
     star.style.setProperty("--y", `${yOffset}px`);
 

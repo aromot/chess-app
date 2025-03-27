@@ -48,11 +48,21 @@ const Scores = () => {
   useEffect(() => {
     if (isTrainerAnswers && trainerAnswer) {
       const card = document.getElementById("card-right");
-      console.log("BOOOM !!", card);
-
-      createStarExplosion(card);
+      if (card) {
+        createStarExplosion(card);
+      }
     }
-  }, [trainingState]);
+
+    if (isTrainerAnswers && !trainerAnswer) {
+      const card = document.getElementById("card-wrong");
+      if (card) {
+        card.classList.add("shakeX");
+        window.setTimeout(() => {
+          card.classList.remove("shakeX");
+        }, 500);
+      }
+    }
+  }, [trainerAnswer, isTrainerAnswers, trainingState, stats]);
 
   return (
     <div className="flex gap-10">

@@ -31,6 +31,7 @@ interface TrainingContextInterface {
   trainerAnswer: boolean | undefined;
   stats: TypeStats;
   wrongNodes: TreeNode[];
+  reset: () => void;
 }
 
 const Context = createContext<TrainingContextInterface | undefined>(undefined);
@@ -49,6 +50,10 @@ type TypeStats = {
 };
 
 const OPPONENT_SPEED = 1000;
+const initStats: TypeStats = {
+  nbOk: 0,
+  nbKo: 0,
+};
 
 const TrainingProvider = ({ context, children }: Props) => {
   const { directory, positionId } = context;
@@ -71,10 +76,7 @@ const TrainingProvider = ({ context, children }: Props) => {
   );
   const [trainerAnswer, setTrainerAnswer] = useState<boolean | undefined>();
   const [currentTimeout, setCurrentTimeout] = useState<number | undefined>();
-  const [stats, setStats] = useState<TypeStats>({
-    nbOk: 0,
-    nbKo: 0,
-  });
+  const [stats, setStats] = useState<TypeStats>(initStats);
   const [wrongNodes, setWrongNodes] = useState<TreeNode[]>([]);
 
   function safeGameMutate(modify: (game: Chess) => void) {
@@ -142,6 +144,15 @@ const TrainingProvider = ({ context, children }: Props) => {
     return true;
   }
 
+  const reset = () => {
+    safeGameMutate((game: Chess) => {
+      game.reset();
+    });
+    setNode(tree.root);
+    setTrainingState(TrainingState.wait_user_move);
+    setStats(initStats);
+  };
+
   const ctx: TrainingContextInterface = {
     game,
     node,
@@ -156,6 +167,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     trainerAnswer,
     stats,
     wrongNodes,
+    reset,
   };
 
   return <Context value={ctx}>{children}</Context>;
