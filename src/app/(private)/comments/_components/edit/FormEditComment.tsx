@@ -35,21 +35,19 @@ const FormEditComment = ({ comment, onSuccess, onCancel }: Props) => {
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-1">
       <InputTextArea
-        label="Votre commentaire"
+        label="Your comment"
         name="content"
-        placeholder="ici votre commentaire"
+        placeholder="write your comment here"
       />
 
       <div className="flex">
         <div className="flex-1">
-          <ButtonSubmit loadingText="modification en cours...">
-            Modifier
-          </ButtonSubmit>
+          <ButtonSubmit loadingText="updating...">Update</ButtonSubmit>
         </div>
         {onCancel && (
           <div>
             <Button variant="link" onClick={onCancel}>
-              Annuler
+              cancel
             </Button>
           </div>
         )}

@@ -3,14 +3,18 @@
 import { addComment, deleteComment, updateComment } from "../_db/db-queries";
 import { CommentSchema } from "../_schemas/schema";
 
-export async function createComment(positionId: number, content: string) {
+export async function createComment(
+  directoryId: number,
+  positionId: number,
+  content: string
+) {
   try {
     CommentSchema.safeParse({ content });
-    await addComment(positionId, content);
+    await addComment(directoryId, positionId, content);
     // return comment;
   } catch (error) {
-    console.log("Une erreur s'est produite");
-    console.log({ error });
+    console.log("An error occurred while creating comment.");
+    console.log(error.stack);
   }
 }
 

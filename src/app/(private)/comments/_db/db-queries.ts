@@ -4,9 +4,13 @@ export async function getComments() {
   return await prisma.comment.findMany();
 }
 
-export async function addComment(positionId: number, content: string) {
+export async function addComment(
+  directoryId: number,
+  positionId: number,
+  content: string
+) {
   return prisma.comment.create({
-    data: { content, positionId },
+    data: { content, positionId, directoryId },
   });
 }
 

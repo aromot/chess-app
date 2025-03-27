@@ -21,14 +21,15 @@ const CommentHandler = () => {
     queryKey: ["comments", directory.id],
     queryFn: async () => {
       const response = await fetch(
-        "http://localhost:3000/comments/api?positionId=" + node.position.id
+        process.env.NEXT_PUBLIC_BACKEND_URL +
+          "/comments/api?positionId=" +
+          node.position.id
       );
       return await response.json();
     },
   });
 
   useEffect(() => {
-    // dbg.debug("request comments for position: " + node.position.id);
     refetch();
   }, [node]);
 
@@ -38,14 +39,13 @@ const CommentHandler = () => {
 
   if (error)
     return (
-      <GeneralError>
-        Une erreur s'est produite lors de la récupération du commentaire
-      </GeneralError>
+      <GeneralError>An error occurred while fetching the comment.</GeneralError>
     );
 
   if (data.comments.length === 0) {
     return (
       <FormAddComment
+        directory={directory}
         position={node.position}
         onSuccess={() => {
           refetch();
@@ -76,7 +76,7 @@ const CommentHandler = () => {
       <div className="bg-slate-800 p-2 rounded-md">
         <div>{comment.content}</div>
         <div className="text-xs mt-2">
-          ajouté le {formatDateTime(comment.createdAt)}
+          added on {formatDateTime(comment.createdAt)}
         </div>
         <div className="mt-2 flex">
           <div className="flex-1">
@@ -85,7 +85,7 @@ const CommentHandler = () => {
               variant="outline"
               onClick={() => setEditMode(true)}
             >
-              modifier
+              update
             </Button>
           </div>
           <div>

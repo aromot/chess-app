@@ -6,14 +6,15 @@ import { useAppForm } from "@/components/forms/useAppForm";
 import { CommentSchema, CommentFormValues } from "../../_schemas/schema";
 import InputTextArea from "@/components/forms/InputTextArea";
 import { createComment } from "../../_actions/actions";
-import { Position } from "@prisma/client";
+import { Directory, Position } from "@prisma/client";
 
 type Props = {
+  directory: Directory;
   position: Position;
   onSuccess?: () => void;
 };
 
-const FormAddComment = ({ onSuccess, position }: Props) => {
+const FormAddComment = ({ onSuccess, position, directory }: Props) => {
   const form = useAppForm({
     schema: CommentSchema,
     defaultValues: {
@@ -23,7 +24,7 @@ const FormAddComment = ({ onSuccess, position }: Props) => {
   });
 
   const onSubmit = async (values: CommentFormValues) => {
-    await createComment(position.id, values.content);
+    await createComment(directory.id, position.id, values.content);
     if (onSuccess) {
       onSuccess();
     }
@@ -32,15 +33,12 @@ const FormAddComment = ({ onSuccess, position }: Props) => {
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-1">
       <InputTextArea
-        // label="Votre commentaire"
         name="content"
-        placeholder="ici votre commentaire"
+        placeholder="write your comment here"
         rows={5}
       />
 
-      <ButtonSubmit loadingText="ajout en cours...">
-        Ajouter le commentaire
-      </ButtonSubmit>
+      <ButtonSubmit loadingText="adding...">Add comment</ButtonSubmit>
     </AppForm>
   );
 };

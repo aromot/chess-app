@@ -12,8 +12,6 @@ const DirectoryPage = async ({ params }: Props) => {
   const id = parseInt((await params).id);
   const directory = (await getDirectory(id)) as Directory;
 
-  console.log({ directory });
-
   return <EditDirectory directory={directory} />;
 };
 
