@@ -50,6 +50,10 @@ const Scores = () => {
       const card = document.getElementById("card-right");
       if (card) {
         createStarExplosion(card);
+        card.classList.add("tada");
+        window.setTimeout(() => {
+          card.classList.remove("tada");
+        }, 500);
       }
     }
 
