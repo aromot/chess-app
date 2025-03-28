@@ -6,42 +6,34 @@ import { CustomSquareProps } from "react-chessboard/dist/chessboard/types";
 const CustomSquareRenderer = ({
   children,
   square,
-  squareColor,
   style,
   ref,
 }: CustomSquareProps) => {
-  const { isTrainerAnswers, node, trainerAnswer } = useTraining();
+  const { isTrainerAnswers, node, trainerAnswer, isWaitingForUserMove } =
+    useTraining();
 
   const customStyles = { ...style };
 
+  // Allume la casse d'arrivée du dernier move correct de l'utilisateur.
   if (isTrainerAnswers && trainerAnswer && square === node.move?.squareTo) {
-    customStyles.background = "#16a34a";
+    customStyles.background = "#15803d";
     customStyles.boxShadow = "0px 0px 5px 5px #ffffffaa";
     customStyles.zIndex = 2;
     customStyles.position = "relative";
   }
 
+  // Allume les cases de départ de la position de départ et d'arrivée du move adverse.
+  if (
+    isWaitingForUserMove &&
+    node.move !== null &&
+    (square == node.move.squareFrom || square == node.move.squareTo)
+  ) {
+    customStyles.background = "#ee930a";
+  }
+
   return (
     <div ref={ref} style={customStyles}>
       {children}
-      {/* <div
-        style={{
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: 16,
-          width: 16,
-          borderTopLeftRadius: 6,
-          backgroundColor: squareColor === "black" ? "#064e3b" : "#312e81",
-          color: "#fff",
-          fontSize: 14,
-        }}
-      >
-        {square}
-      </div> */}
     </div>
   );
 };

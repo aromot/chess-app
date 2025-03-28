@@ -5,6 +5,7 @@ class TreeNode {
   move: Move | null;
   position: Position;
   children: TreeNode[];
+  trainingResult: boolean | undefined;
 
   // move peut-être null pour le TreeNode root de l'arbre (position initiale, donc pas encore de Move)
   // la position est la position résultante APRES le move.
