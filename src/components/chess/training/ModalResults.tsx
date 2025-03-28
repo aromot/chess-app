@@ -30,7 +30,7 @@ const chartConfig = {
 
 const ModalResults = () => {
   const router = useRouter();
-  const { reset, modalResultIsOpen, closeModalResult, directory, stats } =
+  const { reset, modalResultIsOpen, closeModalResult, directory, stats, tree } =
     useTraining();
   const total = stats.nbOk + stats.nbKo;
   const rightPerc = formatPercentage(stats.nbOk / total, 0);
@@ -38,6 +38,27 @@ const ModalResults = () => {
     { label: "Right moves", nb: stats.nbOk, fill: "var(--color-right)" },
     { label: "Wrong moves", nb: stats.nbKo, fill: "var(--color-wrong)" },
   ];
+
+  let nbRight = 0,
+    nbWrong = 0,
+    nbNodeNotTrained = 0,
+    nbVariantNotTrained = 0;
+  tree.traverseBF((node) => {
+    if (node.trainingResult === undefined) {
+      nbNodeNotTrained++;
+      if (node.isVariation()) {
+        nbVariantNotTrained++;
+      }
+    }
+    if (node.isTrainedRight()) {
+      nbRight++;
+    }
+    if (node.isTrainedWrong()) {
+      nbWrong++;
+    }
+  });
+
+  console.log({ nbRight, nbWrong, nbNodeNotTrained, nbVariantNotTrained });
 
   return (
     <Dialog open={modalResultIsOpen}>
@@ -97,6 +118,18 @@ const ModalResults = () => {
             </PieChart>
           </ChartContainer>
         </div>
+        {nbVariantNotTrained > 0 && (
+          <div className="mt-5">
+            {nbVariantNotTrained === 1 ? (
+              <>There are still 1 remaining variation not trained.</>
+            ) : (
+              <>
+                There are still {nbVariantNotTrained} remaining variations not
+                trained.
+              </>
+            )}
+          </div>
+        )}
         <div className="flex mt-5">
           <div className="flex-1">
             <Button

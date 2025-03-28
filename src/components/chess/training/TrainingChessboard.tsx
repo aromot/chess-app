@@ -28,7 +28,7 @@ const CustomSquareRenderer = ({
     node.move !== null &&
     (square == node.move.squareFrom || square == node.move.squareTo)
   ) {
-    customStyles.background = "#ee930a";
+    customStyles.background = "#eba133";
   }
 
   return (

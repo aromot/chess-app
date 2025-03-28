@@ -95,8 +95,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     const randomNode = getRandomItemFromArray(nodes) as TreeNode;
 
     safeGameMutate((game: Chess) => {
-      const move = game.move(randomNode.move?.san);
-      // console.log({ move });
+      game.move(randomNode.move?.san);
     });
     setNode(randomNode);
     setTrainingState(TrainingState.wait_user_move);
@@ -125,10 +124,17 @@ const TrainingProvider = ({ context, children }: Props) => {
       if (isMoveInDirectory) {
         statsCpy.nbOk++;
         const childNode = node.getChildBySan(move.san);
+        if (!childNode) {
+          throw new Error("Child node not found.");
+        }
+        childNode.trainingResult = true;
 
         const newTimeout = window.setTimeout(() => {
           if (childNode?.hasChildren()) {
-            makeRandomMove(childNode.children);
+            const notTrainedChildren = childNode.children.filter(
+              (node) => !node.isTrained()
+            );
+            makeRandomMove(notTrainedChildren);
           }
         }, OPPONENT_SPEED);
 
@@ -140,6 +146,10 @@ const TrainingProvider = ({ context, children }: Props) => {
         setWrongNodes((wrongNodes: TreeNode[]) => {
           wrongNodes.push(node);
           return wrongNodes;
+        });
+        setNode((node) => {
+          node.trainingResult = false;
+          return node;
         });
       }
 

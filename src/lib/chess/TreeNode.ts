@@ -67,6 +67,26 @@ class TreeNode {
   getChildrenSANs() {
     this.children.map((childNode: TreeNode) => childNode.move?.san);
   }
+
+  isVariation() {
+    if (!this.parentNode) {
+      return false;
+    }
+
+    return this.parentNode.children.length > 1;
+  }
+
+  isTrainedRight() {
+    return this.trainingResult === true;
+  }
+
+  isTrainedWrong() {
+    return this.trainingResult === false;
+  }
+
+  isTrained() {
+    return this.trainingResult !== undefined;
+  }
 }
 
 export default TreeNode;

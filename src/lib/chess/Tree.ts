@@ -36,10 +36,14 @@ class Tree {
   }
 
   // from: https://javascripttoday.com/blog/tree-data-structure-with-javascript/
-  traverseBF(fn) {
+  traverseBF(fn: (node: TreeNode) => void) {
     const arr = [this.root];
     while (arr.length) {
       const node = arr.shift();
+
+      if (!node) {
+        throw new Error("Node not found while traversing BF");
+      }
 
       arr.push(...node.children);
       fn(node);
