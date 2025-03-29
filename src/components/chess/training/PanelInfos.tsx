@@ -3,7 +3,6 @@ import Scores from "./Scores";
 import { SquarePlay, TriangleAlert } from "lucide-react";
 import { useEffect } from "react";
 import ModalResults from "./ModalResults";
-import Tree from "../common/Tree";
 
 const PanelInfos = () => {
   const {
@@ -13,6 +12,8 @@ const PanelInfos = () => {
     trainerAnswer,
     isEndOfBranch,
     openModalResult,
+    filteredLines,
+    depth,
   } = useTraining();
 
   useEffect(() => {
@@ -53,6 +54,22 @@ const PanelInfos = () => {
           <div className="h-5">{PGN}</div>
         </div>
       )}
+
+      <div className="mt-3 border-2">
+        {filteredLines.length === 0 && <>No more variation to train.</>}
+        {filteredLines.map((line, i) => {
+          const strLine = line.nodes
+            .map((node, i) =>
+              depth === i ? node.move.san + "*" : node.move.san
+            )
+            .join(" - ");
+          return (
+            <div key={i}>
+              {i + 1}. {line.trained ? "[T]" : ""} {strLine}
+            </div>
+          );
+        })}
+      </div>
 
       <ModalResults />
     </div>

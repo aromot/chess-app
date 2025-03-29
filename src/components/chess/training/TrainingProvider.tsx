@@ -38,6 +38,9 @@ interface TrainingContextInterface {
   modalResultIsOpen: boolean;
   openModalResult: () => void;
   closeModalResult: () => void;
+  filteredLines: Line[];
+  depth: number;
+  initLines: Line[];
 }
 
 const Context = createContext<TrainingContextInterface | undefined>(undefined);
@@ -61,6 +64,17 @@ const initStats: TypeStats = {
   nbKo: 0,
 };
 
+function traceLines(lines: Line[]) {
+  lines.forEach((line) => {
+    const sequence = line.nodes
+      .map((node) => {
+        return node.move?.san;
+      })
+      .join(" - ");
+    console.log(sequence);
+  });
+}
+
 const TrainingProvider = ({ context, children }: Props) => {
   const { directory, positionId } = context;
 
@@ -77,39 +91,32 @@ const TrainingProvider = ({ context, children }: Props) => {
   }, [directory, positionId]);
 
   const initGame = useMemo(() => {
-    return new Chess(initTree.posInit.fen);
+    const g = new Chess(initTree.posInit.fen);
+    return g;
   }, [initTree]);
 
+  // initLines contient TOUTES les lignes possibles (= toutes les variantes de l'arbre).
   const initLines = useMemo(() => {
-    const _lines: Line[] = [];
+    const lines: Line[] = [];
     initTree.traverseBF((node) => {
       if (!node.hasChildren()) {
         const nodes = node.getParentNodes();
+        dbg.debug("shift nodes (initLines)");
         nodes.shift(); // remove root node.
         const line = new Line(nodes.concat(node));
-        _lines.push(line);
+        lines.push(line);
       }
     });
 
-    _lines.forEach((line) => {
-      const sequence = line.nodes
-        .map((node) => {
-          return node.move?.san;
-        })
-        .join(" - ");
-      console.log({ sequence });
-    });
+    dbg.info("initLines :");
+    traceLines(lines);
 
-    return _lines;
+    return lines;
   }, [initTree]);
 
-  // const initPath = useMemo(() => {
-  //   return getRandomItemFromArray(initLines);
-  // }, [initLines]);
-
   const [tree] = useState<Tree>(initTree);
+  const [depth, setDepth] = useState(0);
   const [filteredLines, setFilteredLines] = useState<Line[]>(initLines);
-  // const [path, setPath] = useState<TreeNode[]>(initPath);
   const [node, setNode] = useState<TreeNode>(tree.root);
   const [game, setGame] = useState<Chess>(initGame);
   const [trainingState, setTrainingState] = useState<TrainingState>(
@@ -152,7 +159,88 @@ const TrainingProvider = ({ context, children }: Props) => {
     setModalResultIsOpen(false);
   }
 
+  const filterLines = useCallback(
+    function (san: string) {
+      dbg.debug(
+        "Start filterLines: parmi toutes les lignes ci-dessous, on ne va prendre que celles qui commencent par " +
+          san
+      );
+      traceLines(filteredLines);
+      return filteredLines.filter((line) => {
+        return line.nodes[0].move?.san === san;
+      });
+    },
+    [filteredLines]
+  );
+
+  const makeOpponentMove = useCallback(
+    (availLines: Line[], depth: number) => {
+      console.log(
+        "%c----------------makeOpponentMove (" + depth + ")----------------",
+        "background: #0ff; color: #000; font-size: 15px"
+      );
+
+      dbg.info(
+        "availLines (after timeout), voici les lignes dispos dans notre embranchement :"
+      );
+      traceLines(availLines);
+
+      const randomLine = getRandomItemFromArray<Line>(
+        availLines.filter((line) => !line.trained)
+      );
+      const currNode = randomLine.nodes[depth];
+
+      dbg.info("randomLine selected :");
+      traceLines([randomLine]);
+
+      let newFilteredLines = availLines.filter((line) => {
+        return line.nodes[depth].move?.san === currNode.move.san;
+      });
+
+      if (newFilteredLines.length === 1) {
+        //   console.log(
+        //     "newFilteredLines[0].nodes.length:",
+        //     newFilteredLines[0].nodes.length,
+        //     "depth: " + depth
+        //   );
+
+        //   if (depth === newFilteredLines[0].nodes.length) {
+        newFilteredLines[0].trained = true;
+        //   }
+      }
+
+      // let newFilteredLines = filterLines(node0.move.san);
+
+      // dbg.debug("shift nodes (after setTimeout)");
+      // newFilteredLines.forEach((line) => {
+      //   line.nodes.shift();
+      // });
+      newFilteredLines = newFilteredLines.filter(
+        (line) => line.nodes.length > depth + 1
+      );
+
+      if (newFilteredLines.length === 1) {
+        newFilteredLines[0].trained = true;
+      }
+
+      setDepth(depth + 1);
+      setFilteredLines(newFilteredLines);
+      safeGameMutate((game: Chess) => {
+        console.log("node0.move.san:", currNode.move.san);
+        game.move(currNode.move.san);
+      });
+      setNode(currNode);
+      setTrainingState(TrainingState.wait_user_move);
+      clearTimeout(currentTimeout);
+    },
+    [currentTimeout]
+  );
+
   function onDrop(sourceSquare: Square, targetSquare: Square, piece: Piece) {
+    console.log(
+      "%c----------------ON DROP (" + depth + ")----------------",
+      "background: #f00; color: #fff; font-size: 15px"
+    );
     try {
       const statsCpy = cloneDeep(stats);
       const gameCpy = cloneDeep(game);
@@ -163,26 +251,63 @@ const TrainingProvider = ({ context, children }: Props) => {
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      const isMoveInDirectory = node.hasMove(move.san);
+      // const isMoveInDirectory = node.hasMove(move.san);
+      // let newFilteredLines = filterLines(move.san);
+
+      dbg.debug(
+        "parmi toutes les lignes ci-dessous, on ne va prendre que celles qui ont le move " +
+          move.san +
+          " à l'index " +
+          depth
+      );
+      traceLines(filteredLines);
+      let newFilteredLines = filteredLines.filter((line) => {
+        return line.nodes[depth].move?.san === move.san;
+      });
+
+      if (newFilteredLines.length === 1) {
+        //   if (depth === newFilteredLines[0].nodes.length) {
+        newFilteredLines[0].trained = true;
+        //   }
+      }
+
+      dbg.info("[output after filter move san] newFilteredLines :");
+      traceLines(newFilteredLines);
+
+      const isMoveInDirectory = newFilteredLines.length > 0;
 
       if (isMoveInDirectory) {
         statsCpy.nbOk++;
-        const childNode = node.getChildBySan(move.san);
+        // const childNode = node.getChildBySan(move.san);
+        const childNode = newFilteredLines[0].nodes[depth];
+        // dbg.debug("shift nodes (isMoveInDirectory = true)");
+        // newFilteredLines.forEach((line) => {
+        //   line.nodes.shift();
+        // });
+        newFilteredLines = newFilteredLines.filter(
+          (line) => line.nodes.length > depth + 1
+        );
+        dbg.info("[output after filter line length] newFilteredLines :");
+
+        traceLines(newFilteredLines);
+
         if (!childNode) {
           throw new Error("Child node not found.");
         }
         childNode.trainingResult = true;
 
+        if (newFilteredLines.length === 1) {
+          newFilteredLines[0].trained = true;
+        }
+
+        setDepth(depth + 1);
+        setFilteredLines(newFilteredLines);
+        setNode(childNode as TreeNode);
         const newTimeout = window.setTimeout(() => {
-          if (childNode?.hasChildren()) {
-            const notTrainedChildren = childNode.children.filter(
-              (node) => !node.isTrained()
-            );
-            makeRandomMove(notTrainedChildren);
+          if (newFilteredLines.length > 0) {
+            makeOpponentMove(newFilteredLines, depth + 1);
           }
         }, OPPONENT_SPEED);
-
-        setNode(childNode as TreeNode);
         setCurrentTimeout(newTimeout);
       } else {
         statsCpy.nbKo++;
@@ -210,6 +335,9 @@ const TrainingProvider = ({ context, children }: Props) => {
   }
 
   const reset = () => {
+    setDepth(0);
+    // setFilteredLines(initLines.filter((line) => !line.trained));
+    setFilteredLines(initLines);
     safeGameMutate((game: Chess) => {
       game.reset();
     });
@@ -238,6 +366,9 @@ const TrainingProvider = ({ context, children }: Props) => {
     modalResultIsOpen,
     openModalResult,
     closeModalResult,
+    filteredLines,
+    depth,
+    initLines,
   };
 
   return <Context value={ctx}>{children}</Context>;

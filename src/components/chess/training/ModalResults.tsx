@@ -38,6 +38,7 @@ const ModalResults = () => {
     stats,
     tree,
     userColor,
+    initLines,
   } = useTraining();
   const total = stats.nbOk + stats.nbKo;
   const rightPerc = formatPercentage(stats.nbOk / total, 0);
@@ -45,6 +46,10 @@ const ModalResults = () => {
     { label: "Right moves", nb: stats.nbOk, fill: "var(--color-right)" },
     { label: "Wrong moves", nb: stats.nbKo, fill: "var(--color-wrong)" },
   ];
+
+  const nbRemainingVariations = initLines.filter(
+    (line) => !line.trained
+  ).length;
 
   let nbRight = 0,
     nbWrong = 0,
@@ -147,14 +152,14 @@ const ModalResults = () => {
             </PieChart>
           </ChartContainer>
         </div>
-        {opponentNbVariationNotTrained > 0 && (
+        {nbRemainingVariations > 0 && (
           <div className="mt-5">
-            {opponentNbVariationNotTrained === 1 ? (
+            {nbRemainingVariations === 1 ? (
               <>There are still 1 remaining variation not trained.</>
             ) : (
               <>
-                There are still {opponentNbVariationNotTrained} remaining
-                variations not trained.
+                There are still {nbRemainingVariations} remaining variations not
+                trained.
               </>
             )}
           </div>
