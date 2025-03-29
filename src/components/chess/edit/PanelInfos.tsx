@@ -1,9 +1,10 @@
 import { useChessboard } from "./EditChessboardProvider";
 import CommentHandler from "./CommentHandler";
 import EditableTreeGraph from "./EditableTreeGraph";
+import Tree from "../common/Tree";
 
 const PanelInfos = () => {
-  const { directory, game } = useChessboard();
+  const { game } = useChessboard();
 
   const PGN = game.pgn();
   return (
@@ -17,9 +18,9 @@ const PanelInfos = () => {
 
       <div className="mt-3">
         <EditableTreeGraph />
-        {/* <div className="border-slate-500 rounded-md border-2 p-2">
+        <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
-        </div> */}
+        </div>
       </div>
 
       {/* <div>History :</div>

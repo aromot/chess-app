@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Button } from "../../ui/button";
 import { useChessboard } from "../edit/EditChessboardProvider";
 import Node from "@/lib/chess/TreeNode";
@@ -19,7 +20,14 @@ const TreeNode = ({ node }: { node: Node }) => {
                 variant="outline"
                 size="sm"
                 className={
-                  isCurrent ? "px-2 rounded-sm bg-slate-700 font-bold" : "px-2"
+                  isCurrent
+                    ? "px-2 rounded-sm bg-slate-600 font-bold border-2 border-b-white"
+                    : clsx(
+                        "px-2",
+                        childNode.move?.color === "w"
+                          ? "bg-white text-black"
+                          : "bg-black"
+                      )
                 }
                 onClick={() => onClickGoToNode(childNode)}
               >

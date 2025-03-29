@@ -3,6 +3,7 @@ import Scores from "./Scores";
 import { SquarePlay, TriangleAlert } from "lucide-react";
 import { useEffect } from "react";
 import ModalResults from "./ModalResults";
+import Tree from "../common/Tree";
 
 const PanelInfos = () => {
   const {

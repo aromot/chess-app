@@ -19,6 +19,7 @@ const CommentHandler = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const { isFetching, error, data, refetch } = useQuery({
     queryKey: ["comments", directory.id],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await fetch(
         process.env.NEXT_PUBLIC_BACKEND_URL +

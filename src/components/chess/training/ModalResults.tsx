@@ -30,8 +30,15 @@ const chartConfig = {
 
 const ModalResults = () => {
   const router = useRouter();
-  const { reset, modalResultIsOpen, closeModalResult, directory, stats, tree } =
-    useTraining();
+  const {
+    reset,
+    modalResultIsOpen,
+    closeModalResult,
+    directory,
+    stats,
+    tree,
+    userColor,
+  } = useTraining();
   const total = stats.nbOk + stats.nbKo;
   const rightPerc = formatPercentage(stats.nbOk / total, 0);
   const data = [
@@ -41,24 +48,46 @@ const ModalResults = () => {
 
   let nbRight = 0,
     nbWrong = 0,
-    nbNodeNotTrained = 0,
-    nbVariantNotTrained = 0;
+    opponentNbNodeNotTrained = 0,
+    userNbVariationNotTrained = 0,
+    opponentNbVariationNotTrained = 0;
   tree.traverseBF((node) => {
-    if (node.trainingResult === undefined) {
-      nbNodeNotTrained++;
-      if (node.isVariation()) {
-        nbVariantNotTrained++;
+    // ici c'est le noeud root, on le skip pour les stats (il est tard... j'ai bon ?).
+    if (!node.move) {
+      return;
+    }
+
+    // Si c'est un move de l'utilisateur,
+    // on veut juste savoir si on a bon ou pas.
+    if (node.move.color === userColor) {
+      if (node.isTrainedRight()) {
+        nbRight++;
       }
-    }
-    if (node.isTrainedRight()) {
-      nbRight++;
-    }
-    if (node.isTrainedWrong()) {
-      nbWrong++;
+      if (node.isTrainedWrong()) {
+        nbWrong++;
+      }
+      if (!node.isTrained() && node.isVariation()) {
+        userNbVariationNotTrained++;
+      }
+    } else {
+      // Si c'est un move de l'adversaire,
+      // on veut savoir si on l'a déjà travaillé ou pas.
+      if (!node.isTrained()) {
+        opponentNbNodeNotTrained++;
+        if (node.isVariation()) {
+          opponentNbVariationNotTrained++;
+        }
+      }
     }
   });
 
-  console.log({ nbRight, nbWrong, nbNodeNotTrained, nbVariantNotTrained });
+  console.log({
+    nbRight,
+    nbWrong,
+    opponentNbNodeNotTrained,
+    userNbVariationNotTrained,
+    opponentNbVariationNotTrained,
+  });
 
   return (
     <Dialog open={modalResultIsOpen}>
@@ -118,14 +147,14 @@ const ModalResults = () => {
             </PieChart>
           </ChartContainer>
         </div>
-        {nbVariantNotTrained > 0 && (
+        {opponentNbVariationNotTrained > 0 && (
           <div className="mt-5">
-            {nbVariantNotTrained === 1 ? (
+            {opponentNbVariationNotTrained === 1 ? (
               <>There are still 1 remaining variation not trained.</>
             ) : (
               <>
-                There are still {nbVariantNotTrained} remaining variations not
-                trained.
+                There are still {opponentNbVariationNotTrained} remaining
+                variations not trained.
               </>
             )}
           </div>
