@@ -8,6 +8,18 @@ import defaultBoardStyle from "../common/defaultBoardStyle";
 import { formatUrl } from "@/lib/helpers";
 import { Color } from "chess.js";
 
+const GameTurn = () => {
+  const { game } = useChessboard();
+
+  return game.turn() === "b" ? (
+    <div className="bg-black rounded-full border-white border-2 w-8 h-8">
+      &nbsp;
+    </div>
+  ) : (
+    <div className="bg-white rounded-full w-8 h-8">&nbsp;</div>
+  );
+};
+
 const EditableChessboard = () => {
   const {
     game,
@@ -26,7 +38,7 @@ const EditableChessboard = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-5">
+      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-5 pr-10 relative">
         <Chessboard
           id="chessboard"
           position={game.fen()}
@@ -36,6 +48,9 @@ const EditableChessboard = () => {
           areArrowsAllowed={true}
           // customArrows={[["e2", "e4", "#444444"]]}
         />
+        <div className="absolute top-5 right-0">
+          <GameTurn />
+        </div>
       </div>
       <div className="flex px-5">
         <div className="flex-1">
