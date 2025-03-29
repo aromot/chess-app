@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
+import { Color } from "chess.js";
 
 export async function insertMove(
   directoryId: number,
+  color: Color,
   san: string,
   squareFrom: string,
   squareTo: string,
@@ -11,6 +13,7 @@ export async function insertMove(
   const move = await prisma.move.create({
     data: {
       directoryId,
+      color,
       san,
       squareFrom,
       squareTo,

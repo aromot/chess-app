@@ -76,8 +76,6 @@ const EditChessboardProvider = ({ context, children }: Props) => {
   const [game, setGame] = useState<Chess>(initGame);
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
-  // const [position, setPosition] = useState<Position>(tree.posInit);
-  // const [lastMove, setLastMove] = useState<Move | null>(null);
 
   const openModalDeleteBranch = (move: Move) => {
     setMoveDelete(move);
@@ -116,6 +114,7 @@ const EditChessboardProvider = ({ context, children }: Props) => {
       } else {
         const [newPosition, newMove] = await addMove(
           directory.id,
+          move.color,
           move.san,
           move.after,
           move.from,

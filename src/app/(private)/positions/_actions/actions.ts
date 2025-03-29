@@ -2,9 +2,11 @@
 
 import { insertMove } from "@/app/(private)/moves/_db/db-queries";
 import { addPosition } from "../_db/db-queries";
+import { Color } from "chess.js";
 
 export async function addMove(
   directoryId: number,
+  color: Color,
   san: string,
   fen: string,
   from: string,
@@ -29,6 +31,7 @@ export async function addMove(
 
     const move = await insertMove(
       directoryId,
+      color,
       san,
       from,
       to,

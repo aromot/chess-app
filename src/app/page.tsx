@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getDirectoryByName } from "./(private)/directories/_db/db-queries";
 import ChessboardDemo from "@/components/chess/home/ChessboardDemo";
 import { Directory } from "@prisma/client";
+import GeneralError from "@/components/errors/GeneralError";
 
 export default async function Home() {
   const session = await auth();
@@ -20,7 +21,11 @@ export default async function Home() {
   return (
     <div className="flex h-screen">
       <div className="p-20 w-[48%]">
-        <ChessboardDemo directory={directory as Directory} />
+        {directory ? (
+          <ChessboardDemo directory={directory as Directory} />
+        ) : (
+          <GeneralError>Error while loading the chessboard.</GeneralError>
+        )}
       </div>
       <div className="flex-1 py-10 text-white pr-20 mt-10">
         <div className="flex items-end gap-10">

@@ -46,6 +46,7 @@ model Move {
   san            String // Format SAN (ex: "e4")
   squareFrom     String
   squareTo       String
+  color          String // "w" | "b"
   evaluation     Json? // Données Stockfish (depth, cp, mate, etc.)
   position       Position  @relation(fields: [positionId], references: [id])
   positionId     Int
