@@ -7,6 +7,7 @@ import { URLS } from "@/app/urls";
 import defaultBoardStyle from "../common/defaultBoardStyle";
 import { formatUrl } from "@/lib/helpers";
 import { Color } from "chess.js";
+import clsx from "clsx";
 
 const GameTurn = () => {
   const { game } = useChessboard();
@@ -48,7 +49,13 @@ const EditableChessboard = () => {
           areArrowsAllowed={true}
           // customArrows={[["e2", "e4", "#444444"]]}
         />
-        <div className="absolute top-5 right-0">
+        <div
+          className={clsx(
+            "absolute",
+            game.turn() === "b" ? "top-5" : "bottom-10",
+            "right-0"
+          )}
+        >
           <GameTurn />
         </div>
       </div>
