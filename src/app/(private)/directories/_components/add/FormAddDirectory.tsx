@@ -20,6 +20,7 @@ import AppForm from "@/components/forms/AppForm";
 import FormInput from "@/components/forms/FormInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { createDirectory } from "../../_actions/actions";
+import { useSession } from "next-auth/react";
 
 // Définir les props attendues par le composant
 interface FormAddDirectoryProps {
@@ -27,18 +28,22 @@ interface FormAddDirectoryProps {
 }
 
 export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
+  const session = useSession();
   const form = useAppForm({
     schema: DirectorySchema,
     defaultValues: {
       name: "",
       white: true,
       fenPosInit: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      userId: session.data.user.id,
     },
   });
   const onSubmit = async (data: DirectoryFormValues) => {
-    await createDirectory(data.name, data.white, data.fenPosInit);
+    await createDirectory(data.name, data.white, data.fenPosInit, data.userId);
     onSuccess(); // Fermer le dialogue après un ajout réussi
   };
+
+  console.log({ session });
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-4">

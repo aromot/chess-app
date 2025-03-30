@@ -1,8 +1,18 @@
 import { prisma } from "@/lib/db";
 
 // Récupérer tous les directories
-export async function getDirectories() {
+type getDirectoriesProps = {
+  userId?: string;
+};
+export async function getDirectories(options: getDirectoriesProps = {}) {
+  const where: getDirectoriesProps = {};
+
+  if (options.userId) {
+    where.userId = options.userId;
+  }
+
   const directories = await prisma.directory.findMany({
+    where,
     orderBy: {
       createdAt: "asc", // Tri par date de création croissante
     },
@@ -15,12 +25,14 @@ export async function addDirectory(data: {
   name: string;
   white: boolean;
   fenPosInit: string;
+  userId: string;
 }) {
   const directory = await prisma.directory.create({
     data: {
       name: data.name,
       white: data.white,
       fenPosInit: data.fenPosInit,
+      userId: data.userId,
       positions: {
         create: [
           {

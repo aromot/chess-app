@@ -53,6 +53,8 @@ export async function checkAuth() {
   if (!session?.user) {
     redirect("/");
   }
+
+  return session;
 }
 
 export async function saltAndHashPassword(password: string): Promise<string> {

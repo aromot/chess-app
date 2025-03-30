@@ -10,8 +10,8 @@ import ModalDeleteDirectory from "../directories/_components/delete/ModalDeleteD
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const DashboardPage = async () => {
-  await checkAuth();
-  const directories = await getDirectories();
+  const session = await checkAuth();
+  const directories = await getDirectories({ userId: session.user.id });
 
   return (
     <div className="pt-3 px-2">
@@ -30,7 +30,7 @@ const DashboardPage = async () => {
             data={directories}
             noDataEntry={
               <div className="py-5 space-y-5">
-                <div>No repertoire saved for the moment</div>
+                <div>You don't have repertoire yet...</div>
                 <ButtonAddDirectory />
               </div>
             }
