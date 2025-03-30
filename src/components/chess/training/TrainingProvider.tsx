@@ -3,7 +3,7 @@ import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
 import { dbg, getRandomItemFromArray } from "@/lib/helpers";
 import { Directory } from "@prisma/client";
-import { Chess, Color } from "chess.js";
+import { Chess } from "chess.js";
 import { cloneDeep } from "lodash";
 import {
   createContext,
@@ -34,7 +34,7 @@ interface TrainingContextInterface {
   trainerAnswer: boolean | undefined;
   stats: TypeStats;
   wrongNodes: TreeNode[];
-  reset: () => void;
+  reset: (flushTrainedLines?: boolean) => void;
   modalResultIsOpen: boolean;
   openModalResult: () => void;
   closeModalResult: () => void;
@@ -101,7 +101,6 @@ const TrainingProvider = ({ context, children }: Props) => {
     initTree.traverseBF((node) => {
       if (!node.hasChildren()) {
         const nodes = node.getParentNodes();
-        dbg.debug("shift nodes (initLines)");
         nodes.shift(); // remove root node.
         const line = new Line(nodes.concat(node));
         lines.push(line);
@@ -174,7 +173,7 @@ const TrainingProvider = ({ context, children }: Props) => {
   );
 
   const makeOpponentMove = useCallback(
-    (availLines: Line[], depth: number) => {
+    (availLines: Line[], depth: number, gameCpy: Chess) => {
       console.log(
         "%c----------------makeOpponentMove (" + depth + ")----------------",
         "background: #0ff; color: #000; font-size: 15px"
@@ -185,51 +184,63 @@ const TrainingProvider = ({ context, children }: Props) => {
       );
       traceLines(availLines);
 
-      const randomLine = getRandomItemFromArray<Line>(
-        availLines.filter((line) => !line.trained)
-      );
-      const currNode = randomLine.nodes[depth];
+      // const gameCpy = cloneDeep(game);
 
+      const trainedAvailLines = availLines.filter((line) => !line.trained);
+
+      const randomLine = getRandomItemFromArray<Line>(
+        trainedAvailLines.length === 0 ? availLines : trainedAvailLines
+      );
       dbg.info("randomLine selected :");
       traceLines([randomLine]);
 
-      let newFilteredLines = availLines.filter((line) => {
-        return line.nodes[depth].move?.san === currNode.move.san;
-      });
-
-      if (newFilteredLines.length === 1) {
-        //   console.log(
-        //     "newFilteredLines[0].nodes.length:",
-        //     newFilteredLines[0].nodes.length,
-        //     "depth: " + depth
-        //   );
-
-        //   if (depth === newFilteredLines[0].nodes.length) {
-        newFilteredLines[0].trained = true;
-        //   }
+      if (!randomLine) {
+        alert("No more variation to train.");
+        clearTimeout(currentTimeout);
+        return;
       }
 
-      // let newFilteredLines = filterLines(node0.move.san);
+      const newNode = randomLine.nodes[depth];
 
-      // dbg.debug("shift nodes (after setTimeout)");
-      // newFilteredLines.forEach((line) => {
-      //   line.nodes.shift();
-      // });
+      if (!newNode) {
+        throw new Error("new node not found (computer turn).");
+      }
+
+      console.log("gameCpy history():", gameCpy.history());
+
+      gameCpy.move(newNode.move.san);
+
+      let newFilteredLines = availLines.filter((line) => {
+        return line.matchesGame(gameCpy, depth);
+      });
+
+      if (!newNode.hasChildren()) {
+        randomLine.trained = true;
+
+        setFilteredLines(newFilteredLines);
+        setNode(newNode);
+        setGame(gameCpy);
+        setTrainingState(TrainingState.wait_user_move);
+        clearTimeout(currentTimeout);
+
+        openModalResult();
+        return;
+      }
+
       newFilteredLines = newFilteredLines.filter(
         (line) => line.nodes.length > depth + 1
       );
-
-      if (newFilteredLines.length === 1) {
-        newFilteredLines[0].trained = true;
-      }
+      dbg.info("[output after filter line length] newFilteredLines :");
+      traceLines(newFilteredLines);
 
       setDepth(depth + 1);
       setFilteredLines(newFilteredLines);
-      safeGameMutate((game: Chess) => {
-        console.log("node0.move.san:", currNode.move.san);
-        game.move(currNode.move.san);
-      });
-      setNode(currNode);
+      // safeGameMutate((game: Chess) => {
+      //   // console.log("node0.move.san:", currNode.move.san);
+      //   game.move(newNode.move.san);
+      // });
+      setGame(gameCpy);
+      setNode(newNode);
       setTrainingState(TrainingState.wait_user_move);
       clearTimeout(currentTimeout);
     },
@@ -251,9 +262,6 @@ const TrainingProvider = ({ context, children }: Props) => {
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      // const isMoveInDirectory = node.hasMove(move.san);
-      // let newFilteredLines = filterLines(move.san);
-
       dbg.debug(
         "parmi toutes les lignes ci-dessous, on ne va prendre que celles qui ont le move " +
           move.san +
@@ -261,51 +269,50 @@ const TrainingProvider = ({ context, children }: Props) => {
           depth
       );
       traceLines(filteredLines);
-      let newFilteredLines = filteredLines.filter((line) => {
-        return line.nodes[depth].move?.san === move.san;
+
+      let candidateLines = filteredLines.filter((line: Line) => {
+        return line.matchesGame(gameCpy, depth);
       });
 
-      if (newFilteredLines.length === 1) {
-        //   if (depth === newFilteredLines[0].nodes.length) {
-        newFilteredLines[0].trained = true;
-        //   }
-      }
+      dbg.info("[output after filter move san] candidateLines :");
+      traceLines(candidateLines);
 
-      dbg.info("[output after filter move san] newFilteredLines :");
-      traceLines(newFilteredLines);
-
-      const isMoveInDirectory = newFilteredLines.length > 0;
+      const isMoveInDirectory = candidateLines.length > 0;
 
       if (isMoveInDirectory) {
         statsCpy.nbOk++;
-        // const childNode = node.getChildBySan(move.san);
-        const childNode = newFilteredLines[0].nodes[depth];
-        // dbg.debug("shift nodes (isMoveInDirectory = true)");
-        // newFilteredLines.forEach((line) => {
-        //   line.nodes.shift();
-        // });
-        newFilteredLines = newFilteredLines.filter(
+        const newNode = candidateLines[0].nodes[depth];
+
+        if (!newNode) {
+          throw new Error("new node not found (user turn).");
+        }
+        newNode.trainingResult = true;
+
+        if (!newNode.hasChildren()) {
+          candidateLines[0].trained = true;
+          setFilteredLines(candidateLines);
+          setNode(newNode);
+          setStats(statsCpy);
+          setGame(gameCpy);
+          setTrainerAnswer(isMoveInDirectory);
+          setTrainingState(TrainingState.trainer_answers);
+
+          openModalResult();
+          return;
+        }
+
+        candidateLines = candidateLines.filter(
           (line) => line.nodes.length > depth + 1
         );
         dbg.info("[output after filter line length] newFilteredLines :");
-
-        traceLines(newFilteredLines);
-
-        if (!childNode) {
-          throw new Error("Child node not found.");
-        }
-        childNode.trainingResult = true;
-
-        if (newFilteredLines.length === 1) {
-          newFilteredLines[0].trained = true;
-        }
+        traceLines(candidateLines);
 
         setDepth(depth + 1);
-        setFilteredLines(newFilteredLines);
-        setNode(childNode as TreeNode);
+        setFilteredLines(candidateLines);
+        setNode(newNode as TreeNode);
         const newTimeout = window.setTimeout(() => {
-          if (newFilteredLines.length > 0) {
-            makeOpponentMove(newFilteredLines, depth + 1);
+          if (candidateLines.length > 0) {
+            makeOpponentMove(candidateLines, depth + 1, gameCpy);
           }
         }, OPPONENT_SPEED);
         setCurrentTimeout(newTimeout);
@@ -334,9 +341,11 @@ const TrainingProvider = ({ context, children }: Props) => {
     return true;
   }
 
-  const reset = () => {
+  const reset = (flushTrainedLines: boolean = false) => {
     setDepth(0);
-    // setFilteredLines(initLines.filter((line) => !line.trained));
+    if (flushTrainedLines) {
+      initLines.forEach((line) => (line.trained = false));
+    }
     setFilteredLines(initLines);
     safeGameMutate((game: Chess) => {
       game.reset();

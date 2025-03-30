@@ -91,6 +91,14 @@ export function getRandomItemFromArray<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+export function arraysAreEqual(arr1: unknown[], arr2: unknown[]) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
+
 export function formatPercentage(perc: number, precision: number = 2) {
   return new Intl.NumberFormat("en-US", {
     style: "percent",

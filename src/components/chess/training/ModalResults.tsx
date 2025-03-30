@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Progress } from "@/components/ui/progress";
 const chartConfig = {
   right: {
     color: "#15803d",
@@ -94,6 +95,16 @@ const ModalResults = () => {
     opponentNbVariationNotTrained,
   });
 
+  const progress = Math.round(
+    ((initLines.length - nbRemainingVariations) / initLines.length) * 100
+  );
+
+  console.log({
+    progress,
+    nbRemainingVariations,
+    initLines_length: initLines.length,
+  });
+
   return (
     <Dialog open={modalResultIsOpen}>
       <DialogContent hideCloseButton={true}>
@@ -152,7 +163,7 @@ const ModalResults = () => {
             </PieChart>
           </ChartContainer>
         </div>
-        {nbRemainingVariations > 0 && (
+        {nbRemainingVariations > 0 ? (
           <div className="mt-5">
             {nbRemainingVariations === 1 ? (
               <>There are still 1 remaining variation not trained.</>
@@ -163,12 +174,19 @@ const ModalResults = () => {
               </>
             )}
           </div>
+        ) : (
+          <div className="mt-5">Your completed your repertoire.</div>
         )}
+
+        <div className="my-3">
+          <Progress value={progress} />
+        </div>
+
         <div className="flex mt-5">
           <div className="flex-1">
             <Button
               onClick={() => {
-                reset();
+                reset(nbRemainingVariations === 0);
                 closeModalResult();
               }}
             >

@@ -16,11 +16,11 @@ const PanelInfos = () => {
     depth,
   } = useTraining();
 
-  useEffect(() => {
-    if (isEndOfBranch) {
-      openModalResult();
-    }
-  }, [isEndOfBranch, openModalResult]);
+  // useEffect(() => {
+  //   if (isEndOfBranch) {
+  //     openModalResult();
+  //   }
+  // }, [isEndOfBranch, openModalResult]);
 
   const PGN = game.pgn();
 
@@ -55,17 +55,22 @@ const PanelInfos = () => {
         </div>
       )}
 
-      <div className="mt-3 border-2">
+      <div className="mt-3 border-2 p-3">
         {filteredLines.length === 0 && <>No more variation to train.</>}
         {filteredLines.map((line, i) => {
-          const strLine = line.nodes
-            .map((node, i) =>
-              depth === i ? node.move.san + "*" : node.move.san
-            )
-            .join(" - ");
           return (
-            <div key={i}>
-              {i + 1}. {line.trained ? "[T]" : ""} {strLine}
+            <div key={i} className="flex gap-3 mb-1">
+              <span>{i + 1}.</span>
+              {line.nodes.map((node, i) =>
+                depth === i ? (
+                  <span className="bg-yellow-400 text-black" key={i}>
+                    {node.move.san}
+                  </span>
+                ) : (
+                  <span key={i}>{node.move.san}</span>
+                )
+              )}
+              {line.trained && <span className="bg-purple-800">[T]</span>}
             </div>
           );
         })}
