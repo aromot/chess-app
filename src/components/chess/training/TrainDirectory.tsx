@@ -6,6 +6,7 @@ import TrainingChessboard from "./TrainingChessboard";
 import PanelInfos from "./PanelInfos";
 import { useSearchParams } from "next/navigation";
 import "./train.css";
+import BtnEditRepertoire from "./buttons/BtnEditRepertoire";
 
 const TrainDirectory = ({ directory }: { directory: Directory }) => {
   const params = useSearchParams();
@@ -14,7 +15,12 @@ const TrainDirectory = ({ directory }: { directory: Directory }) => {
   return (
     <TrainingProvider context={{ directory, positionId }}>
       <div className="h-screen bg-zinc-900">
-        <div className="text-3xl px-5 pt-3">{directory.name}</div>
+        <div className="flex px-5 pt-3 gap-3 items-center">
+          <div className="text-3xl ">{directory.name}</div>
+          <div>
+            <BtnEditRepertoire size="sm" />
+          </div>
+        </div>
         <div className="flex">
           <TrainingChessboard />
           <div className="flex-1 max-w-[48rem]">
