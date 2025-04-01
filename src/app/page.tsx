@@ -36,7 +36,7 @@ export default async function Home() {
             alt="Chess App"
           />
           <div>
-            <div className="text-7xl">Chess App</div>
+            <div className="text-7xl">Billie Chess</div>
             <div className="text mt-3" style={{ letterSpacing: ".5rem" }}>
               Prepare your openings
             </div>
