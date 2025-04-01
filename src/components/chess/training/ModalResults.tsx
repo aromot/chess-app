@@ -34,7 +34,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const RepertoireProgress = ({ progress }: { progress: number }) => {
-  const { reset, closeModalResult, nbRemainingVariations } = useTraining();
+  const { reset, closeModals, nbRemainingVariations } = useTraining();
   const [barProgress, setBarProgress] = useState(0);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const RepertoireProgress = ({ progress }: { progress: number }) => {
             size="lg"
             onClick={() => {
               reset();
-              closeModalResult();
+              closeModals();
             }}
             className="text-2xl"
           >
@@ -71,12 +71,8 @@ const RepertoireProgress = ({ progress }: { progress: number }) => {
 };
 
 const ModalResults = () => {
-  const router = useRouter();
   const {
-    reset,
     modalResultIsOpen,
-    closeModalResult,
-    directory,
     stats,
     tree,
     userColor,

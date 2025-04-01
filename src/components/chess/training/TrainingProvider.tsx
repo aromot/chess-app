@@ -39,11 +39,10 @@ interface TrainingContextInterface {
   // Modal Results
   modalResultIsOpen: boolean;
   openModalResult: () => void;
-  closeModalResult: () => void;
+  closeModals: () => void;
 
   // Modal Fix results
   modalFixResultIsOpen: boolean;
-  closeModalFixResult: () => void;
 
   filteredLines: Line[];
   depth: number;
@@ -155,15 +154,13 @@ const TrainingProvider = ({ context, children }: Props) => {
   function openModalResult() {
     setModalResultIsOpen(true);
   }
-  function closeModalResult() {
+  function closeModals() {
     setModalResultIsOpen(false);
+    setModalFixResultIsOpen(false);
   }
 
   function openModalFixResult() {
     setModalFixResultIsOpen(true);
-  }
-  function closeModalFixResult() {
-    setModalFixResultIsOpen(false);
   }
 
   const makeOpponentMove = useCallback(
@@ -243,7 +240,7 @@ const TrainingProvider = ({ context, children }: Props) => {
 
   function backToTraining() {
     setFixMode(false);
-    closeModalFixResult();
+    closeModals();
     reset();
   }
 
@@ -435,7 +432,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     }
 
     gameCpy.load(nodeToFix.position.fen);
-    closeModalResult();
+    closeModals();
 
     setDepth(nodeToFix.depth);
     setFilteredLines(initLines);
@@ -460,7 +457,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     }
 
     gameCpy.load(nodeToFix.position.fen);
-    closeModalFixResult();
+    closeModals();
 
     setDepth(nodeToFix.depth);
     setFilteredLines(initLines);
@@ -489,14 +486,13 @@ const TrainingProvider = ({ context, children }: Props) => {
     reset,
     modalResultIsOpen,
     openModalResult,
-    closeModalResult,
+    closeModals,
     filteredLines,
     depth,
     initLines,
     fixMistakes,
     fixMode,
     modalFixResultIsOpen,
-    closeModalFixResult,
     backToTraining,
     fixNextMistake,
     nbRemainingVariations: initLines.filter((line) => !line.trained).length,

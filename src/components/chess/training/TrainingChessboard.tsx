@@ -44,7 +44,7 @@ const TrainingChessboard = () => {
   return (
     <div className="flex flex-col">
       {/* 2xl:w-[42rem] */}
-      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[32rem] aspect-square p-5">
+      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-5">
         <Chessboard
           id="chessboard"
           position={game.fen()}

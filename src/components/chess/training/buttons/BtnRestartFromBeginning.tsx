@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { useTraining } from "../TrainingProvider";
 
 const BtnRestartFromBeginning = () => {
-  const { reset, closeModalFixResult } = useTraining();
+  const { reset, closeModals } = useTraining();
 
   return (
     <Button
       onClick={() => {
         reset(true);
-        closeModalFixResult();
+        closeModals();
       }}
     >
       Restart from the beginning
