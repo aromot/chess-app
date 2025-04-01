@@ -35,12 +35,26 @@ interface TrainingContextInterface {
   stats: TypeStats;
   wrongNodes: TreeNode[];
   reset: (flushTrainedLines?: boolean) => void;
+
+  // Modal Results
   modalResultIsOpen: boolean;
   openModalResult: () => void;
   closeModalResult: () => void;
+
+  // Modal Fix results
+  modalFixResultIsOpen: boolean;
+  closeModalFixResult: () => void;
+
   filteredLines: Line[];
   depth: number;
   initLines: Line[];
+  fixMistakes: () => void;
+  fixMode: boolean;
+
+  backToTraining: () => void;
+  fixNextMistake: () => void;
+
+  nbRemainingVariations: number;
 }
 
 const Context = createContext<TrainingContextInterface | undefined>(undefined);
@@ -126,6 +140,9 @@ const TrainingProvider = ({ context, children }: Props) => {
   const [stats, setStats] = useState<TypeStats>(initStats);
   const [wrongNodes, setWrongNodes] = useState<TreeNode[]>([]);
   const [modalResultIsOpen, setModalResultIsOpen] = useState<boolean>(false);
+  const [modalFixResultIsOpen, setModalFixResultIsOpen] =
+    useState<boolean>(false);
+  const [fixMode, setFixMode] = useState<boolean>(false);
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((game: Chess) => {
@@ -135,22 +152,6 @@ const TrainingProvider = ({ context, children }: Props) => {
     });
   }
 
-  function makeRandomMove(nodes: TreeNode[]) {
-    const randomNode = getRandomItemFromArray(nodes) as TreeNode;
-
-    if (!randomNode.move) {
-      throw new Error("No move available for the random node.");
-    }
-
-    safeGameMutate((game: Chess) => {
-      game.move(randomNode.move.san);
-    });
-    // Le trainingResult de l'adversaire est TOUJOURS à true (j'ai bon ?).
-    randomNode.trainingResult = true;
-    setNode(randomNode);
-    setTrainingState(TrainingState.wait_user_move);
-  }
-
   function openModalResult() {
     setModalResultIsOpen(true);
   }
@@ -158,19 +159,12 @@ const TrainingProvider = ({ context, children }: Props) => {
     setModalResultIsOpen(false);
   }
 
-  const filterLines = useCallback(
-    function (san: string) {
-      dbg.debug(
-        "Start filterLines: parmi toutes les lignes ci-dessous, on ne va prendre que celles qui commencent par " +
-          san
-      );
-      traceLines(filteredLines);
-      return filteredLines.filter((line) => {
-        return line.nodes[0].move?.san === san;
-      });
-    },
-    [filteredLines]
-  );
+  function openModalFixResult() {
+    setModalFixResultIsOpen(true);
+  }
+  function closeModalFixResult() {
+    setModalFixResultIsOpen(false);
+  }
 
   const makeOpponentMove = useCallback(
     (availLines: Line[], depth: number, gameCpy: Chess) => {
@@ -247,11 +241,61 @@ const TrainingProvider = ({ context, children }: Props) => {
     [currentTimeout]
   );
 
+  function backToTraining() {
+    setFixMode(false);
+    closeModalFixResult();
+    reset();
+  }
+
+  function onDropInFixMode(
+    sourceSquare: Square,
+    targetSquare: Square,
+    piece: Piece
+  ) {
+    const gameCpy = cloneDeep(game);
+
+    const move = gameCpy.move({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: piece[1].toLowerCase() ?? "q",
+    });
+
+    const childNode = node.getChildBySan(move.san);
+    const isMoveInDirectory = !!childNode;
+
+    if (isMoveInDirectory) {
+      console.log("🎉 FIX OK");
+      if (!childNode.parentNode) {
+        throw new Error("The fixed node does not have a parent.");
+      }
+      childNode.parentNode.removeWrongMove(move.san);
+      setNode(childNode);
+      openModalFixResult();
+    } else {
+      console.log("%cWRONG FIX, START AGAIN", "color: #f00");
+      gameCpy.undo();
+    }
+
+    setGame(gameCpy);
+    setTrainerAnswer(isMoveInDirectory);
+    setTrainingState(TrainingState.trainer_answers);
+  }
+
   function onDrop(sourceSquare: Square, targetSquare: Square, piece: Piece) {
     console.log(
-      "%c----------------ON DROP (" + depth + ")----------------",
+      "%c----------------ON DROP (depth=" +
+        depth +
+        ", fixMode=" +
+        (fixMode ? "ON" : "OFF") +
+        ")----------------",
       "background: #f00; color: #fff; font-size: 15px"
     );
+
+    if (fixMode) {
+      onDropInFixMode(sourceSquare, targetSquare, piece);
+      return true;
+    }
+
     try {
       const statsCpy = cloneDeep(stats);
       const gameCpy = cloneDeep(game);
@@ -287,6 +331,7 @@ const TrainingProvider = ({ context, children }: Props) => {
           throw new Error("new node not found (user turn).");
         }
         newNode.trainingResult = true;
+        console.log("Node.trainingResult = true for " + newNode.move?.san);
 
         if (!newNode.hasChildren()) {
           candidateLines[0].trained = true;
@@ -298,7 +343,7 @@ const TrainingProvider = ({ context, children }: Props) => {
           setTrainingState(TrainingState.trainer_answers);
 
           openModalResult();
-          return;
+          return true;
         }
 
         candidateLines = candidateLines.filter(
@@ -319,14 +364,34 @@ const TrainingProvider = ({ context, children }: Props) => {
       } else {
         statsCpy.nbKo++;
         gameCpy.undo();
-        setWrongNodes((wrongNodes: TreeNode[]) => {
-          wrongNodes.push(node);
-          return wrongNodes;
-        });
-        setNode((node) => {
-          node.trainingResult = false;
-          return node;
-        });
+        // setWrongNodes((wrongNodes: TreeNode[]) => {
+        //   wrongNodes.push(node);
+        //   return wrongNodes;
+        // });
+
+        // setNode((node) => {
+        //   node.trainingResult = false;
+        //   node.addWrongMove(move.san);
+        //   console.log(
+        //     "Node.trainingResult = FALSE for " +
+        //       node.move?.san +
+        //       " (tried " +
+        //       move.san +
+        //       ")"
+        //   );
+        //   return node;
+        // });
+
+        node.trainingResult = false;
+        node.addWrongMove(move.san);
+        console.log(
+          "Node.trainingResult = FALSE for " +
+            node.move?.san +
+            " (tried " +
+            move.san +
+            ")"
+        );
+        setNode(node);
       }
 
       setStats(statsCpy);
@@ -355,6 +420,56 @@ const TrainingProvider = ({ context, children }: Props) => {
     setStats(initStats);
   };
 
+  const fixMistakes = () => {
+    const gameCpy = cloneDeep(game);
+    let nodeToFix: TreeNode | undefined;
+
+    tree.traverseBF((node) => {
+      if (!nodeToFix && node.hasWrongMoves()) {
+        nodeToFix = node;
+      }
+    });
+
+    if (!nodeToFix) {
+      throw new Error("No node to fix.");
+    }
+
+    gameCpy.load(nodeToFix.position.fen);
+    closeModalResult();
+
+    setDepth(nodeToFix.depth);
+    setFilteredLines(initLines);
+    setGame(gameCpy);
+    setFixMode(true);
+    setNode(nodeToFix);
+    setTrainingState(TrainingState.wait_user_move);
+  };
+
+  function fixNextMistake() {
+    const gameCpy = cloneDeep(game);
+    let nodeToFix: TreeNode | undefined;
+
+    tree.traverseBF((node) => {
+      if (!nodeToFix && node.hasWrongMoves()) {
+        nodeToFix = node;
+      }
+    });
+
+    if (!nodeToFix) {
+      throw new Error("No node to fix.");
+    }
+
+    gameCpy.load(nodeToFix.position.fen);
+    closeModalFixResult();
+
+    setDepth(nodeToFix.depth);
+    setFilteredLines(initLines);
+    setGame(gameCpy);
+    setFixMode(true);
+    setNode(nodeToFix);
+    setTrainingState(TrainingState.wait_user_move);
+  }
+
   const ctx: TrainingContextInterface = {
     game,
     userColor,
@@ -378,6 +493,13 @@ const TrainingProvider = ({ context, children }: Props) => {
     filteredLines,
     depth,
     initLines,
+    fixMistakes,
+    fixMode,
+    modalFixResultIsOpen,
+    closeModalFixResult,
+    backToTraining,
+    fixNextMistake,
+    nbRemainingVariations: initLines.filter((line) => !line.trained).length,
   };
 
   return <Context value={ctx}>{children}</Context>;

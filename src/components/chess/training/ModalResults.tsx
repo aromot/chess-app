@@ -20,6 +20,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Progress } from "@/components/ui/progress";
+import { Info, ThumbsUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import BtnRestartFromBeginning from "./buttons/BtnRestartFromBeginning";
+import BtnEditRepertoire from "./buttons/BtnEditRepertoire";
 const chartConfig = {
   right: {
     color: "#15803d",
@@ -28,6 +32,43 @@ const chartConfig = {
     color: "#b91c1c",
   },
 } satisfies ChartConfig;
+
+const RepertoireProgress = ({ progress }: { progress: number }) => {
+  const { reset, closeModalResult, nbRemainingVariations } = useTraining();
+  const [barProgress, setBarProgress] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBarProgress(progress);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [progress]);
+
+  return (
+    <>
+      <div className="text-center">
+        You have revised{" "}
+        <span className="font-bold">{formatPercentage(progress / 100, 0)}</span>{" "}
+        of your repertoire.
+      </div>
+      <Progress value={barProgress} />
+      {nbRemainingVariations > 0 && (
+        <div className="text-center mt-1">
+          <Button
+            size="lg"
+            onClick={() => {
+              reset();
+              closeModalResult();
+            }}
+            className="text-2xl"
+          >
+            Go ahead!
+          </Button>
+        </div>
+      )}
+    </>
+  );
+};
 
 const ModalResults = () => {
   const router = useRouter();
@@ -40,7 +81,14 @@ const ModalResults = () => {
     tree,
     userColor,
     initLines,
+    fixMistakes,
+    nbRemainingVariations,
   } = useTraining();
+
+  const progress = Math.round(
+    ((initLines.length - nbRemainingVariations) / initLines.length) * 100
+  );
+
   const total = stats.nbOk + stats.nbKo;
   const rightPerc = formatPercentage(stats.nbOk / total, 0);
   const data = [
@@ -48,16 +96,27 @@ const ModalResults = () => {
     { label: "Wrong moves", nb: stats.nbKo, fill: "var(--color-wrong)" },
   ];
 
-  const nbRemainingVariations = initLines.filter(
-    (line) => !line.trained
-  ).length;
-
   let nbRight = 0,
     nbWrong = 0,
     opponentNbNodeNotTrained = 0,
     userNbVariationNotTrained = 0,
-    opponentNbVariationNotTrained = 0;
+    opponentNbVariationNotTrained = 0,
+    nbMisplayedPositions = 0;
+
   tree.traverseBF((node) => {
+    if (node.hasWrongMoves()) {
+      nbMisplayedPositions++;
+      console.log(
+        "%cWrong moves for position #" +
+          node.position.id +
+          " / move " +
+          node.move.san +
+          ": " +
+          node.trainingWrongMoves.join(", "),
+        "background: #f00"
+      );
+    }
+
     // ici c'est le noeud root, on le skip pour les stats (il est tard... j'ai bon ?).
     if (!node.move) {
       return;
@@ -93,13 +152,6 @@ const ModalResults = () => {
     opponentNbNodeNotTrained,
     userNbVariationNotTrained,
     opponentNbVariationNotTrained,
-  });
-
-  const progress = Math.round(
-    ((initLines.length - nbRemainingVariations) / initLines.length) * 100
-  );
-
-  console.log({
     progress,
     nbRemainingVariations,
     initLines_length: initLines.length,
@@ -178,31 +230,39 @@ const ModalResults = () => {
           <div className="mt-5">Your completed your repertoire.</div>
         )}
 
+        {nbMisplayedPositions === 0 ? (
+          <div className="text-green-700 flex gap-3 items-center bg-green-100 p-3 rounded-lg">
+            <ThumbsUp className="h-4 w-4" />
+            <div>No misplayed position</div>
+          </div>
+        ) : (
+          <div className="text-orange-700 flex gap-3 items-center bg-orange-100 p-3 rounded-lg">
+            <Info className="h-4 w-4" />
+            <div className="flex w-full items-center">
+              <div className="flex-1">
+                Misplayed positions = {nbMisplayedPositions}
+              </div>
+              <Button
+                onClick={() => {
+                  fixMistakes();
+                }}
+              >
+                Fix your mistakes
+              </Button>
+            </div>
+          </div>
+        )}
+
         <div className="my-3">
-          <Progress value={progress} />
+          <RepertoireProgress progress={progress} />
         </div>
 
         <div className="flex mt-5">
           <div className="flex-1">
-            <Button
-              onClick={() => {
-                reset(nbRemainingVariations === 0);
-                closeModalResult();
-              }}
-            >
-              Start again
-            </Button>
+            <BtnRestartFromBeginning />
           </div>
           <div>
-            <Button
-              onClick={() => {
-                router.push(
-                  formatUrl(URLS.editDirectory, { id: directory.id })
-                );
-              }}
-            >
-              Edit your repertoire
-            </Button>
+            <BtnEditRepertoire />
           </div>
         </div>
       </DialogContent>
