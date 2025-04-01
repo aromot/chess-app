@@ -24,6 +24,7 @@ class InvalidLoginError extends CredentialsSignin {
 
 // https://authjs.dev/guides/edge-compatibility
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   adapter,
   session: { strategy: "jwt" },
   debug: isDev(),
