@@ -55,18 +55,13 @@ const ModalFixResult = () => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="text-3xl mb-3">🎉 You are correct!</div>
-        <div>Nb remaining misplayed positions={nbMisplayedPositions}</div>
-
-        {/* {nbMisplayedPositions === 0 && (
-          <div>
-            <Button onClick={backToTraining}>Back to your training</Button>
-          </div>
-        )} */}
 
         {nbMisplayedPositions > 0 && (
           <div className="flex">
             <div className="flex-1">
-              <Button onClick={fixNextMistake}>Fix next mistake...</Button>
+              <Button onClick={fixNextMistake}>
+                Fix next mistake ({nbMisplayedPositions})...
+              </Button>
             </div>
             <div>
               {nbRemainingVariations === 0 ? (
