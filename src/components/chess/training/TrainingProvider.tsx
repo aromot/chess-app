@@ -405,6 +405,7 @@ const TrainingProvider = ({ context, children }: Props) => {
 
   const reset = (flushTrainedLines: boolean = false) => {
     setDepth(0);
+    setFixMode(false);
     if (flushTrainedLines) {
       initLines.forEach((line) => (line.trained = false));
     }

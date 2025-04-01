@@ -86,15 +86,17 @@ const Chessboard = ({
   game: Chess;
 }) => {
   return (
-    <ReactChessboard
-      id="chessboard"
-      position={game.fen()}
-      // onPieceDrop={onDrop}
-      boardOrientation={directory.white ? "white" : "black"}
-      customBoardStyle={defaultBoardStyle}
-      areArrowsAllowed={true}
-      // customArrows={[["e2", "e4", "#444444"]]}
-    />
+    <div style={{ pointerEvents: "none" }}>
+      <ReactChessboard
+        id="chessboard"
+        position={game.fen()}
+        // onPieceDrop={onDrop}
+        boardOrientation={directory.white ? "white" : "black"}
+        customBoardStyle={defaultBoardStyle}
+        areArrowsAllowed={true}
+        // customArrows={[["e2", "e4", "#444444"]]}
+      />
+    </div>
   );
 };
 
