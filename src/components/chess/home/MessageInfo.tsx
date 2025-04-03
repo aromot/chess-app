@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-const buttonVariants = cva("text-2xl p-3 rounded-lg", {
+const buttonVariants = cva("p-3 rounded-lg lg:text-2xl", {
   variants: {
     variant: {
       default: "bg-zinc-700",
