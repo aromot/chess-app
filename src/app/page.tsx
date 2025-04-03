@@ -79,7 +79,7 @@ export default async function Home() {
 
   return (
     <div className="h-screen w-full flex items-center justify-center">
-      <div className="flex flex-col md:flex-row gap-5 lg:w-[60rem] xl:w-[70rem] 2xl:w-[78rem] border-2">
+      <div className="flex flex-col md:flex-row gap-5 lg:w-[60rem] xl:w-[70rem] 2xl:w-[78rem]">
         <div className="md:hidden">
           <Title />
         </div>
