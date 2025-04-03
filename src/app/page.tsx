@@ -9,25 +9,10 @@ import ChessboardDemo from "@/components/chess/home/ChessboardDemo";
 import { Directory } from "@prisma/client";
 import GeneralError from "@/components/errors/GeneralError";
 
-export default async function Home() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect(URLS.dashboard);
-  }
-
-  const directory = await getDirectoryByName("HOMEPAGE");
-
+const Contents = () => {
   return (
-    <div className="flex h-screen">
-      <div className="p-20 w-[48%]">
-        {directory ? (
-          <ChessboardDemo directory={directory as Directory} />
-        ) : (
-          <GeneralError>Error while loading the chessboard.</GeneralError>
-        )}
-      </div>
-      <div className="flex-1 py-10 text-white pr-20 mt-10">
+    <div className="flex-1 text-white flex flex-col">
+      <div className="pt-3">
         <div className="flex items-end gap-10">
           <Image
             src="/logo-outline.svg"
@@ -37,18 +22,22 @@ export default async function Home() {
           />
           <div>
             <div className="text-7xl">Billie Chess</div>
-            <div className="text mt-3" style={{ letterSpacing: ".5rem" }}>
+            <div className="text mt-3 ml-2" style={{ letterSpacing: ".5rem" }}>
               Prepare your openings
             </div>
           </div>
         </div>
 
-        <div className="my-20 text-justify">
-          Build your repertory, study to get well prepared. Share your games.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt unde
-          ullam quos dicta provident! Aperiam assumenda, dolor doloremque
-          explicabo illum, nisi iure praesentium optio voluptatum provident
-          molestias qui quae delectus.
+        <div className="mt-20 mb-16 text-2xl text-justify">
+          <div className="mb-10">
+            Build your own chess repertoire...
+            <br />
+            Billie Chess proposes a personnalized interactive training!
+          </div>
+          <div>
+            Whether you're a beginner or advanced player, this app turns opening
+            theory into a powerful tool for success on the board.
+          </div>
         </div>
 
         <div className="flex">
@@ -63,6 +52,31 @@ export default async function Home() {
             </Button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+export default async function Home() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect(URLS.dashboard);
+  }
+
+  const directory = await getDirectoryByName("HOMEPAGE");
+
+  return (
+    <div className="h-screen w-full flex items-center justify-center">
+      <div className="flex gap-5 w-[78rem]">
+        {directory ? (
+          <ChessboardDemo directory={directory as Directory} />
+        ) : (
+          <div>
+            <GeneralError>Error while loading the chessboard.</GeneralError>
+          </div>
+        )}
+        <Contents />
       </div>
     </div>
   );

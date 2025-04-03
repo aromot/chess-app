@@ -3,99 +3,91 @@
 import { Chessboard as ReactChessboard } from "react-chessboard";
 import defaultBoardStyle from "../common/defaultBoardStyle";
 import { Directory } from "@prisma/client";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import Tree from "@/lib/chess/Tree";
-import { Chess } from "chess.js";
-import TreeNode from "@/lib/chess/TreeNode";
-import { getRandomInt, getRandomItemFromArray } from "@/lib/helpers";
-import { cloneDeep } from "lodash";
+import { CustomSquareProps } from "react-chessboard/dist/chessboard/types";
+import ChessboardDemoProvider, {
+  useChessboardDemo,
+} from "./ChessboardDemoProvider";
+import MessageInfo from "./MessageInfo";
 
-const ChessboardDemo = ({ directory }: { directory: Directory }) => {
-  const initTree = useMemo(() => {
-    const tree = new Tree(directory);
-    // console.log("initTree:", tree);
-    return tree;
-  }, [directory]);
+const CustomSquareRenderer = ({
+  children,
+  square,
+  style,
+  ref,
+}: CustomSquareProps) => {
+  const { node, opponentCheckDone, userCheckSuccess, userCheckError, game } =
+    useChessboardDemo();
 
-  const initGame = useMemo(() => {
-    return new Chess(initTree.posInit.fen);
-  }, [initTree]);
+  const customStyles = { ...style };
 
-  const [tree] = useState<Tree>(initTree);
-  const [node, setNode] = useState<TreeNode>(tree.root);
-  const [game, setGame] = useState<Chess>(initGame);
-  const [currentTimeout, setCurrentTimeout] = useState<number | undefined>();
-
-  function safeGameMutate(modify: (game: Chess) => void) {
-    setGame((game: Chess) => {
-      const gameCpy = cloneDeep(game);
-      modify(gameCpy);
-      return gameCpy;
-    });
+  // Allume la casse d'arrivée du dernier move correct de l'utilisateur.
+  if (userCheckSuccess && square === node.move?.squareTo) {
+    customStyles.background = "#15803d";
+    customStyles.borderRadius = "10px";
+    customStyles.boxShadow = "0px 0px 5px 5px #ffffffaa";
+    customStyles.zIndex = 2;
+    customStyles.position = "relative";
   }
 
-  const makeRandomMove = useCallback(
-    (nodes: TreeNode[]) => {
-      const randomNode = getRandomItemFromArray(nodes) as TreeNode;
+  if (userCheckError) {
+    const history = [...game.history({ verbose: true })];
+    const lastMove = history.pop();
 
-      // dbg.debug("computer plays: " + randomNode.move?.san);
-      safeGameMutate((game: Chess) => {
-        const move = game.move(randomNode.move?.san);
-        // console.log({ move });
-      });
-      setNode(randomNode);
-      // setTrainingState(TrainingState.wait_user_move);
-      clearTimeout(currentTimeout);
-    },
-    [currentTimeout]
+    if (square === lastMove?.to) {
+      customStyles.background = "#ad0000";
+      customStyles.borderRadius = "10px";
+      customStyles.boxShadow = "0px 0px 5px 5px #ffffffaa";
+      customStyles.zIndex = 2;
+      customStyles.position = "relative";
+    }
+  }
+
+  // Allume les cases de départ de la position de départ et d'arrivée du move adverse.
+  if (
+    opponentCheckDone &&
+    node.move !== null &&
+    (square == node.move.squareFrom || square == node.move.squareTo)
+  ) {
+    customStyles.background = "#eba133";
+    customStyles.borderRadius = "10px";
+  }
+
+  return (
+    <div ref={ref} style={customStyles}>
+      {children}
+    </div>
   );
-
-  const resetGame = useCallback(() => {
-    safeGameMutate((game: Chess) => {
-      game.reset();
-    });
-    setNode(tree.root);
-  }, [tree]);
-
-  useEffect(() => {
-    const newTimeout = window.setTimeout(
-      () => {
-        if (node.hasChildren()) {
-          makeRandomMove(node.children);
-        } else {
-          resetGame();
-        }
-      },
-      node.hasChildren() ? getRandomInt(300, 1800) : getRandomInt(1500, 3000)
-    );
-    // setCurrentTimeout(newTimeout);
-
-    return () => {
-      clearTimeout(currentTimeout);
-    };
-  }, [node, makeRandomMove, currentTimeout, resetGame]);
-
-  return <Chessboard directory={directory} game={game} />;
 };
 
-const Chessboard = ({
-  directory,
-  game,
-}: {
-  directory: Directory;
-  game: Chess;
-}) => {
+const ChessboardDemo = ({ directory }: { directory: Directory }) => {
   return (
-    <div style={{ pointerEvents: "none" }}>
-      <ReactChessboard
-        id="chessboard"
-        position={game.fen()}
-        // onPieceDrop={onDrop}
-        boardOrientation={directory.white ? "white" : "black"}
-        customBoardStyle={defaultBoardStyle}
-        areArrowsAllowed={true}
-        // customArrows={[["e2", "e4", "#444444"]]}
-      />
+    <ChessboardDemoProvider directory={directory}>
+      <Chessboard />
+    </ChessboardDemoProvider>
+  );
+};
+
+const Chessboard = () => {
+  const { game, directory } = useChessboardDemo();
+
+  return (
+    <div className="flex flex-col" style={{ pointerEvents: "none" }}>
+      {/* <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-2"> */}
+      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[30rem] 2xl:w-[36rem] aspect-square p-2">
+        <ReactChessboard
+          id="chessboard"
+          position={game.fen()}
+          // onPieceDrop={onDrop}
+          boardOrientation={directory.white ? "white" : "black"}
+          customBoardStyle={defaultBoardStyle}
+          areArrowsAllowed={false}
+          customSquare={CustomSquareRenderer}
+        />
+      </div>
+      <div className="p-2 pt-0">
+        <MessageInfo />
+      </div>
+      <div className="p-2 min-h-16 text-sm">{game.pgn()}</div>
     </div>
   );
 };

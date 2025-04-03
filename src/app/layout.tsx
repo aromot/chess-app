@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
-import Header from "@/components/app/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chess App",
-  description: "Chess application",
+  title: "Billie Chess App",
+  description: "Prepare your openings.",
 };
 
 export default function RootLayout({
@@ -31,10 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 dark`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-900 dark`}
       >
         <SessionProvider>
-          {/* <Header /> */}
           {children}
           {modalLogin}
           {modalRegister}

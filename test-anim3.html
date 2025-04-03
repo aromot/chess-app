@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Jackson Moonwalk Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // Set up canvas
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Load the sprite sheet (Make sure you have the sprite image ready)
+        const spriteSheet = new Image();
+        spriteSheet.src = 'michael-jackson-sprite.png';  // Replace with the actual sprite path
+
+        // Set the size of each frame in the sprite sheet
+        const frameWidth = 64;  // Width of one frame in the sprite sheet
+        const frameHeight = 128;  // Height of one frame in the sprite sheet
+        const totalFrames = 6;  // Total number of frames in the sprite sheet (adjust this)
+
+        let currentFrame = 0;
+        let spriteX = 100;  // Initial horizontal position of the sprite
+        let spriteY = canvas.height / 2 - frameHeight / 2;  // Vertically center the sprite
+        let moonwalkSpeed = 5;  // Speed of the moonwalk (movement)
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+            // Draw the current frame of the sprite
+            ctx.drawImage(
+                spriteSheet, 
+                currentFrame * frameWidth, 0,  // Source x, y (frame position in the sprite sheet)
+                frameWidth, frameHeight,  // Source width, height
+                spriteX, spriteY,  // Destination x, y
+                frameWidth, frameHeight  // Destination width, height
+            );
+
+            // Move the sprite to the left and simulate the moonwalk
+            spriteX += moonwalkSpeed;
+            
+            // Check for looping of the sprite animation
+            currentFrame++;
+            if (currentFrame >= totalFrames) {
+                currentFrame = 0;
+            }
+
+            // Loop the animation using requestAnimationFrame
+            requestAnimationFrame(draw);
+        }
+
+        // Start the animation once the sprite image is loaded
+        spriteSheet.onload = function() {
+            draw();
+        };
+    </script>
+</body>
+</html>
