@@ -42,7 +42,6 @@ const HomepageContents = () => {
             Whether you're a beginner or advanced player, this app turns opening
             theory into a powerful tool for success on the board.
           </div>
-          <div>breakpoint: {breakpoint}</div>
         </div>
 
         <div className="flex mb-8 md:mb-0">
