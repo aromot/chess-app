@@ -4,7 +4,7 @@ import LogoOutline from "../../../public/logo-outline.svg";
 const HomepageTitle = () => {
   return (
     <div className="flex gap-3 xl:gap-5">
-      <div className="w-[50px] xl:w-[70px]">
+      <div className="ml-3 md:ml-0 w-[50px] xl:w-[70px]">
         <Image
           src={LogoOutline}
           alt="Billie Chess"
