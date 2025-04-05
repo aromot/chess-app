@@ -76,7 +76,7 @@ const Chessboard = () => {
       style={{ pointerEvents: "none" }}
     >
       {/* <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-2"> */}
-      <div className="w-[25rem] sm:w-[30rem] md:w-[24rem] lg:w-[28rem] xl:w-[30rem] 2xl:w-[36rem] aspect-square p-2">
+      <div className="w-[23rem] sm:w-[30rem] md:w-[24rem] lg:w-[28rem] xl:w-[30rem] 2xl:w-[36rem] aspect-square p-2">
         <ReactChessboard
           id="chessboard"
           position={game.fen()}
