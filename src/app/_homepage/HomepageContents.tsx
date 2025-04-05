@@ -1,11 +1,16 @@
 "use client";
 import { Button, ButtonProps } from "@/components/ui/button";
-import { getCurrentBreakpoint } from "@/lib/helpers";
 import Link from "next/link";
 import HomepageTitle from "./HomepageTitle";
 import { URLS } from "../urls";
+import { useMounted } from "@/hooks/use-mounted";
+import { getCurrentBreakpoint } from "@/lib/helpers";
 
+// https://medium.com/@eric.burel/how-to-get-rid-of-window-is-not-defined-and-hydration-mismatch-errors-in-next-js-567cc51b4a17
 const HomepageContents = () => {
+  const mounted = useMounted();
+  if (!mounted) return null;
+
   const breakpoint = getCurrentBreakpoint();
   const bps: { [key: string]: ButtonProps["size"] } = {
     "2xl": "xl",
