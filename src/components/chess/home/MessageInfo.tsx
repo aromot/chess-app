@@ -52,9 +52,7 @@ const MessageInfo = () => {
     status === DemoStatus.opponent_played ||
     status === DemoStatus.opponent_check_done
   ) {
-    return (
-      <Paper>Your opponent plays {node.move?.san}, what do you play?</Paper>
-    );
+    return <Paper>Your opponent plays {node.move?.san}.</Paper>;
   }
 
   if (status === DemoStatus.end_of_variation) {

@@ -8,21 +8,25 @@ import { getDirectoryByName } from "./(private)/directories/_db/db-queries";
 import ChessboardDemo from "@/components/chess/home/ChessboardDemo";
 import { Directory } from "@prisma/client";
 import GeneralError from "@/components/errors/GeneralError";
+import LogoOutline from "../../public/logo-outline.svg";
 
 const Title = () => {
   return (
-    <div className="flex items-end gap-3 xl:gap-10">
-      <Image
-        src="/logo-outline.svg"
-        width={110}
-        height={141}
-        alt="Billie Chess"
-      />
+    <div className="flex items-end gap-3 xl:gap-5">
+      <div className="w-[50px] xl:w-[70px]">
+        <Image
+          src={LogoOutline}
+          alt="Billie Chess"
+          sizes="100vw"
+          style={{
+            width: "100%",
+            height: "auto",
+          }}
+        />
+      </div>
       <div>
         <div className="text-5xl xl:text-7xl">Billie Chess</div>
-        <div className="text mt-3 ml-2 tracking-widest">
-          Prepare your openings
-        </div>
+        <div className="ml-2 tracking-widest">Prepare your openings</div>
       </div>
     </div>
   );
