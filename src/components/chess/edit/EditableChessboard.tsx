@@ -5,8 +5,9 @@ import { ChevronLeft, ChevronRight, ChevronsLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { URLS } from "@/app/urls";
 import defaultBoardStyle from "../common/defaultBoardStyle";
-import { formatUrl } from "@/lib/helpers";
+import { formatUrl, getCurrentBreakpoint, isDev } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const GameTurn = () => {
   const { game, isUserTurn } = useChessboard();
@@ -14,14 +15,11 @@ const GameTurn = () => {
 
   return (
     <div
-      className={cn(
-        "absolute right-0 z-20",
-        isUserTurn ? "bottom-10" : "top-5"
-      )}
+      className={cn("absolute right-0 z-20", isUserTurn ? "bottom-5" : "top-3")}
     >
       <div
         className={cn(
-          "rounded-full w-8 h-8",
+          "rounded-full w-2 h-2 sm:w-4 sm:h-4",
           whiteToPlay ? "bg-white" : "bg-black border-white border-2"
         )}
       >
@@ -45,10 +43,15 @@ const EditableChessboard = () => {
     isUserTurn,
   } = useChessboard();
   const router = useRouter();
+  const [breakpoint, setBreakpoint] = useState<string>("");
+
+  useEffect(() => {
+    setBreakpoint(getCurrentBreakpoint());
+  }, []);
 
   return (
     <div className="flex flex-col">
-      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-5 pr-10 relative">
+      <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-3 sm:pr-5 relative">
         <div className="z-40 relative">
           <Chessboard
             id="chessboard"
@@ -110,6 +113,7 @@ const EditableChessboard = () => {
           </Button>
         </div>
       </div>
+      {isDev() && <div className="text-sm p-5">breakpoint: {breakpoint}</div>}
     </div>
   );
 };

@@ -177,7 +177,6 @@ export function getCurrentBreakpoint() {
     return "md";
   } else if (width >= 640) {
     return "sm";
-  } else {
-    return "xs"; // Or any value for extra small screens
   }
+  return "xs"; // Or any value for extra small screens
 }

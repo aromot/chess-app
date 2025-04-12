@@ -18,9 +18,9 @@ const PanelInfos = () => {
 
       <div className="mt-3">
         <EditableTreeGraph />
-        <div className="border-slate-500 rounded-md border-2 p-2">
+        {/* <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
-        </div>
+        </div> */}
       </div>
 
       {/* <div>History :</div>
@@ -37,7 +37,7 @@ const PanelInfos = () => {
         <CommentHandler />
       </div>
 
-      <div className="mt-3">Position (FEN) : {game.fen()}</div>
+      <div className="mt-3 sm:text-sm">Position (FEN) : {game.fen()}</div>
 
       {/* <div className="flex gap-3 mt-5">
         <Button variant="secondary" onClick={onClickReset} disabled={isStart}>
