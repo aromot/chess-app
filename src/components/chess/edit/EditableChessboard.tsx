@@ -6,18 +6,28 @@ import { useRouter } from "next/navigation";
 import { URLS } from "@/app/urls";
 import defaultBoardStyle from "../common/defaultBoardStyle";
 import { formatUrl } from "@/lib/helpers";
-import { Color } from "chess.js";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 const GameTurn = () => {
-  const { game } = useChessboard();
+  const { game, isUserTurn } = useChessboard();
+  const whiteToPlay = game.turn() === "w";
 
-  return game.turn() === "b" ? (
-    <div className="bg-black rounded-full border-white border-2 w-8 h-8">
-      &nbsp;
+  return (
+    <div
+      className={cn(
+        "absolute right-0 z-20",
+        isUserTurn ? "bottom-10" : "top-5"
+      )}
+    >
+      <div
+        className={cn(
+          "rounded-full w-8 h-8",
+          whiteToPlay ? "bg-white" : "bg-black border-white border-2"
+        )}
+      >
+        &nbsp;
+      </div>
     </div>
-  ) : (
-    <div className="bg-white rounded-full w-8 h-8">&nbsp;</div>
   );
 };
 
@@ -32,32 +42,25 @@ const EditableChessboard = () => {
     onClickBackward,
     onClickForward,
     isEndOfBranch,
+    isUserTurn,
   } = useChessboard();
   const router = useRouter();
-  const userColor: Color = directory.white ? "w" : "b";
-  const isUserTurn = game.turn() === userColor;
 
   return (
     <div className="flex flex-col">
       <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-5 pr-10 relative">
-        <Chessboard
-          id="chessboard"
-          position={game.fen()}
-          onPieceDrop={onDrop}
-          boardOrientation={directory.white ? "white" : "black"}
-          customBoardStyle={defaultBoardStyle}
-          areArrowsAllowed={true}
-          // customArrows={[["e2", "e4", "#444444"]]}
-        />
-        <div
-          className={clsx(
-            "absolute",
-            game.turn() === "b" ? "top-5" : "bottom-10",
-            "right-0"
-          )}
-        >
-          <GameTurn />
+        <div className="z-40 relative">
+          <Chessboard
+            id="chessboard"
+            position={game.fen()}
+            onPieceDrop={onDrop}
+            boardOrientation={directory.white ? "white" : "black"}
+            customBoardStyle={defaultBoardStyle}
+            areArrowsAllowed={true}
+            // customArrows={[["e2", "e4", "#444444"]]}
+          />
         </div>
+        <GameTurn />
       </div>
       <div className="flex px-5">
         <div className="flex-1">
