@@ -52,7 +52,8 @@ body {
     --chart-5: 27 87% 67%;
   }
   .dark {
-    --background: 28 50% 10%;
+    /* --background: 28 50% 10%; */
+    --background: 240 5.88% 10%;
     --foreground: 28 5% 90%;
     --card: 28 50% 10%;
     --card-foreground: 28 5% 90%;

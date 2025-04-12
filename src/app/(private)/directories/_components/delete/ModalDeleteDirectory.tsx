@@ -26,20 +26,20 @@ const ModalDeleteDirectory = () => {
     <Dialog open={openDelete} onOpenChange={setOpenDelete}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Supprimer le répertoire</DialogTitle>
+          <DialogTitle>Delete repertoire</DialogTitle>
         </DialogHeader>
         <DialogDescription>
-          Êtes-vous sûr de vouloir supprimer le répertoire ?
+          Are you sure you want to delete the repetertoire?
         </DialogDescription>
 
         <div className="flex">
           <div className="flex-1">
             <Button onClick={clickDelete} variant="destructive">
-              Je supprime
+              Delete
             </Button>
           </div>
           <Button variant="link" onClick={() => setOpenDelete(false)}>
-            Annuler
+            Cancel
           </Button>
         </div>
       </DialogContent>

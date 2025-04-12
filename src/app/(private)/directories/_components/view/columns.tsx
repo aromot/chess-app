@@ -4,12 +4,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { formatDateTime } from "@/lib/i18n";
 import { Directory } from "@prisma/client";
 import Link from "next/link";
-import ButtonEditDirectory from "./_components/edit/ButtonEditDirectory";
-import ButtonDeleteDirectory from "./_components/delete/ButtonDeleteDirectory";
+import ButtonEditDirectory from "../edit/ButtonEditDirectory";
+import ButtonDeleteDirectory from "../delete/ButtonDeleteDirectory";
 import { formatUrl } from "@/lib/helpers";
 import { URLS } from "@/app/urls";
-import { Button } from "@/components/ui/button";
-import ButtonTrain from "./_components/train/ButtonTrain";
+import ButtonTrain from "../train/ButtonTrain";
+import { ReactNode } from "react";
 
 export const columns: ColumnDef<Directory>[] = [
   {
@@ -17,14 +17,14 @@ export const columns: ColumnDef<Directory>[] = [
     header: "Name",
     cell: ({ renderValue, row }) => (
       <Link href={formatUrl(URLS.editDirectory, { id: row.original.id })}>
-        {renderValue()}
+        {renderValue() as ReactNode}
       </Link>
     ),
   },
   {
     accessorKey: "white",
-    header: "Play as",
-    cell: ({ row }) => (row.original.white ? "Blanc" : "Noir"),
+    header: "Color",
+    cell: ({ row }) => (row.original.white ? "white" : "black"),
   },
   {
     accessorKey: "createdAt",
@@ -33,7 +33,6 @@ export const columns: ColumnDef<Directory>[] = [
   },
   {
     id: "actions",
-    maxSize: 50,
     cell: ({ row }) => {
       const directory = row.original as Directory;
       return (

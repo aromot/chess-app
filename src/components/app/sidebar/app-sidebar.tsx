@@ -21,6 +21,7 @@ import {
 import { FormChangePassword } from "@/app/(auth)/_components/ChangePassword/FormChangePassword";
 import { useRouter } from "next/navigation";
 import { URLS } from "@/app/urls";
+import LogoFill from "../../../../public/logo-fill.svg";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open: sidebarOpen } = useSidebar();
@@ -36,19 +37,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               onClick={() => {
                 router.push(URLS.dashboard);
               }}
-              className="flex justify-center hover:cursor-pointer"
-              style={{ width: sidebarOpen ? "auto" : "var(--sidebar-width)" }}
+              className="flex justify-center hover:cursor-pointer h-8"
             >
               <Image
-                src="/logo-fill.svg"
-                width={20}
-                height={32}
-                alt="logo"
-                style={{ height: "auto" }}
+                src={LogoFill}
+                alt="Billie Chess"
+                // sizes="100vw"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                }}
               />
             </div>
             {sidebarOpen && (
-              <span className="text-2xl font-bold truncate">Chess App</span>
+              <span className="text-2xl font-bold truncate">Billie Chess</span>
             )}
           </div>
         </SidebarHeader>

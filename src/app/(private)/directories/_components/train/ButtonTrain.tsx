@@ -6,12 +6,17 @@ import { formatUrl } from "@/lib/helpers";
 import { Directory } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
-const ButtonTrain = ({ directory }: { directory: Directory }) => {
+interface Props {
+  variant?: "ghost" | "default";
+  directory: Directory;
+}
+
+const ButtonTrain: React.FC<Props> = ({ directory, variant = "ghost" }) => {
   const router = useRouter();
 
   return (
     <Button
-      variant="ghost"
+      variant={variant}
       className="h-8 px-3"
       onClick={() =>
         router.push(formatUrl(URLS.training, { id: directory.id }))

@@ -1,13 +1,8 @@
 import Title1 from "@/components/ui/title1";
 import { checkAuth } from "@/lib/helpers";
 import { getDirectories } from "../directories/_db/db-queries";
-import ButtonAddDirectory from "../directories/_components/add/ButtonAddDirectory";
-import DirectoryProvider from "../directories/_components/DirectoryProvider";
-import { DataTable } from "@/components/ui/data-table";
-import { columns } from "../directories/columns";
-import ModalEditDirectory from "../directories/_components/edit/ModalEditDirectory";
-import ModalDeleteDirectory from "../directories/_components/delete/ModalDeleteDirectory";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import ListDirectories from "../directories/_components/view/ListDirectories";
 
 const DashboardPage = async () => {
   const session = await checkAuth();
@@ -19,26 +14,7 @@ const DashboardPage = async () => {
         <SidebarTrigger /> Your dashboard
       </Title1>
 
-      <div className="container mx-auto my-10 px-20 w-[80%]">
-        <div className="flex justify-between items-center mb-4">
-          <Title1>Your repertoires</Title1>
-          {directories.length > 0 && <ButtonAddDirectory />}
-        </div>
-        <DirectoryProvider>
-          <DataTable
-            columns={columns}
-            data={directories}
-            noDataEntry={
-              <div className="py-5 space-y-5">
-                <div>You don't have repertoire yet...</div>
-                <ButtonAddDirectory />
-              </div>
-            }
-          />
-          <ModalEditDirectory />
-          <ModalDeleteDirectory />
-        </DirectoryProvider>
-      </div>
+      <ListDirectories directories={directories} />
     </div>
   );
 };

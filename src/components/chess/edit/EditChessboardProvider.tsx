@@ -1,5 +1,5 @@
 import { Directory, Move } from "@prisma/client";
-import { Chess } from "chess.js";
+import { Chess, Color } from "chess.js";
 import {
   createContext,
   useCallback,
@@ -8,12 +8,11 @@ import {
   useMemo,
   useState,
 } from "react";
-// import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash/cloneDeep";
 import { addMove } from "@/app/(private)/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
-import { cloneDeep } from "lodash";
 
 // const audios = {
 //   move: new Audio("/move.mp3"),
@@ -45,6 +44,8 @@ interface ChessboardContextInterface {
   moveDelete: Move | undefined;
   removeBranch: (move: Move) => void;
   handleKeyDown: (event: KeyboardEvent) => void;
+  userColor: Color;
+  isUserTurn: boolean;
 }
 
 const Context = createContext<ChessboardContextInterface | undefined>(
@@ -52,15 +53,11 @@ const Context = createContext<ChessboardContextInterface | undefined>(
 );
 
 type Props = Readonly<{
-  context: {
-    directory: Directory;
-  };
+  directory: Directory;
   children: React.ReactNode;
 }>;
 
-const EditChessboardProvider = ({ context, children }: Props) => {
-  const { directory } = context;
-
+const EditChessboardProvider = ({ directory, children }: Props) => {
   const initTree = useMemo(() => {
     const tree = new Tree(directory);
     // console.log("initTree:", tree);
@@ -243,12 +240,12 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     };
   }, [handleKeyDown]);
 
+  const userColor: Color = directory.white ? "w" : "b";
+
   const ctx: ChessboardContextInterface = {
     game,
     node,
     tree,
-    // position,
-    // lastMove,
     directory,
     onDrop,
     onClickReset,
@@ -264,6 +261,8 @@ const EditChessboardProvider = ({ context, children }: Props) => {
     moveDelete,
     removeBranch,
     handleKeyDown,
+    userColor,
+    isUserTurn: game.turn() === userColor,
   };
 
   return <Context value={ctx}>{children}</Context>;

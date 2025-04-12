@@ -6,15 +6,19 @@ import { Pencil } from "lucide-react";
 import { useDirectory } from "../DirectoryProvider";
 
 interface Props {
+  variant?: "ghost" | "default";
   directory: Directory;
 }
 
-const ButtonEditDirectory: React.FC<Props> = ({ directory }) => {
+const ButtonEditDirectory: React.FC<Props> = ({
+  directory,
+  variant = "ghost",
+}) => {
   const { openEditDirectory } = useDirectory();
 
   return (
     <Button
-      variant="ghost"
+      variant={variant}
       className="h-8 w-8 p-0"
       onClick={() => openEditDirectory(directory)}
     >

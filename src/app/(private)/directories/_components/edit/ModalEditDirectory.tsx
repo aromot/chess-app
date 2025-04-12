@@ -15,11 +15,13 @@ const ModalEditDirectory = () => {
   const { openEdit, setOpenEdit, directory } = useDirectory();
   const router = useRouter();
 
+  if (!directory) return null;
+
   return (
     <Dialog open={openEdit} onOpenChange={setOpenEdit}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Modifier le répertoire</DialogTitle>
+          <DialogTitle>Edit repertoire</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <FormEditDirectory

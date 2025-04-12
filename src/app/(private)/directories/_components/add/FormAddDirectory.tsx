@@ -21,6 +21,7 @@ import FormInput from "@/components/forms/FormInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
 import { createDirectory } from "../../_actions/actions";
 import { useSession } from "next-auth/react";
+import FormSelect from "@/components/forms/FormSelect";
 
 // Définir les props attendues par le composant
 interface FormAddDirectoryProps {
@@ -33,44 +34,34 @@ export function FormAddDirectory({ onSuccess }: FormAddDirectoryProps) {
     schema: DirectorySchema,
     defaultValues: {
       name: "",
-      white: true,
+      white: "true",
       fenPosInit: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-      userId: session.data.user.id,
+      userId: session.data?.user?.id,
     },
   });
   const onSubmit = async (data: DirectoryFormValues) => {
-    await createDirectory(data.name, data.white, data.fenPosInit, data.userId);
-    onSuccess(); // Fermer le dialogue après un ajout réussi
-  };
+    const res = await createDirectory(
+      data.name,
+      data.white,
+      data.fenPosInit,
+      data.userId
+    );
+    console.log({ res });
 
-  console.log({ session });
+    onSuccess();
+  };
 
   return (
     <AppForm form={form} onSubmit={onSubmit} className="space-y-4">
       <FormInput label="Name" name="name" />
-      <FormField
-        control={form.control}
+      <FormSelect
         name="white"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Color</FormLabel>
-            <Select
-              onValueChange={(value) => field.onChange(value === "true")}
-              value={field.value ? "true" : "false"}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a color" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="true">White</SelectItem>
-                <SelectItem value="false">Black</SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Color"
+        placeholder="Select a color"
+        options={[
+          { label: "White", value: "true" },
+          { label: "Black", value: "false" },
+        ]}
       />
       <FormInput label="Initial FEN" name="fenPosInit" />
       <ButtonSubmit loadingText="saving..." className="mt-4">

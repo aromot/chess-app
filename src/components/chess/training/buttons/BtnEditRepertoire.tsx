@@ -18,7 +18,7 @@ const BtnEditRepertoire = ({ size = "default" }: Props) => {
         router.push(formatUrl(URLS.editDirectory, { id: directory.id }));
       }}
     >
-      Edit your repertoire
+      Edit repertoire
     </Button>
   );
 };

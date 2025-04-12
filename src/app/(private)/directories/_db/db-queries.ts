@@ -99,6 +99,15 @@ export async function getDirectory(id: number) {
     where: {
       id,
     },
+  });
+  return directory;
+}
+
+export async function getFullDirectory(id: number) {
+  const directory = await prisma.directory.findUnique({
+    where: {
+      id,
+    },
     include: {
       positions: {
         include: {
