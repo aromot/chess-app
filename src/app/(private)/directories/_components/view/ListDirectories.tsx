@@ -8,6 +8,7 @@ import DirectoriesDatagrid from "./DirectoriesDatagrid";
 import Spinner from "@/components/loaders/Spinner";
 import ModalEditDirectory from "../edit/ModalEditDirectory";
 import ModalDeleteDirectory from "../delete/ModalDeleteDirectory";
+import ButtonAddDirectory from "../add/ButtonAddDirectory";
 
 const ListDirectories = ({ directories }: { directories: Directory[] }) => {
   const isMobile = useIsMobile();
@@ -17,12 +18,17 @@ const ListDirectories = ({ directories }: { directories: Directory[] }) => {
   }
 
   return (
-    <DirectoryProvider directories={directories}>
-      {isMobile ? <DirectoriesCards /> : <DirectoriesDatagrid />}
+    <>
+      <div className="block sm:hidden text-right">
+        <ButtonAddDirectory size="sm" />
+      </div>
+      <DirectoryProvider directories={directories}>
+        {isMobile ? <DirectoriesCards /> : <DirectoriesDatagrid />}
 
-      <ModalEditDirectory />
-      <ModalDeleteDirectory />
-    </DirectoryProvider>
+        <ModalEditDirectory />
+        <ModalDeleteDirectory />
+      </DirectoryProvider>
+    </>
   );
 };
 

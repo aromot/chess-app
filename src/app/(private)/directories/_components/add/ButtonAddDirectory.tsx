@@ -13,14 +13,17 @@ import { FormAddDirectory } from "./FormAddDirectory";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const ButtonAddDirectory = () => {
+type Props = {
+  size?: "default" | "sm";
+};
+const ButtonAddDirectory = ({ size = "default" }: Props) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Make a new repertoire</Button>
+        <Button size={size}>Make a new repertoire</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
