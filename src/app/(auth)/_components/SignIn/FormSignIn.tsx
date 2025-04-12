@@ -5,7 +5,7 @@ import AppForm from "@/components/forms/AppForm";
 import EmailInput from "@/components/forms/EmailInput";
 import PasswordInput from "@/components/forms/PasswordInput";
 import ButtonSubmit from "@/components/forms/ButtonSubmit";
-import { dbg } from "@/lib/helpers";
+// import { dbg } from "@/lib/helpers";
 import FormGeneralError from "@/components/forms/FormGeneralError";
 import { ZodIssue } from "zod";
 import { URLS } from "@/app/urls";
@@ -22,7 +22,7 @@ const FormSignIn = () => {
   });
 
   const onSubmit = async (values: SignInFormValues) => {
-    dbg.info({ ...values });
+    // dbg.info({ ...values });
 
     const res = await signInAction(values);
     if (res?.error == "validation") {

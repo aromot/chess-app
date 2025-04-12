@@ -1,29 +1,43 @@
 "use client";
 
+import { Directory } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
 
-const Context = createContext(null);
+interface ContextInterface {
+  openEdit: boolean;
+  setOpenEdit: (b: boolean) => void;
+  openEditDirectory: (directory: Directory) => void;
+  directory: Directory | null;
+  openDelete: boolean;
+  setOpenDelete: (b: boolean) => void;
+  openDeleteDirectory: (directory: Directory) => void;
+  directories: Directory[];
+}
+
+const Context = createContext<ContextInterface | null>(null);
 
 const DirectoryProvider = ({
   children,
+  directories,
 }: Readonly<{
   children: React.ReactNode;
+  directories: Directory[];
 }>) => {
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [directory, setDirectory] = useState();
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [directory, setDirectory] = useState<Directory | null>(null);
 
-  const openEditDirectory = (_directory) => {
+  const openEditDirectory = (_directory: Directory) => {
     setOpenEdit(true);
     setDirectory(_directory);
   };
 
-  const openDeleteDirectory = (_directory) => {
+  const openDeleteDirectory = (_directory: Directory) => {
     setOpenDelete(true);
     setDirectory(_directory);
   };
 
-  const ctx = {
+  const ctx: ContextInterface = {
     openEdit,
     setOpenEdit,
     openEditDirectory,
@@ -31,13 +45,14 @@ const DirectoryProvider = ({
     openDelete,
     setOpenDelete,
     openDeleteDirectory,
+    directories,
   };
 
   return <Context value={ctx}>{children}</Context>;
 };
 
 export function useDirectory() {
-  return useContext(Context);
+  return useContext(Context) as ContextInterface;
 }
 
 export default DirectoryProvider;
