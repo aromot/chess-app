@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 const EditDirectory = ({ directory }: { directory: Directory }) => {
   return (
     <div className="h-screen">
-      <div className="text-3xl px-5 pt-3">
+      <div className="text-2xl md:text-3xl px-1 pt-1">
         <SidebarTrigger /> {directory.name}
       </div>
       <QueryClientProvider client={queryClient}>

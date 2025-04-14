@@ -164,7 +164,8 @@ export function classExistsInCSS(className: string) {
   return false;
 }
 
-export function getCurrentBreakpoint() {
+export type BreakpointType = "2xl" | "xl" | "lg" | "md" | "sm" | "xs";
+export function getCurrentBreakpoint(): BreakpointType {
   const width = window.innerWidth;
 
   if (width >= 1536) {

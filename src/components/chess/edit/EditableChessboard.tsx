@@ -49,6 +49,8 @@ const EditableChessboard = () => {
     setBreakpoint(getCurrentBreakpoint());
   }, []);
 
+  const btnSize = breakpoint === "xs" ? "sm" : "default";
+
   return (
     <div className="flex flex-col">
       <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-3 sm:pr-5 relative">
@@ -69,6 +71,7 @@ const EditableChessboard = () => {
         <div className="flex-1">
           <div className="flex gap-3">
             <Button
+              size={btnSize}
               variant="secondary"
               onClick={onClickReset}
               disabled={isStart}
@@ -76,6 +79,7 @@ const EditableChessboard = () => {
               <ChevronsLeft />
             </Button>
             <Button
+              size={btnSize}
               variant="secondary"
               onClick={onClickBackward}
               disabled={isStart}
@@ -83,6 +87,7 @@ const EditableChessboard = () => {
               <ChevronLeft />
             </Button>
             <Button
+              size={btnSize}
               variant="secondary"
               onClick={onClickForward}
               disabled={isEndOfBranch}
@@ -92,8 +97,9 @@ const EditableChessboard = () => {
           </div>
         </div>
         <div className="flex gap-3">
-          {!isStart && isUserTurn && (
+          {isDev() && !isStart && isUserTurn && (
             <Button
+              size={btnSize}
               onClick={() => {
                 const url =
                   formatUrl(URLS.training, { id: directory.id }) +
@@ -105,6 +111,7 @@ const EditableChessboard = () => {
             </Button>
           )}
           <Button
+            size={btnSize}
             onClick={() => {
               router.push(formatUrl(URLS.training, { id: directory.id }));
             }}
@@ -113,7 +120,7 @@ const EditableChessboard = () => {
           </Button>
         </div>
       </div>
-      {isDev() && <div className="text-sm p-5">breakpoint: {breakpoint}</div>}
+      {isDev() && <div className="text-sm px-5">breakpoint: {breakpoint}</div>}
     </div>
   );
 };

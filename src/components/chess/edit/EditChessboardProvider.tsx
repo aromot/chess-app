@@ -13,6 +13,7 @@ import { addMove } from "@/app/(private)/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
+import { BreakpointType, getCurrentBreakpoint } from "@/lib/helpers";
 
 // const audios = {
 //   move: new Audio("/move.mp3"),
@@ -46,6 +47,7 @@ interface ChessboardContextInterface {
   handleKeyDown: (event: KeyboardEvent) => void;
   userColor: Color;
   isUserTurn: boolean;
+  breakpoint: BreakpointType;
 }
 
 const Context = createContext<ChessboardContextInterface | undefined>(
@@ -73,6 +75,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
   const [game, setGame] = useState<Chess>(initGame);
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
+  const [breakpoint, setBreakpoint] = useState<BreakpointType | undefined>();
 
   const openModalDeleteBranch = (move: Move) => {
     setMoveDelete(move);
@@ -240,6 +243,10 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     };
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    setBreakpoint(getCurrentBreakpoint());
+  }, []);
+
   const userColor: Color = directory.white ? "w" : "b";
 
   const ctx: ChessboardContextInterface = {
@@ -263,6 +270,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     handleKeyDown,
     userColor,
     isUserTurn: game.turn() === userColor,
+    breakpoint,
   };
 
   return <Context value={ctx}>{children}</Context>;

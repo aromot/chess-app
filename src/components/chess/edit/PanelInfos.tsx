@@ -1,14 +1,13 @@
 import { useChessboard } from "./EditChessboardProvider";
 import CommentHandler from "./CommentHandler";
 import EditableTreeGraph from "./EditableTreeGraph";
-import Tree from "../common/Tree";
 
 const PanelInfos = () => {
   const { game } = useChessboard();
 
   const PGN = game.pgn();
   return (
-    <div className="text-white py-5 px-3">
+    <div className="text-white px-3">
       {/* <div className="mb-5">
         <Title1>Répertoire {`"${directory.name}"`}</Title1>
         <Link href={URLS.dashboard}>
@@ -37,7 +36,9 @@ const PanelInfos = () => {
         <CommentHandler />
       </div>
 
-      <div className="mt-3 sm:text-sm">Position (FEN) : {game.fen()}</div>
+      <div className="mt-3 sm:text-sm overflow-scroll md:overflow-auto">
+        Position (FEN) : {game.fen()}
+      </div>
 
       {/* <div className="flex gap-3 mt-5">
         <Button variant="secondary" onClick={onClickReset} disabled={isStart}>

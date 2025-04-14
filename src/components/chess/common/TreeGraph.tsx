@@ -3,6 +3,8 @@ import React from "react";
 import ModalDeleteBranch from "../edit/ModalDeleteBranch";
 import { useRouter } from "next/navigation";
 import { Move as ModelMove } from "@prisma/client";
+import { useChessboard } from "../edit/EditChessboardProvider";
+import { BreakpointType, mapValue } from "@/lib/helpers";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;
@@ -41,8 +43,17 @@ const TreeGraph = ({
   Move,
   showChildren = true,
 }: Props) => {
-  const parentNodes = node.getParentNodes().slice(-6);
+  const { breakpoint } = useChessboard();
   const router = useRouter();
+  const size = mapValue(breakpoint, {
+    xs: -2,
+    sm: -3,
+    md: -4,
+    lg: -5,
+    xl: -5,
+    "2xl": -6,
+  });
+  const parentNodes = node.getParentNodes().slice(size);
 
   return (
     <>
