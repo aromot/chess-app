@@ -15,18 +15,18 @@ const TrainDirectory = ({ directory }: { directory: Directory }) => {
 
   return (
     <TrainingProvider context={{ directory, positionId }}>
-      <div className="h-screen bg-zinc-900">
-        <div className="flex px-5 pt-3 gap-3 items-center">
-          <div className="text-3xl">
+      <div className="h-screen">
+        <div className="flex gap-3 items-center px-1 pt-1">
+          <div className="text-2xl md:text-3xl">
             <SidebarTrigger /> {directory.name}
           </div>
           <div>
             <BtnEditRepertoire size="sm" />
           </div>
         </div>
-        <div className="flex">
+        <div className="sm:flex">
           <TrainingChessboard />
-          <div className="flex-1 max-w-[48rem]">
+          <div className="flex-1 max-w-[34rem]">
             <PanelInfos />
           </div>
         </div>

@@ -5,9 +5,8 @@ import { ChevronLeft, ChevronRight, ChevronsLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { URLS } from "@/app/urls";
 import defaultBoardStyle from "../common/defaultBoardStyle";
-import { formatUrl, getCurrentBreakpoint, isDev } from "@/lib/helpers";
+import { formatUrl, isDev } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 
 const GameTurn = () => {
   const { game, isUserTurn } = useChessboard();
@@ -41,13 +40,9 @@ const EditableChessboard = () => {
     onClickForward,
     isEndOfBranch,
     isUserTurn,
+    breakpoint,
   } = useChessboard();
   const router = useRouter();
-  const [breakpoint, setBreakpoint] = useState<string>("");
-
-  useEffect(() => {
-    setBreakpoint(getCurrentBreakpoint());
-  }, []);
 
   const btnSize = breakpoint === "xs" ? "sm" : "default";
 

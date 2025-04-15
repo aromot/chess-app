@@ -1,9 +1,8 @@
 import { DemoStatus, useChessboardDemo } from "./ChessboardDemoProvider";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
-const buttonVariants = cva("p-3 rounded-lg lg:text-2xl", {
+const paperVariants = cva("p-3 rounded-lg lg:text-2xl", {
   variants: {
     variant: {
       default: "bg-zinc-700",
@@ -16,12 +15,12 @@ const buttonVariants = cva("p-3 rounded-lg lg:text-2xl", {
   },
 });
 
-export interface PaperProps extends VariantProps<typeof buttonVariants> {
+export interface PaperProps extends VariantProps<typeof paperVariants> {
   children: React.ReactNode;
 }
 
 const Paper = ({ variant, children }: PaperProps) => {
-  return <div className={cn(buttonVariants({ variant }))}>{children}</div>;
+  return <div className={cn(paperVariants({ variant }))}>{children}</div>;
 };
 
 const MessageInfo = () => {

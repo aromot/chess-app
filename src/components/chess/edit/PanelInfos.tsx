@@ -8,22 +8,12 @@ const PanelInfos = () => {
   const PGN = game.pgn();
   return (
     <div className="text-white px-3">
-      {/* <div className="mb-5">
-        <Title1>Répertoire {`"${directory.name}"`}</Title1>
-        <Link href={URLS.dashboard}>
-          &laquo; retour à votre tableau de bord
-        </Link>
-      </div> */}
-
       <div className="mt-3">
         <EditableTreeGraph />
         {/* <div className="border-slate-500 rounded-md border-2 p-2">
           <Tree />
         </div> */}
       </div>
-
-      {/* <div>History :</div>
-      <div>{game.history().join(" ")}</div> */}
 
       {PGN && (
         <div className="mt-3">
@@ -39,39 +29,6 @@ const PanelInfos = () => {
       <div className="mt-3 sm:text-sm overflow-scroll md:overflow-auto">
         Position (FEN) : {game.fen()}
       </div>
-
-      {/* <div className="flex gap-3 mt-5">
-        <Button variant="secondary" onClick={onClickReset} disabled={isStart}>
-          <ChevronsLeft />
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={onClickBackward}
-          disabled={isStart}
-        >
-          <ChevronLeft />
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={onClickForward}
-          disabled={isEndOfBranch}
-        >
-          <ChevronRight />
-        </Button>
-      </div> */}
-
-      {/* {isDev() && (
-        <div>
-          <div>Debug</div>
-          <div className="flex gap-3">
-            <DebugBox title="position">{position}</DebugBox>
-            <DebugBox title="lastMove">{lastMove}</DebugBox>
-          </div>
-          {/* <div>
-            <DebugModal label="node">{node}</DebugModal>
-          </div> * /}
-        </div>
-      )} */}
     </div>
   );
 };

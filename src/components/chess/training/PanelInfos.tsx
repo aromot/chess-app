@@ -2,9 +2,39 @@ import { useTraining } from "./TrainingProvider";
 import Scores from "./Scores";
 import { SquarePlay, TriangleAlert } from "lucide-react";
 import ModalResults from "./ModalResults";
-import clsx from "clsx";
 import ModalFixResult from "./ModalFixResult";
-import { isDev } from "@/lib/helpers";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const msgContVariants = cva(
+  "flex gap-1 lg:gap-3 items-center py-1 px-2 md:p-5 rounded-lg",
+  {
+    variants: {
+      variant: {
+        user_turn: "bg-white text-sky-950",
+        right: "bg-green-100 text-green-700",
+        wrong: "bg-red-100 text-red-700",
+      },
+    },
+    defaultVariants: {
+      variant: "user_turn",
+    },
+  }
+);
+
+interface MsgContProps extends VariantProps<typeof msgContVariants> {
+  icon?: React.ComponentType<{ className?: string }>;
+  children: React.ReactNode;
+}
+
+const MessageContainer = ({ variant, icon: Icon, children }: MsgContProps) => {
+  return (
+    <div className={cn(msgContVariants({ variant }))}>
+      {Icon && <Icon className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" />}
+      <div className="md:text-2xl lg:text-3xl">{children}</div>
+    </div>
+  );
+};
 
 const PanelInfos = () => {
   const {
@@ -12,8 +42,6 @@ const PanelInfos = () => {
     isWaitingForUserMove,
     isTrainerAnswers,
     trainerAnswer,
-    filteredLines,
-    depth,
     fixMode,
     modalResultIsOpen,
     modalFixResultIsOpen,
@@ -22,7 +50,7 @@ const PanelInfos = () => {
   const PGN = game.pgn();
 
   return (
-    <div className="text-white py-5 px-3 max-w-[34rem]">
+    <div className="text-white sm:py-3 px-3">
       {fixMode && (
         <div className="mb-3 ">
           <span className="bg-emerald-700 rounded-md px-2 inline-block font-bold">
@@ -32,21 +60,17 @@ const PanelInfos = () => {
       )}
       <div className="mb-5">
         {isWaitingForUserMove && (
-          <div className="text-2xl text-sky-950 flex gap-3 items-center bg-white p-5 rounded-lg">
-            <SquarePlay size={32} />
-            <div className="text-3xl">It's your turn...</div>
-          </div>
+          <MessageContainer variant="user_turn" icon={SquarePlay}>
+            It's your turn...
+          </MessageContainer>
         )}
         {isTrainerAnswers && trainerAnswer && (
-          <div className="text-2xl text-green-700 flex gap-3 items-center bg-green-100 p-5 rounded-lg">
-            <div className="text-3xl">🎉 Good!</div>
-          </div>
+          <MessageContainer variant="right">🎉 Good!</MessageContainer>
         )}
         {isTrainerAnswers && !trainerAnswer && (
-          <div className="text-2xl text-red-700 flex gap-3 items-center bg-red-100 p-5 rounded-lg">
-            <TriangleAlert size={32} />
-            <div className="text-3xl">No, try again</div>
-          </div>
+          <MessageContainer variant="wrong" icon={TriangleAlert}>
+            No, try again
+          </MessageContainer>
         )}
       </div>
 
@@ -59,7 +83,7 @@ const PanelInfos = () => {
         </div>
       )}
 
-      {isDev() && (
+      {/* {isDev() && (
         <div className="mt-3 border-2 p-3">
           {filteredLines.length === 0 && <>No more variation to train.</>}
           {filteredLines.map((line, i) => {
@@ -86,7 +110,7 @@ const PanelInfos = () => {
             );
           })}
         </div>
-      )}
+      )} */}
 
       {modalResultIsOpen && <ModalResults />}
       {modalFixResultIsOpen && <ModalFixResult />}

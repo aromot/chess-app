@@ -18,17 +18,17 @@ const Card = ({ id, type, title, value }: CardProps) => {
     <div
       id={id}
       className={clsx(
-        total === 0 && "opacity-50",
+        (total === 0 || (type === "wrong" && stats.nbKo === 0)) && "opacity-50",
         type === "right" ? "bg-green-700" : "bg-red-700",
-        "p-5",
-        "rounded-lg",
-        "relative"
+        "flex-1 p-2 sm:p-5 rounded-lg relative"
       )}
     >
-      <div className="text-3xl">{title}</div>
+      <div className="text-center text-lg sm:text-xl md:text-2xl lg:text-3xl">
+        {title}
+      </div>
       <div className="flex justify-center mt-2">
         <div>
-          <span className="text-6xl">{value}</span>
+          <span className="text-4xl sm:text-6xl">{value}</span>
           <span className="text-2xl"> / {total}</span>
         </div>
       </div>
@@ -69,7 +69,7 @@ const Scores = () => {
   }, [trainerAnswer, isTrainerAnswers, trainingState, stats]);
 
   return (
-    <div className="flex gap-10">
+    <div className="flex gap-3 md:gap-10 w-full">
       <Card
         id="card-right"
         type="right"

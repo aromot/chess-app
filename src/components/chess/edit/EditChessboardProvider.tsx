@@ -47,7 +47,7 @@ interface ChessboardContextInterface {
   handleKeyDown: (event: KeyboardEvent) => void;
   userColor: Color;
   isUserTurn: boolean;
-  breakpoint: BreakpointType;
+  breakpoint: BreakpointType | undefined;
 }
 
 const Context = createContext<ChessboardContextInterface | undefined>(

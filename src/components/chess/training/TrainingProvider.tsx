@@ -1,7 +1,12 @@
 import Line from "@/lib/chess/Line";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
-import { dbg, getRandomItemFromArray } from "@/lib/helpers";
+import {
+  BreakpointType,
+  dbg,
+  getCurrentBreakpoint,
+  getRandomItemFromArray,
+} from "@/lib/helpers";
 import { Directory } from "@prisma/client";
 import { Chess } from "chess.js";
 import { cloneDeep } from "lodash";
@@ -9,6 +14,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -54,6 +60,7 @@ interface TrainingContextInterface {
   fixNextMistake: () => void;
 
   nbRemainingVariations: number;
+  breakpoint: BreakpointType | undefined;
 }
 
 const Context = createContext<TrainingContextInterface | undefined>(undefined);
@@ -142,6 +149,7 @@ const TrainingProvider = ({ context, children }: Props) => {
   const [modalFixResultIsOpen, setModalFixResultIsOpen] =
     useState<boolean>(false);
   const [fixMode, setFixMode] = useState<boolean>(false);
+  const [breakpoint, setBreakpoint] = useState<BreakpointType | undefined>();
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((game: Chess) => {
@@ -468,6 +476,10 @@ const TrainingProvider = ({ context, children }: Props) => {
     setTrainingState(TrainingState.wait_user_move);
   }
 
+  useEffect(() => {
+    setBreakpoint(getCurrentBreakpoint());
+  }, []);
+
   const ctx: TrainingContextInterface = {
     game,
     userColor,
@@ -497,6 +509,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     backToTraining,
     fixNextMistake,
     nbRemainingVariations: initLines.filter((line) => !line.trained).length,
+    breakpoint,
   };
 
   return <Context value={ctx}>{children}</Context>;
