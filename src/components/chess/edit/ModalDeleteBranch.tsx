@@ -42,22 +42,22 @@ const ModalDeleteBranch = ({ onSuccess }: Props) => {
     <Dialog open={modalDelBranchOpen} onOpenChange={toggleModalDeleteBranch}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Supprimer une branche</DialogTitle>
+          <DialogTitle>Delete a variation</DialogTitle>
           {/* si on retire cette balise, on a un warning :-( */}
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div>
-          ATTENTION, voulez-vous vraiment supprimer cette branche (y compris ses
-          commentaires) ?
+          WARNING, do you really want to delete this variation (including all
+          its comments)?
         </div>
         <div className="flex">
           <div className="flex-1">
             <Button onClick={clickDelete} variant="destructive">
-              Je supprime la branche
+              I confirm
             </Button>
           </div>
           <Button variant="link" onClick={closeModalDeleteBranch}>
-            Annuler
+            cancel
           </Button>
         </div>
       </DialogContent>
