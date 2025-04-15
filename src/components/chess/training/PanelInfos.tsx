@@ -77,7 +77,7 @@ const PanelInfos = () => {
       {!fixMode && <Scores />}
 
       {PGN && (
-        <div className="mt-5 rounded-lg bg-zinc-800 p-3">
+        <div className="mt-5 rounded-lg bg-zinc-800 p-3  overflow-auto">
           <div>PGN :</div>
           <div className="min-h-5">{PGN}</div>
         </div>

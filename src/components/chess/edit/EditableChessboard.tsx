@@ -41,6 +41,14 @@ const EditableChessboard = () => {
     isEndOfBranch,
     isUserTurn,
     breakpoint,
+    onSquareClick,
+    moveSquares,
+    optionSquares,
+    rightClickedSquares,
+    moveTo,
+    onSquareRightClick,
+    onPromotionPieceSelect,
+    showPromotionDialog,
   } = useChessboard();
   const router = useRouter();
 
@@ -52,11 +60,22 @@ const EditableChessboard = () => {
         <div className="z-40 relative">
           <Chessboard
             id="chessboard"
+            animationDuration={250}
             position={game.fen()}
+            onSquareClick={onSquareClick}
+            onSquareRightClick={onSquareRightClick}
             onPieceDrop={onDrop}
+            onPromotionPieceSelect={onPromotionPieceSelect}
             boardOrientation={directory.white ? "white" : "black"}
             customBoardStyle={defaultBoardStyle}
+            customSquareStyles={{
+              ...moveSquares,
+              ...optionSquares,
+              ...rightClickedSquares,
+            }}
             areArrowsAllowed={true}
+            promotionToSquare={moveTo}
+            showPromotionDialog={showPromotionDialog}
             // customArrows={[["e2", "e4", "#444444"]]}
           />
         </div>
@@ -115,7 +134,6 @@ const EditableChessboard = () => {
           </Button>
         </div>
       </div>
-      {isDev() && <div className="text-sm px-5">breakpoint: {breakpoint}</div>}
     </div>
   );
 };

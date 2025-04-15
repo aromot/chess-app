@@ -11,6 +11,7 @@ import {
 import cloneDeep from "lodash/cloneDeep";
 import { addMove } from "@/app/(private)/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
+import { Move as ChessMove } from "chess.js";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
 import { BreakpointType, getCurrentBreakpoint } from "@/lib/helpers";
@@ -20,13 +21,20 @@ import { BreakpointType, getCurrentBreakpoint } from "@/lib/helpers";
 //   capture: new Audio("/capture.webm"),
 // };
 
+function move2piece(move: ChessMove): Piece {
+  // @ts-expect-error ça marche
+  return move.color + move.piece.toUpperCase();
+}
+
+type SquareSet = {
+  [key: string]: object;
+};
+
 interface ChessboardContextInterface {
   directory: Directory;
   tree: Tree;
   game: Chess;
   node: TreeNode;
-  // position: Position;
-  // lastMove: Move | null;
   onDrop: (
     sourceSquare: Square,
     targetSquare: Square,
@@ -48,6 +56,14 @@ interface ChessboardContextInterface {
   userColor: Color;
   isUserTurn: boolean;
   breakpoint: BreakpointType | undefined;
+  onSquareClick: (square: Square) => void;
+  moveSquares: SquareSet;
+  optionSquares: SquareSet;
+  rightClickedSquares: SquareSet;
+  moveTo: Square | null;
+  onSquareRightClick: (square: Square) => void;
+  onPromotionPieceSelect: (piece: Piece) => Promise<boolean>;
+  showPromotionDialog: boolean;
 }
 
 const Context = createContext<ChessboardContextInterface | undefined>(
@@ -76,6 +92,13 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
   const [tree] = useState<Tree>(initTree);
   const [node, setNode] = useState<TreeNode>(tree.root);
   const [breakpoint, setBreakpoint] = useState<BreakpointType | undefined>();
+  const [moveFrom, setMoveFrom] = useState<Square | null>(null);
+  const [moveTo, setMoveTo] = useState<Square | null>(null);
+  const [moveSquares, setMoveSquares] = useState<SquareSet>({});
+  const [optionSquares, setOptionSquares] = useState<SquareSet>({});
+  const [rightClickedSquares, setRightClickedSquares] = useState<SquareSet>({});
+  const [showPromotionDialog, setShowPromotionDialog] =
+    useState<boolean>(false);
 
   const openModalDeleteBranch = (move: Move) => {
     setMoveDelete(move);
@@ -132,11 +155,149 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     return true;
   }
 
+  function getMoveOptions(square: Square) {
+    const moves = game.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      setOptionSquares({});
+      return false;
+    }
+    const newSquares: SquareSet = {};
+    moves.map((move) => {
+      const moveTo = game.get(move.to);
+      newSquares[move.to] = {
+        background:
+          moveTo && moveTo.color !== game.get(square)?.color
+            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+        borderRadius: "50%",
+      };
+      return move;
+    });
+    newSquares[square] = {
+      background: "rgba(255, 255, 0, 0.4)",
+    };
+    setOptionSquares(newSquares);
+    return true;
+  }
+
+  async function onSquareClick(square: Square) {
+    setRightClickedSquares({});
+
+    // from square
+    if (!moveFrom) {
+      const hasMoveOptions = getMoveOptions(square);
+      if (hasMoveOptions) setMoveFrom(square);
+      return;
+    }
+
+    // to square
+    if (moveTo) {
+      return;
+    }
+
+    // check if valid move before showing dialog
+    const moves = game.moves({
+      square: moveFrom,
+      verbose: true,
+    });
+
+    const foundMove = moves.find((m) => m.from === moveFrom && m.to === square);
+
+    // not a valid move
+    if (!foundMove) {
+      // check if clicked on new piece
+      const hasMoveOptions = getMoveOptions(square);
+      // if new piece, setMoveFrom, otherwise clear moveFrom
+      setMoveFrom(hasMoveOptions ? square : null);
+      return;
+    }
+
+    // valid move
+    setMoveTo(square);
+
+    const piece = move2piece(foundMove);
+
+    // if promotion move
+    if (
+      (foundMove.color === "w" &&
+        foundMove.piece === "p" &&
+        square[1] === "8") ||
+      (foundMove.color === "b" && foundMove.piece === "p" && square[1] === "1")
+    ) {
+      setShowPromotionDialog(true);
+      return;
+    }
+
+    // is normal move
+    await onDrop(foundMove.from, foundMove.to, piece);
+    // const gameCopy = cloneDeep(game);
+    // const move = gameCopy.move({
+    //   from: moveFrom,
+    //   to: square,
+    //   promotion: "q",
+    // });
+
+    // if invalid, setMoveFrom and getMoveOptions
+    // if (move === null) {
+    //   const hasMoveOptions = getMoveOptions(square);
+    //   if (hasMoveOptions) setMoveFrom(square);
+    //   return;
+    // }
+    // setGame(gameCopy);
+    // setTimeout(makeRandomMove, 300);
+    setMoveFrom(null);
+    setMoveTo(null);
+    setOptionSquares({});
+  }
+
+  function onSquareRightClick(square: Square) {
+    const colour = "rgba(0, 0, 255, 0.4)";
+    setRightClickedSquares({
+      ...rightClickedSquares,
+      [square]:
+        rightClickedSquares[square] &&
+        rightClickedSquares[square].backgroundColor === colour
+          ? undefined
+          : {
+              backgroundColor: colour,
+            },
+    });
+  }
+
+  async function onPromotionPieceSelect(piece: Piece) {
+    // if no piece passed then user has cancelled dialog, don't make move and reset
+    if (piece) {
+      // const gameCopy = {
+      //   ...game,
+      // };
+      // gameCopy.move({
+      //   from: moveFrom,
+      //   to: moveTo,
+      //   promotion: piece[1].toLowerCase() ?? "q",
+      // });
+      // setGame(gameCopy);
+      // setTimeout(makeRandomMove, 300);
+
+      await onDrop(moveFrom, moveTo, piece);
+    }
+    setMoveFrom(null);
+    setMoveTo(null);
+    setShowPromotionDialog(false);
+    setOptionSquares({});
+    return true;
+  }
+
   const onClickReset = useCallback(() => {
     // audios.move.play();
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
+    setMoveSquares({});
+    setOptionSquares({});
+    setRightClickedSquares({});
   }, [game, tree]);
 
   const onClickForward = useCallback(() => {
@@ -158,8 +319,9 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     // audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(nextNode);
-    // setPosition(nextNode.position);
-    // setLastMove(nextNode.move);
+    setMoveSquares({});
+    setOptionSquares({});
+    setRightClickedSquares({});
   }, [node, game]);
 
   const onClickBackward = useCallback(() => {
@@ -174,6 +336,9 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     // audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(parentNode);
+    setMoveSquares({});
+    setOptionSquares({});
+    setRightClickedSquares({});
   }, [game, node]);
 
   const onClickGoToNode = (node: TreeNode) => {
@@ -271,6 +436,14 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     userColor,
     isUserTurn: game.turn() === userColor,
     breakpoint,
+    onSquareClick,
+    moveSquares,
+    optionSquares,
+    rightClickedSquares,
+    moveTo,
+    onSquareRightClick,
+    onPromotionPieceSelect,
+    showPromotionDialog,
   };
 
   return <Context value={ctx}>{children}</Context>;
