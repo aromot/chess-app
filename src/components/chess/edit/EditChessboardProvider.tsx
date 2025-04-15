@@ -11,24 +11,16 @@ import {
 import cloneDeep from "lodash/cloneDeep";
 import { addMove } from "@/app/(private)/positions/_actions/actions";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
-import { Move as ChessMove } from "chess.js";
 import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
 import { BreakpointType, getCurrentBreakpoint } from "@/lib/helpers";
+import { SquareSet } from "../common/types";
+import { move2piece } from "../common/helpers";
 
 // const audios = {
 //   move: new Audio("/move.mp3"),
 //   capture: new Audio("/capture.webm"),
 // };
-
-function move2piece(move: ChessMove): Piece {
-  // @ts-expect-error ça marche
-  return move.color + move.piece.toUpperCase();
-}
-
-type SquareSet = {
-  [key: string]: object;
-};
 
 interface ChessboardContextInterface {
   directory: Directory;

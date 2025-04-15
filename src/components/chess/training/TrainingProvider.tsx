@@ -19,6 +19,8 @@ import {
   useState,
 } from "react";
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
+import { SquareSet } from "../common/types";
+import { move2piece } from "../common/helpers";
 
 enum TrainingState {
   wait_user_move,
@@ -61,6 +63,14 @@ interface TrainingContextInterface {
 
   nbRemainingVariations: number;
   breakpoint: BreakpointType | undefined;
+  onSquareClick: (square: Square) => void;
+  moveSquares: SquareSet;
+  optionSquares: SquareSet;
+  rightClickedSquares: SquareSet;
+  moveTo: Square | null;
+  onSquareRightClick: (square: Square) => void;
+  onPromotionPieceSelect: (piece: Piece) => Promise<boolean>;
+  showPromotionDialog: boolean;
 }
 
 const Context = createContext<TrainingContextInterface | undefined>(undefined);
@@ -127,8 +137,8 @@ const TrainingProvider = ({ context, children }: Props) => {
       }
     });
 
-    dbg.info("initLines :");
-    traceLines(lines);
+    // dbg.info("initLines :");
+    // traceLines(lines);
 
     return lines;
   }, [initTree]);
@@ -150,6 +160,13 @@ const TrainingProvider = ({ context, children }: Props) => {
     useState<boolean>(false);
   const [fixMode, setFixMode] = useState<boolean>(false);
   const [breakpoint, setBreakpoint] = useState<BreakpointType | undefined>();
+  const [moveFrom, setMoveFrom] = useState<Square | null>(null);
+  const [moveTo, setMoveTo] = useState<Square | null>(null);
+  const [moveSquares, setMoveSquares] = useState<SquareSet>({});
+  const [optionSquares, setOptionSquares] = useState<SquareSet>({});
+  const [rightClickedSquares, setRightClickedSquares] = useState<SquareSet>({});
+  const [showPromotionDialog, setShowPromotionDialog] =
+    useState<boolean>(false);
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((game: Chess) => {
@@ -173,15 +190,15 @@ const TrainingProvider = ({ context, children }: Props) => {
 
   const makeOpponentMove = useCallback(
     (availLines: Line[], depth: number, gameCpy: Chess) => {
-      console.log(
-        "%c----------------makeOpponentMove (" + depth + ")----------------",
-        "background: #0ff; color: #000; font-size: 15px"
-      );
+      // console.log(
+      //   "%c----------------makeOpponentMove (" + depth + ")----------------",
+      //   "background: #0ff; color: #000; font-size: 15px"
+      // );
 
-      dbg.info(
-        "availLines (after timeout), voici les lignes dispos dans notre embranchement :"
-      );
-      traceLines(availLines);
+      // dbg.info(
+      //   "availLines (after timeout), voici les lignes dispos dans notre embranchement :"
+      // );
+      // traceLines(availLines);
 
       // const gameCpy = cloneDeep(game);
 
@@ -190,8 +207,8 @@ const TrainingProvider = ({ context, children }: Props) => {
       const randomLine = getRandomItemFromArray<Line>(
         trainedAvailLines.length === 0 ? availLines : trainedAvailLines
       );
-      dbg.info("randomLine selected :");
-      traceLines([randomLine]);
+      // dbg.info("randomLine selected :");
+      // traceLines([randomLine]);
 
       if (!randomLine) {
         alert("No more variation to train.");
@@ -205,7 +222,7 @@ const TrainingProvider = ({ context, children }: Props) => {
         throw new Error("new node not found (computer turn).");
       }
 
-      console.log("gameCpy history():", gameCpy.history());
+      // console.log("gameCpy history():", gameCpy.history());
 
       gameCpy.move(newNode.move.san);
 
@@ -229,8 +246,8 @@ const TrainingProvider = ({ context, children }: Props) => {
       newFilteredLines = newFilteredLines.filter(
         (line) => line.nodes.length > depth + 1
       );
-      dbg.info("[output after filter line length] newFilteredLines :");
-      traceLines(newFilteredLines);
+      // dbg.info("[output after filter line length] newFilteredLines :");
+      // traceLines(newFilteredLines);
 
       setDepth(depth + 1);
       setFilteredLines(newFilteredLines);
@@ -269,7 +286,7 @@ const TrainingProvider = ({ context, children }: Props) => {
     const isMoveInDirectory = !!childNode;
 
     if (isMoveInDirectory) {
-      console.log("🎉 FIX OK");
+      // console.log("🎉 FIX OK");
       if (!childNode.parentNode) {
         throw new Error("The fixed node does not have a parent.");
       }
@@ -277,7 +294,7 @@ const TrainingProvider = ({ context, children }: Props) => {
       setNode(childNode);
       openModalFixResult();
     } else {
-      console.log("%cWRONG FIX, START AGAIN", "color: #f00");
+      // console.log("%cWRONG FIX, START AGAIN", "color: #f00");
       gameCpy.undo();
     }
 
@@ -287,14 +304,14 @@ const TrainingProvider = ({ context, children }: Props) => {
   }
 
   function onDrop(sourceSquare: Square, targetSquare: Square, piece: Piece) {
-    console.log(
-      "%c----------------ON DROP (depth=" +
-        depth +
-        ", fixMode=" +
-        (fixMode ? "ON" : "OFF") +
-        ")----------------",
-      "background: #f00; color: #fff; font-size: 15px"
-    );
+    // console.log(
+    //   "%c----------------ON DROP (depth=" +
+    //     depth +
+    //     ", fixMode=" +
+    //     (fixMode ? "ON" : "OFF") +
+    //     ")----------------",
+    //   "background: #f00; color: #fff; font-size: 15px"
+    // );
 
     if (fixMode) {
       onDropInFixMode(sourceSquare, targetSquare, piece);
@@ -311,20 +328,20 @@ const TrainingProvider = ({ context, children }: Props) => {
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      dbg.debug(
-        "parmi toutes les lignes ci-dessous, on ne va prendre que celles qui ont le move " +
-          move.san +
-          " à l'index " +
-          depth
-      );
-      traceLines(filteredLines);
+      // dbg.debug(
+      //   "parmi toutes les lignes ci-dessous, on ne va prendre que celles qui ont le move " +
+      //     move.san +
+      //     " à l'index " +
+      //     depth
+      // );
+      // traceLines(filteredLines);
 
       let candidateLines = filteredLines.filter((line: Line) => {
         return line.matchesGame(gameCpy, depth);
       });
 
-      dbg.info("[output after filter move san] candidateLines :");
-      traceLines(candidateLines);
+      // dbg.info("[output after filter move san] candidateLines :");
+      // traceLines(candidateLines);
 
       const isMoveInDirectory = candidateLines.length > 0;
 
@@ -336,7 +353,7 @@ const TrainingProvider = ({ context, children }: Props) => {
           throw new Error("new node not found (user turn).");
         }
         newNode.trainingResult = true;
-        console.log("Node.trainingResult = true for " + newNode.move?.san);
+        // console.log("Node.trainingResult = true for " + newNode.move?.san);
 
         if (!newNode.hasChildren()) {
           candidateLines[0].trained = true;
@@ -354,8 +371,8 @@ const TrainingProvider = ({ context, children }: Props) => {
         candidateLines = candidateLines.filter(
           (line) => line.nodes.length > depth + 1
         );
-        dbg.info("[output after filter line length] newFilteredLines :");
-        traceLines(candidateLines);
+        // dbg.info("[output after filter line length] newFilteredLines :");
+        // traceLines(candidateLines);
 
         setDepth(depth + 1);
         setFilteredLines(candidateLines);
@@ -389,13 +406,13 @@ const TrainingProvider = ({ context, children }: Props) => {
 
         node.trainingResult = false;
         node.addWrongMove(move.san);
-        console.log(
-          "Node.trainingResult = FALSE for " +
-            node.move?.san +
-            " (tried " +
-            move.san +
-            ")"
-        );
+        // console.log(
+        //   "Node.trainingResult = FALSE for " +
+        //     node.move?.san +
+        //     " (tried " +
+        //     move.san +
+        //     ")"
+        // );
         setNode(node);
       }
 
@@ -424,6 +441,9 @@ const TrainingProvider = ({ context, children }: Props) => {
     setNode(tree.root);
     setTrainingState(TrainingState.wait_user_move);
     setStats(initStats);
+    setMoveSquares({});
+    setOptionSquares({});
+    setRightClickedSquares({});
   };
 
   const fixMistakes = () => {
@@ -476,6 +496,141 @@ const TrainingProvider = ({ context, children }: Props) => {
     setTrainingState(TrainingState.wait_user_move);
   }
 
+  function getMoveOptions(square: Square) {
+    const moves = game.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      setOptionSquares({});
+      return false;
+    }
+    const newSquares: SquareSet = {};
+    moves.map((move) => {
+      const moveTo = game.get(move.to);
+      newSquares[move.to] = {
+        background:
+          moveTo && moveTo.color !== game.get(square)?.color
+            ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+            : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+        borderRadius: "50%",
+      };
+      return move;
+    });
+    newSquares[square] = {
+      background: "rgba(255, 255, 0, 0.4)",
+    };
+    setOptionSquares(newSquares);
+    return true;
+  }
+
+  async function onSquareClick(square: Square) {
+    setRightClickedSquares({});
+
+    // from square
+    if (!moveFrom) {
+      const hasMoveOptions = getMoveOptions(square);
+      if (hasMoveOptions) setMoveFrom(square);
+      return;
+    }
+
+    // to square
+    if (moveTo) {
+      return;
+    }
+
+    // check if valid move before showing dialog
+    const moves = game.moves({
+      square: moveFrom,
+      verbose: true,
+    });
+
+    const foundMove = moves.find((m) => m.from === moveFrom && m.to === square);
+
+    // not a valid move
+    if (!foundMove) {
+      // check if clicked on new piece
+      const hasMoveOptions = getMoveOptions(square);
+      // if new piece, setMoveFrom, otherwise clear moveFrom
+      setMoveFrom(hasMoveOptions ? square : null);
+      return;
+    }
+
+    // valid move
+    setMoveTo(square);
+
+    const piece = move2piece(foundMove);
+
+    // if promotion move
+    if (
+      (foundMove.color === "w" &&
+        foundMove.piece === "p" &&
+        square[1] === "8") ||
+      (foundMove.color === "b" && foundMove.piece === "p" && square[1] === "1")
+    ) {
+      setShowPromotionDialog(true);
+      return;
+    }
+
+    // is normal move
+    onDrop(foundMove.from, foundMove.to, piece);
+    // const gameCopy = cloneDeep(game);
+    // const move = gameCopy.move({
+    //   from: moveFrom,
+    //   to: square,
+    //   promotion: "q",
+    // });
+
+    // if invalid, setMoveFrom and getMoveOptions
+    // if (move === null) {
+    //   const hasMoveOptions = getMoveOptions(square);
+    //   if (hasMoveOptions) setMoveFrom(square);
+    //   return;
+    // }
+    // setGame(gameCopy);
+    // setTimeout(makeRandomMove, 300);
+    setMoveFrom(null);
+    setMoveTo(null);
+    setOptionSquares({});
+  }
+
+  function onSquareRightClick(square: Square) {
+    const colour = "rgba(0, 0, 255, 0.4)";
+    setRightClickedSquares({
+      ...rightClickedSquares,
+      [square]:
+        rightClickedSquares[square] &&
+        rightClickedSquares[square].backgroundColor === colour
+          ? undefined
+          : {
+              backgroundColor: colour,
+            },
+    });
+  }
+
+  async function onPromotionPieceSelect(piece: Piece) {
+    // if no piece passed then user has cancelled dialog, don't make move and reset
+    if (piece) {
+      // const gameCopy = {
+      //   ...game,
+      // };
+      // gameCopy.move({
+      //   from: moveFrom,
+      //   to: moveTo,
+      //   promotion: piece[1].toLowerCase() ?? "q",
+      // });
+      // setGame(gameCopy);
+      // setTimeout(makeRandomMove, 300);
+
+      onDrop(moveFrom, moveTo, piece);
+    }
+    setMoveFrom(null);
+    setMoveTo(null);
+    setShowPromotionDialog(false);
+    setOptionSquares({});
+    return true;
+  }
+
   useEffect(() => {
     setBreakpoint(getCurrentBreakpoint());
   }, []);
@@ -510,6 +665,14 @@ const TrainingProvider = ({ context, children }: Props) => {
     fixNextMistake,
     nbRemainingVariations: initLines.filter((line) => !line.trained).length,
     breakpoint,
+    onSquareClick,
+    moveSquares,
+    optionSquares,
+    rightClickedSquares,
+    moveTo,
+    onSquareRightClick,
+    onPromotionPieceSelect,
+    showPromotionDialog,
   };
 
   return <Context value={ctx}>{children}</Context>;

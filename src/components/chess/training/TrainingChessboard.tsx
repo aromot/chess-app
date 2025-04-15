@@ -39,18 +39,41 @@ const CustomSquareRenderer = ({
 };
 
 const TrainingChessboard = () => {
-  const { game, onDrop, directory } = useTraining();
+  const {
+    game,
+    onDrop,
+    directory,
+    onSquareClick,
+    moveSquares,
+    optionSquares,
+    rightClickedSquares,
+    moveTo,
+    onSquareRightClick,
+    onPromotionPieceSelect,
+    showPromotionDialog,
+  } = useTraining();
 
   return (
     <div className="flex flex-col">
       <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-3 relative">
         <Chessboard
           id="chessboard"
+          animationDuration={250}
           position={game.fen()}
+          onSquareClick={onSquareClick}
+          onSquareRightClick={onSquareRightClick}
           onPieceDrop={onDrop}
+          onPromotionPieceSelect={onPromotionPieceSelect}
           boardOrientation={directory.white ? "white" : "black"}
           customBoardStyle={defaultBoardStyle}
+          customSquareStyles={{
+            ...moveSquares,
+            ...optionSquares,
+            ...rightClickedSquares,
+          }}
           areArrowsAllowed={true}
+          promotionToSquare={moveTo}
+          showPromotionDialog={showPromotionDialog}
           customSquare={CustomSquareRenderer}
           // customArrows={[["e2", "e4", "#444444"]]}
         />
