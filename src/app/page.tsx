@@ -11,9 +11,9 @@ import HomepageTitle from "./_homepage/HomepageTitle";
 export default async function Home() {
   const session = await auth();
 
-  // if (session?.user) {
-  //   redirect(URLS.dashboard);
-  // }
+  if (session?.user) {
+    redirect(URLS.dashboard);
+  }
 
   const directory = await getDirectoryByName("HOMEPAGE");
 
