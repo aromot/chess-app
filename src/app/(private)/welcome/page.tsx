@@ -14,7 +14,7 @@ const DashboardPage = async () => {
   return (
     <div className="pt-3 px-2">
       <Title1 className="truncate">
-        <SidebarTrigger /> Your dashboard
+        <SidebarTrigger /> Dashboard
       </Title1>
 
       {isAdmin && (

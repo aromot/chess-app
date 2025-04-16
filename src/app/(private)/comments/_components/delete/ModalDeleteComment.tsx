@@ -42,19 +42,19 @@ const ModalDeleteComment = ({ onSuccess }: Props) => {
     <Dialog open={modalDeleteOpen} onOpenChange={toggleModalDelete}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Supprimer un commentaire</DialogTitle>
+          <DialogTitle>Delete a comment</DialogTitle>
           {/* si on retire cette balise, on a un warning :-( */}
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div>Voulez-vous vraiment supprimer ce commentaire ?</div>
+        <div>Are you sure you want to delete this comment?</div>
         <div className="flex">
           <div className="flex-1">
             <Button onClick={clickDelete} variant="destructive">
-              Je supprime
+              I delete
             </Button>
           </div>
           <Button variant="link" onClick={closeModalDelete}>
-            Annuler
+            cancel
           </Button>
         </div>
       </DialogContent>

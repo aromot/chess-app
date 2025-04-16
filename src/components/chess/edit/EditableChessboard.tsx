@@ -111,7 +111,7 @@ const EditableChessboard = () => {
           </div>
         </div>
         <div className="flex gap-3">
-          {isDev() && !isStart && isUserTurn && (
+          {/* {isDev() && !isStart && isUserTurn && (
             <Button
               size={btnSize}
               onClick={() => {
@@ -123,7 +123,7 @@ const EditableChessboard = () => {
             >
               Train from this position
             </Button>
-          )}
+          )} */}
           <Button
             size={btnSize}
             onClick={() => {
