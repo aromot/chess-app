@@ -3,7 +3,6 @@ import Tree from "@/lib/chess/Tree";
 import TreeNode from "@/lib/chess/TreeNode";
 import {
   BreakpointType,
-  dbg,
   getCurrentBreakpoint,
   getRandomItemFromArray,
 } from "@/lib/helpers";

@@ -16,11 +16,16 @@ import TreeNode from "@/lib/chess/TreeNode";
 import { BreakpointType, getCurrentBreakpoint } from "@/lib/helpers";
 import { SquareSet } from "../common/types";
 import { move2piece } from "../common/helpers";
+import { Howl } from "howler";
 
-// const audios = {
-//   move: new Audio("/move.mp3"),
-//   capture: new Audio("/capture.webm"),
-// };
+const audios = {
+  move: new Howl({
+    src: ["/move.mp3"],
+  }),
+  capture: new Howl({
+    src: ["/capture.webm"],
+  }),
+};
 
 interface ChessboardContextInterface {
   directory: Directory;
@@ -115,7 +120,11 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
         promotion: piece[1].toLowerCase() ?? "q",
       });
 
-      // audios.move.play();
+      if (move.captured) {
+        audios.capture.play();
+      } else {
+        audios.move.play();
+      }
 
       setGame((game) => cloneDeep(game));
 
@@ -283,7 +292,6 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
   }
 
   const onClickReset = useCallback(() => {
-    // audios.move.play();
     game.reset();
     setGame((game) => cloneDeep(game));
     setNode(tree.root);
@@ -308,7 +316,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     }
 
     game.move(nextNode.move.san);
-    // audios.move.play();
+    audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(nextNode);
     setMoveSquares({});
@@ -325,7 +333,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     const parentNode = node.parentNode as TreeNode;
 
     game.undo();
-    // audios.move.play();
+    audios.move.play();
     setGame((game) => cloneDeep(game));
     setNode(parentNode);
     setMoveSquares({});
@@ -349,7 +357,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
       game.move(node.move.san);
     }
     setGame((game) => cloneDeep(game));
-    // audios.move.play();
+    audios.move.play();
 
     setNode(node);
   };
