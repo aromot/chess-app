@@ -16,16 +16,7 @@ import TreeNode from "@/lib/chess/TreeNode";
 import { BreakpointType, getCurrentBreakpoint } from "@/lib/helpers";
 import { SquareSet } from "../common/types";
 import { move2piece } from "../common/helpers";
-import { Howl } from "howler";
-
-const audios = {
-  move: new Howl({
-    src: ["/move.mp3"],
-  }),
-  capture: new Howl({
-    src: ["/capture.webm"],
-  }),
-};
+import { audios } from "../common/audios";
 
 interface ChessboardContextInterface {
   directory: Directory;

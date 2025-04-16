@@ -20,6 +20,7 @@ import {
 import { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import { SquareSet } from "../common/types";
 import { move2piece } from "../common/helpers";
+import { audios } from "../common/audios";
 
 enum TrainingState {
   wait_user_move,
@@ -201,6 +202,7 @@ const TrainingProvider = ({ context, children }: Props) => {
 
       // const gameCpy = cloneDeep(game);
 
+      audios.move.play();
       const trainedAvailLines = availLines.filter((line) => !line.trained);
 
       const randomLine = getRandomItemFromArray<Line>(
@@ -281,6 +283,12 @@ const TrainingProvider = ({ context, children }: Props) => {
       promotion: piece[1].toLowerCase() ?? "q",
     });
 
+    if (move.captured) {
+      audios.capture.play();
+    } else {
+      audios.move.play();
+    }
+
     const childNode = node.getChildBySan(move.san);
     const isMoveInDirectory = !!childNode;
 
@@ -326,6 +334,12 @@ const TrainingProvider = ({ context, children }: Props) => {
         to: targetSquare,
         promotion: piece[1].toLowerCase() ?? "q",
       });
+
+      if (move.captured) {
+        audios.capture.play();
+      } else {
+        audios.move.play();
+      }
 
       // dbg.debug(
       //   "parmi toutes les lignes ci-dessous, on ne va prendre que celles qui ont le move " +

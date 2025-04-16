@@ -91,8 +91,8 @@ const Chessboard = () => {
         <div className="p-2 pt-0 sm:w-[30rem]">
           <MessageInfo />
         </div>
+        <div className="p-2 min-h-16 text-sm">{game.pgn()}</div>
       </div>
-      <div className="p-2 min-h-16 text-sm">{game.pgn()}</div>
     </>
   );
 };

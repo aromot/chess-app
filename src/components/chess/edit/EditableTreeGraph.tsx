@@ -5,6 +5,8 @@ import TreeNode from "@/lib/chess/TreeNode";
 import MoveSAN from "../common/MoveSAN";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const Position = ({ node, current }: { node: TreeNode; current?: boolean }) => {
   const { onClickGoToNode } = useChessboard();
@@ -19,6 +21,8 @@ const Position = ({ node, current }: { node: TreeNode; current?: boolean }) => {
 
 const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
   const { onClickGoToNode, openModalDeleteBranch } = useChessboard();
+  const isMobile = useIsMobile();
+
   return (
     <div className="flex group">
       <button
@@ -32,8 +36,7 @@ const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
         <Button
           size="sm"
           variant="ghost"
-          // className="sm:invisible sm:group-hover:visible"
-          className="sm:group-hover:visible"
+          className={cn(!isMobile && "sm:invisible", "sm:group-hover:visible")}
           onClick={() => {
             if (!node.move) {
               alert("No move to delete!");
