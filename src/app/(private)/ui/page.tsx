@@ -3,7 +3,7 @@ import Link from "next/link";
 import { checkAuth } from "@/lib/helpers";
 
 const UiPage = async () => {
-  await checkAuth();
+  await checkAuth("admin");
 
   return (
     <div className="p-5">

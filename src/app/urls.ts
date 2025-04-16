@@ -6,4 +6,5 @@ export const URLS = {
   directories: "/directories",
   editDirectory: "/directories/:id",
   training: "/directories/:id/train",
+  ui: "/ui",
 };

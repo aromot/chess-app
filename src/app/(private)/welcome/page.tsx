@@ -1,11 +1,14 @@
 import Title1 from "@/components/ui/title1";
-import { checkAuth } from "@/lib/helpers";
+import { checkAuth, checkIsAdmin } from "@/lib/helpers";
 import { getDirectories } from "../directories/_db/db-queries";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import ListDirectories from "../directories/_components/view/ListDirectories";
+import Link from "next/link";
+import { URLS } from "@/app/urls";
 
 const DashboardPage = async () => {
   const session = await checkAuth();
+  const isAdmin = await checkIsAdmin();
   const directories = await getDirectories({ userId: session.user.id });
 
   return (
@@ -13,6 +16,12 @@ const DashboardPage = async () => {
       <Title1 className="truncate">
         <SidebarTrigger /> Your dashboard
       </Title1>
+
+      {isAdmin && (
+        <div>
+          <Link href={URLS.ui}>UI guidelines</Link>
+        </div>
+      )}
 
       <ListDirectories directories={directories} />
     </div>

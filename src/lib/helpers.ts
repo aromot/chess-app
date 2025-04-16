@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { URLS } from "@/app/urls";
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -47,14 +48,29 @@ export const dbg = {
   },
 };
 
-export async function checkAuth() {
+export async function checkAuth(role?: "admin" | "member") {
   const session = await auth();
 
+  // Authentication check
   if (!session?.user) {
     redirect("/");
   }
 
+  if (!role) {
+    return session;
+  }
+
+  // Authorization check
+  if (session.user.role !== role) {
+    redirect(URLS.dashboard);
+  }
+
   return session;
+}
+
+export async function checkIsAdmin() {
+  const session = await auth();
+  return session?.user?.role === "admin";
 }
 
 export async function saltAndHashPassword(password: string): Promise<string> {

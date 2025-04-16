@@ -37,9 +37,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        console.log(
-          "================= START AUTHORIZE ============================="
-        );
+        // console.log(
+        //   "================= START AUTHORIZE ============================="
+        // );
 
         try {
           const validation = signInSchema.parse(credentials);
@@ -83,11 +83,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         // User is available during sign-in
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     session({ session, token }) {
       session.user.id = token.id;
+      session.user.role = token.role;
       return session;
     },
   },
