@@ -24,7 +24,7 @@ import { URLS } from "@/app/urls";
 import LogoFill from "../../../../public/logo-fill.svg";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { open: sidebarOpen } = useSidebar();
+  const { open: sidebarOpen, openMobile } = useSidebar();
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
 
@@ -49,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 }}
               />
             </div>
-            {sidebarOpen && (
+            {(sidebarOpen || openMobile) && (
               <span className="text-2xl font-bold truncate">Billie Chess</span>
             )}
           </div>

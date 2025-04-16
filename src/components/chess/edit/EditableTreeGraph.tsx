@@ -27,13 +27,13 @@ const Move = ({ node, disabled }: { node: TreeNode; disabled?: boolean }) => {
         disabled={disabled}
       >
         <MoveSAN san={node.move?.san || ""} />
-        {/* {formatSAN(node.move?.san || "")} */}
       </button>
       {!disabled && (
         <Button
           size="sm"
           variant="ghost"
-          className="invisible group-hover:visible"
+          // className="sm:invisible sm:group-hover:visible"
+          className="sm:group-hover:visible"
           onClick={() => {
             if (!node.move) {
               alert("No move to delete!");

@@ -4,7 +4,7 @@ import ModalDeleteBranch from "../edit/ModalDeleteBranch";
 import { useRouter } from "next/navigation";
 import { Move as ModelMove } from "@prisma/client";
 import { useChessboard } from "../edit/EditChessboardProvider";
-import { BreakpointType, mapValue } from "@/lib/helpers";
+import { mapValue } from "@/lib/helpers";
 
 const Curve = ({ index }: { index: number }) => {
   const height = index * 37.5;
