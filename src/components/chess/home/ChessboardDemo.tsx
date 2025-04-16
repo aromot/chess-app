@@ -70,29 +70,30 @@ const ChessboardDemo = ({ directory }: { directory: Directory }) => {
 const Chessboard = () => {
   const { game, directory } = useChessboardDemo();
 
+  // max-w-[25rem] sm:max-w-[30rem] mx-auto md:max-w-[24rem] lg:max-w-[32rem] xl:max-w-[30rem] 2xl:max-w-[36rem]
   return (
-    <div
-      className="flex flex-col max-w-[25rem] sm:max-w-[30rem] mx-auto md:max-w-[24rem] lg:max-w-[32rem] xl:max-w-[30rem] 2xl:max-w-[36rem]"
-      style={{ pointerEvents: "none" }}
-    >
-      {/* <div className="sm:w-[20rem] md:w-[24rem] lg:w-[32rem] xl:w-[40rem] 2xl:w-[42rem] aspect-square p-2"> */}
-      <div className="w-[23rem] sm:w-[30rem] md:w-[24rem] lg:w-[28rem] xl:w-[30rem] 2xl:w-[36rem] aspect-square p-2">
-        <ReactChessboard
-          id="chessboard"
-          position={game.fen()}
-          // onPieceDrop={onDrop}
-          boardOrientation={directory.white ? "white" : "black"}
-          customBoardStyle={defaultBoardStyle}
-          areArrowsAllowed={false}
-          customSquare={CustomSquareRenderer}
-        />
+    <>
+      <div
+        className="flex flex-col sm:items-center"
+        style={{ pointerEvents: "none" }}
+      >
+        <div className="sm:w-[30rem] md:w-[24rem] lg:w-[28rem] xl:w-[30rem] 2xl:w-[36rem] aspect-square p-2 relative">
+          <ReactChessboard
+            id="chessboard"
+            position={game.fen()}
+            // onPieceDrop={onDrop}
+            boardOrientation={directory.white ? "white" : "black"}
+            customBoardStyle={defaultBoardStyle}
+            areArrowsAllowed={false}
+            customSquare={CustomSquareRenderer}
+          />
+        </div>
+        <div className="p-2 pt-0 sm:w-[30rem]">
+          <MessageInfo />
+        </div>
       </div>
-      <div className="p-2 pt-0">
-        <MessageInfo />
-      </div>
-
       <div className="p-2 min-h-16 text-sm">{game.pgn()}</div>
-    </div>
+    </>
   );
 };
 
