@@ -17,7 +17,7 @@ const TrainDirectory = ({ directory }: { directory: Directory }) => {
     <TrainingProvider context={{ directory, positionId }}>
       <div className="h-screen">
         <div className="flex gap-3 items-center px-1 pt-1">
-          <div className="text-2xl md:text-3xl">
+          <div className="text-2xl md:text-3xl truncate">
             <SidebarTrigger /> {directory.name}
           </div>
           <div>
