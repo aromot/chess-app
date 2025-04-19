@@ -73,10 +73,7 @@ const Chessboard = () => {
   // max-w-[25rem] sm:max-w-[30rem] mx-auto md:max-w-[24rem] lg:max-w-[32rem] xl:max-w-[30rem] 2xl:max-w-[36rem]
   return (
     <>
-      <div
-        className="flex flex-col sm:items-center"
-        style={{ pointerEvents: "none" }}
-      >
+      <div className="flex flex-col sm:items-center pointer-events-none">
         <div className="sm:w-[30rem] md:w-[24rem] lg:w-[28rem] xl:w-[30rem] 2xl:w-[36rem] aspect-square p-2 relative">
           <ReactChessboard
             id="chessboard"

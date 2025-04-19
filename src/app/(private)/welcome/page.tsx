@@ -9,7 +9,11 @@ import { URLS } from "@/app/urls";
 const DashboardPage = async () => {
   const session = await checkAuth();
   const isAdmin = await checkIsAdmin();
-  const directories = await getDirectories({ userId: session.user.id });
+  const directories = await getDirectories({
+    userId: session.user?.id,
+    page: 1,
+    pageSize: 9999,
+  });
 
   return (
     <div className="pt-3 px-2">
@@ -23,7 +27,7 @@ const DashboardPage = async () => {
         </div>
       )}
 
-      <ListDirectories directories={directories} />
+      <ListDirectories directories={directories.toObject()} />
     </div>
   );
 };

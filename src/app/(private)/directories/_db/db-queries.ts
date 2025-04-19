@@ -1,11 +1,23 @@
+import Paginator from "@/lib/dal/Paginator";
 import { prisma } from "@/lib/db";
+import { Directory } from "../../../../../prisma/generated/client";
+
+type PaginationType = {
+  page?: number;
+  pageSize?: number;
+};
 
 // Récupérer tous les directories
-type getDirectoriesProps = {
+type getDirectoriesProps = PaginationType & {
   userId?: string;
 };
 export async function getDirectories(options: getDirectoriesProps = {}) {
-  const where: getDirectoriesProps = {};
+  const where: {
+    userId?: string;
+  } = {};
+
+  const page = options.page ? options.page : 1;
+  const pageSize = options.pageSize ? options.pageSize : 10;
 
   if (options.userId) {
     where.userId = options.userId;
@@ -16,8 +28,22 @@ export async function getDirectories(options: getDirectoriesProps = {}) {
     orderBy: {
       createdAt: "asc", // Tri par date de création croissante
     },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
-  return directories;
+
+  const total = await prisma.directory.count({
+    where,
+  });
+
+  const paginator = new Paginator<Directory>({
+    data: directories,
+    page,
+    pageSize,
+    total,
+  });
+
+  return paginator;
 }
 
 // Ajouter un nouveau directory

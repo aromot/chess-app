@@ -37,12 +37,12 @@
 
 - envoyer un email de bienvenue.
 
-## Utilisateurs / Demander une réinitialisation du mot de passe
+## Utilisateurs / Demander une réinitialisation du mot de passe
 
 - on demande l'email de l'utilisateur
 - si on l'a en BDD, on envoie un email avec un lien pour réinitialiser le mot de passe.
 
-## Utilisateurs / Réinitialiser du mot de passe
+## Utilisateurs / Réinitialiser du mot de passe
 
 - l'utilisateur consulte l'email reçu suite au scénario "Demander une réinitialisation du mot de passe" et il click sur le lien.
 - demander un nouveau mot de passe + confirmation.

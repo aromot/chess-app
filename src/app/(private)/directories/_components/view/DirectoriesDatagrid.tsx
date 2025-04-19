@@ -1,11 +1,9 @@
 import Title1 from "@/components/ui/title1";
 import ButtonAddDirectory from "../add/ButtonAddDirectory";
 import { useDirectory } from "../DirectoryProvider";
-import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
-import ModalEditDirectory from "../edit/ModalEditDirectory";
-import ModalDeleteDirectory from "../delete/ModalDeleteDirectory";
 import MessageEmpty from "./MessageEmpty";
+import { PaginatedDataTable } from "@/components/ui/paginated-data-table";
 
 const DirectoriesDatagrid = () => {
   const { directories } = useDirectory();
@@ -16,14 +14,15 @@ const DirectoriesDatagrid = () => {
         <Title1>Your repertoires</Title1>
         {directories.length > 0 && <ButtonAddDirectory />}
       </div>
-      <DataTable
+      <PaginatedDataTable
         columns={columns}
-        data={directories}
+        data={directories.data}
         noDataEntry={
           <div className="py-5 space-y-5">
             <MessageEmpty />
           </div>
         }
+        pageSize={10}
       />
     </div>
   );

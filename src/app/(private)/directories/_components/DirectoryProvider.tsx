@@ -1,5 +1,6 @@
 "use client";
 
+import { PaginatorObjectType } from "@/lib/dal/Paginator";
 import { Directory } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
 
@@ -11,7 +12,7 @@ interface ContextInterface {
   openDelete: boolean;
   setOpenDelete: (b: boolean) => void;
   openDeleteDirectory: (directory: Directory) => void;
-  directories: Directory[];
+  directories: PaginatorObjectType<Directory>;
 }
 
 const Context = createContext<ContextInterface | null>(null);
@@ -21,7 +22,7 @@ const DirectoryProvider = ({
   directories,
 }: Readonly<{
   children: React.ReactNode;
-  directories: Directory[];
+  directories: PaginatorObjectType<Directory>;
 }>) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);

@@ -35,11 +35,14 @@ const DirectoriesCards = () => {
   }
   return (
     <div className="mt-3 space-y-2">
-      {directories.map((directory, i) => {
+      {directories.data.map((directory, i) => {
         return (
           <DirCard key={i}>
             <div className="text-2xl truncate">
-              <Link href={formatUrl(URLS.editDirectory, { id: directory.id })}>
+              <Link
+                className="underline"
+                href={formatUrl(URLS.editDirectory, { id: directory.id })}
+              >
                 {directory.name}
               </Link>
             </div>
