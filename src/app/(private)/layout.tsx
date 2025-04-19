@@ -1,11 +1,23 @@
+"use server";
+
+import { headers } from "next/headers";
+import { userAgent } from "next/server";
 import { AppSidebar } from "@/components/app/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import LayoutClient from "./layoutClient";
 
-const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
+const PrivateLayout = async ({ children }: { children: React.ReactNode }) => {
+  const reqUserAgent = userAgent({
+    headers: await headers(),
+  });
+  // console.log({ reqUserAgent });
+
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <LayoutClient reqUserAgent={reqUserAgent}>{children}</LayoutClient>
+      </SidebarInset>
     </SidebarProvider>
   );
 };

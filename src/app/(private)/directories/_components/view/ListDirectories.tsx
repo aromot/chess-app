@@ -1,7 +1,6 @@
 "use client";
 
 import DirectoryProvider from "../DirectoryProvider";
-import { useIsMobile } from "@/hooks/use-mobile";
 import DirectoriesCards from "./DirectoriesCards";
 import DirectoriesDatagrid from "./DirectoriesDatagrid";
 import Spinner from "@/components/loaders/Spinner";
@@ -10,6 +9,7 @@ import ModalDeleteDirectory from "../delete/ModalDeleteDirectory";
 import ButtonAddDirectory from "../add/ButtonAddDirectory";
 import { Directory } from "../../../../../../prisma/generated/client";
 import { PaginatorObjectType } from "@/lib/dal/Paginator";
+import { useIsMobile } from "@/app/(private)/welcome/useIsMobile";
 
 const ListDirectories = ({
   directories,

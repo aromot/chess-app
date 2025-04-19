@@ -1,4 +1,10 @@
-import { ComponentProps } from "react";
+import {
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDirectory } from "../DirectoryProvider";
 import MessageEmpty from "./MessageEmpty";
 import { cn } from "@/lib/utils";
@@ -10,19 +16,78 @@ import ButtonEditDirectory from "../edit/ButtonEditDirectory";
 import ButtonTrain from "../train/ButtonTrain";
 import ButtonDeleteDirectory from "../delete/ButtonDeleteDirectory";
 import ButtonAddDirectory from "../add/ButtonAddDirectory";
+import { Directory } from "../../../../../../prisma/generated/client";
 
 const DirCard = ({ className, children, ...props }: ComponentProps<"div">) => {
   return (
-    <div className={cn("bg-zinc-800 p-3 rounded-md", className)} {...props}>
+    <div
+      className={cn("bg-zinc-700 px-3 py-9 rounded-md", className)}
+      {...props}
+    >
       {children}
     </div>
   );
 };
 
+const PAGE_SIZE = 7;
+
 const DirectoriesCards = () => {
   const { directories } = useDirectory();
+  const [page, setPage] = useState(0);
+  const [items, setItems] = useState<Directory[]>([]);
+  const [initiated, setInitiated] = useState<boolean>(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  if (directories.length === 0) {
+  const loadMore = useCallback(() => {
+    const newItems = directories.data.slice(
+      page * PAGE_SIZE,
+      (page + 1) * PAGE_SIZE
+    );
+    setItems((prev) => prev.concat(newItems));
+  }, [page, directories.data]);
+
+  useEffect(() => {
+    loadMore();
+    if (!initiated) {
+      setInitiated(true);
+    }
+  }, [page, loadMore]);
+
+  // Set up IntersectionObserver
+  useEffect(() => {
+    if (!initiated) {
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log("ADD A PAGE");
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [initiated]);
+
+  if (!initiated) {
+    return (
+      <div className="mt-3">
+        <DirCard>
+          <div className="my-8 text-center text-3xl">LOADING...</div>
+        </DirCard>
+      </div>
+    );
+  }
+
+  if (items.length === 0 && loaderRef?.current) {
     return (
       <div className="mt-3">
         <DirCard>
@@ -33,9 +98,10 @@ const DirectoriesCards = () => {
       </div>
     );
   }
+
   return (
     <div className="mt-3 space-y-2">
-      {directories.data.map((directory, i) => {
+      {items.map((directory, i) => {
         return (
           <DirCard key={i}>
             <div className="text-2xl truncate">
@@ -64,6 +130,16 @@ const DirectoriesCards = () => {
       })}
       <div className="text-center py-5">
         <ButtonAddDirectory />
+      </div>
+
+      <div
+        ref={loaderRef}
+        className={cn(
+          "h-10 flex items-center w-full justify-center text-center",
+          items.length === directories.data.length && "hidden"
+        )}
+      >
+        Loading more...
       </div>
     </div>
   );
