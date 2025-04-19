@@ -48,7 +48,7 @@ const DirectoriesCards = () => {
     if (!initiated) {
       setInitiated(true);
     }
-  }, [page, loadMore]);
+  }, [page, loadMore]); // SURTOUT NE PAS ajouter initiated en dépendance sinon on charge en double au début (erreur de conception ?).
 
   // Set up IntersectionObserver
   useEffect(() => {
@@ -75,7 +75,7 @@ const DirectoriesCards = () => {
 
   if (!initiated) {
     return (
-      <div className="mt-3">
+      <div className="mt-28">
         <DirCard>
           <div className="my-8 text-center text-3xl">LOADING...</div>
         </DirCard>
@@ -85,7 +85,7 @@ const DirectoriesCards = () => {
 
   if (items.length === 0 && loaderRef?.current) {
     return (
-      <div className="mt-3">
+      <div className="mt-28">
         <DirCard>
           <div className="my-8 text-center">
             <MessageEmpty />
@@ -96,7 +96,7 @@ const DirectoriesCards = () => {
   }
 
   return (
-    <div className="mt-3 space-y-2">
+    <div className="mt-28 space-y-2">
       {items.map((directory, i) => {
         return (
           <DirCard key={i}>
