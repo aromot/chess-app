@@ -20,16 +20,13 @@ import { Directory } from "../../../../../../prisma/generated/client";
 
 const DirCard = ({ className, children, ...props }: ComponentProps<"div">) => {
   return (
-    <div
-      className={cn("bg-zinc-700 px-3 py-9 rounded-md", className)}
-      {...props}
-    >
+    <div className={cn("bg-zinc-700 p-3 rounded-md", className)} {...props}>
       {children}
     </div>
   );
 };
 
-const PAGE_SIZE = 7;
+const PAGE_SIZE = 10;
 
 const DirectoriesCards = () => {
   const { directories } = useDirectory();
@@ -51,7 +48,7 @@ const DirectoriesCards = () => {
     if (!initiated) {
       setInitiated(true);
     }
-  }, [page, loadMore]);
+  }, [page, loadMore, initiated]);
 
   // Set up IntersectionObserver
   useEffect(() => {
@@ -61,7 +58,6 @@ const DirectoriesCards = () => {
 
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        console.log("ADD A PAGE");
         setPage((prev) => prev + 1);
       }
     });
