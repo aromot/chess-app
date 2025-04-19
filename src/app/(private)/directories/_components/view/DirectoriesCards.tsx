@@ -48,7 +48,7 @@ const DirectoriesCards = () => {
     if (!initiated) {
       setInitiated(true);
     }
-  }, [page, loadMore, initiated]);
+  }, [page, loadMore]);
 
   // Set up IntersectionObserver
   useEffect(() => {
