@@ -5,7 +5,6 @@ import DashboardHeader from "./DashboardHeader";
 
 const DashboardPage = async () => {
   const session = await checkAuth();
-  // const isAdmin = await checkIsAdmin();
   const directories = await getDirectories({
     userId: session.user?.id,
     page: 1,

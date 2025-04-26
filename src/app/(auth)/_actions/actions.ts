@@ -14,6 +14,8 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { changePasswordSchema } from "@/app/(auth)/_schemas/schema";
 import { updateUserPassword } from "@/app/(auth)/_db/db-queries";
 import { auth } from "@/lib/auth";
+import { URLS } from "@/app/urls";
+import { redirect } from "next/navigation";
 
 // ZodType
 
@@ -96,43 +98,82 @@ export async function signInAction(data: SignInFormValues) {
   }
 }
 
-export async function changePassword(old_password: string, new_password: string, new_password_confirm: string) {
+export async function changePassword(
+  old_password: string,
+  new_password: string,
+  new_password_confirm: string
+) {
   try {
-  const session = await auth();
-  
-  const validation = changePasswordSchema.safeParse({ old_password, new_password, new_password_confirm });
-  if (!validation.success) {
+    const session = await auth();
+
+    const validation = changePasswordSchema.safeParse({
+      old_password,
+      new_password,
+      new_password_confirm,
+    });
+    if (!validation.success) {
+      return {
+        error: "validation",
+        errors: validation.error.errors,
+      };
+    }
+
+    const user = await getUserByEmail(session!.user?.email as string);
+    if (!user) {
+      return { error: "auth", message: "Utilisateur introuvable" };
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      old_password,
+      user.password as string
+    );
+    if (!isPasswordValid) {
+      return { error: "auth", message: "Mot de passe actuel invalide" };
+    }
+
+    if (new_password !== new_password_confirm) {
+      return {
+        error: "validation",
+        message: "Les mots de passe ne correspondent pas",
+      };
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    await updateUserPassword(user.id, hashedPassword);
+
     return {
-      error: "validation",
-      errors: validation.error.errors,
+      success: true,
     };
-  }
-
-  const user = await getUserByEmail(session!.user?.email as string);
-  if (!user) {
-    return { error: "auth", message: "Utilisateur introuvable" };
-  }
-
-  const isPasswordValid = await bcrypt.compare(old_password, user.password as string);
-  if (!isPasswordValid) {
-    return { error: "auth", message: "Mot de passe actuel invalide" };
-  }
-
-  if (new_password !== new_password_confirm) {
-    return { error: "validation", message: "Les mots de passe ne correspondent pas" };
-  }
-
-  const hashedPassword = await bcrypt.hash(new_password, 10);
-  await updateUserPassword(user.id, hashedPassword);
-
-  return {
-    success: true,
-  };
   } catch (error) {
     console.error("Erreur lors du changement de mot de passe:", error);
     return {
       error: "server",
-      message: "Une erreur s'est produite lors du changement de mot de passe, essayez à nouveau plus tard.",
+      message:
+        "Une erreur s'est produite lors du changement de mot de passe, essayez à nouveau plus tard.",
     };
+  }
+}
+
+export async function signInGoogleAction() {
+  try {
+    await signIn("google", {
+      redirectTo: process.env.NEXT_PUBLIC_BACKEND_URL + URLS.dashboard,
+    });
+  } catch (error) {
+    // Signin can fail for a number of reasons, such as the user
+    // not existing, or the user not having the correct role.
+    // In some cases, you may want to redirect to a custom error
+    if (error instanceof AuthError) {
+      // return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
+      return redirect(`/error?error=${error.type}`);
+    }
+
+    // http://localhost:3000/login?error=OAuthAccountNotLinked
+
+    // Otherwise if a redirects happens Next.js can handle it
+    // so you can just re-thrown the error and let Next.js handle it.
+    // Docs:
+    // https://nextjs.org/docs/app/api-reference/functions/redirect#server-component
+    throw error;
   }
 }

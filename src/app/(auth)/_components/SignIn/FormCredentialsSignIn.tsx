@@ -12,7 +12,7 @@ import { URLS } from "@/app/urls";
 import { SignInFormValues, signInSchema } from "../../_schemas/schema";
 import { signInAction } from "../../_actions/actions";
 
-const FormSignIn = () => {
+const FormCredentialsSignIn = () => {
   const form = useAppForm({
     schema: signInSchema,
     defaultValues: {
@@ -67,4 +67,4 @@ const FormSignIn = () => {
   );
 };
 
-export default FormSignIn;
+export default FormCredentialsSignIn;

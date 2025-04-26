@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { CredentialsSignin } from "next-auth";
 import { prisma } from "./db";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { signInSchema } from "../app/(auth)/_schemas/schema";
 import { getUserByEmail } from "../app/(auth)/_db/db-queries";
 import bcrypt from "bcryptjs";
@@ -29,6 +30,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
   debug: isDev(),
   providers: [
+    // tuto: https://www.youtube.com/watch?v=ykDcnlzneGg
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
