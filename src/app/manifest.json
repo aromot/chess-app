@@ -1,7 +1,8 @@
 {
-  "name": "Billie Ches Application",
+  "name": "Billie Chess",
   "short_name": "Billie Chess",
   "description": "An application to make and train your own chess directory.",
+  "start_url": "/",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
