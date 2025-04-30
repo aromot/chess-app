@@ -40,7 +40,7 @@ interface ChessboardContextInterface {
   closeModalDeleteBranch: () => void;
   moveDelete: Move | undefined;
   removeBranch: (move: Move) => void;
-  handleKeyDown: (event: KeyboardEvent) => void;
+  // handleKeyDown: (event: KeyboardEvent) => void;
   userColor: Color;
   isUserTurn: boolean;
   breakpoint: BreakpointType | undefined;
@@ -313,7 +313,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     setMoveSquares({});
     setOptionSquares({});
     setRightClickedSquares({});
-  }, [node, game]);
+  }, [game, node]);
 
   const onClickBackward = useCallback(() => {
     if (!node.parentNode) {
@@ -381,8 +381,6 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
 
         // Annuler l'action par défaut pour éviter qu'elle ne soit traitée deux fois.
         event.preventDefault();
-
-        document.removeEventListener("keydown", handleKeyDown);
       } catch (error) {
         console.log("Error while processing keyboard event.");
         console.log(error);
@@ -423,7 +421,7 @@ const EditChessboardProvider = ({ directory, children }: Props) => {
     closeModalDeleteBranch,
     moveDelete,
     removeBranch,
-    handleKeyDown,
+    // handleKeyDown,
     userColor,
     isUserTurn: game.turn() === userColor,
     breakpoint,

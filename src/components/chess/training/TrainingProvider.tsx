@@ -442,7 +442,8 @@ const TrainingProvider = ({ context, children }: Props) => {
   }
 
   const reset = (flushTrainedLines: boolean = false) => {
-    setDepth(0);
+    const depthReset = 0;
+    setDepth(depthReset);
     setFixMode(false);
     if (flushTrainedLines) {
       initLines.forEach((line) => (line.trained = false));
@@ -457,6 +458,15 @@ const TrainingProvider = ({ context, children }: Props) => {
     setMoveSquares({});
     setOptionSquares({});
     setRightClickedSquares({});
+
+    if (!directory.white) {
+      const newTimeout = window.setTimeout(() => {
+        const gameCpy = cloneDeep(game);
+        gameCpy.reset();
+        makeOpponentMove(initLines, depthReset, gameCpy);
+      }, 500);
+      setCurrentTimeout(newTimeout);
+    }
   };
 
   const fixMistakes = () => {
@@ -646,6 +656,14 @@ const TrainingProvider = ({ context, children }: Props) => {
 
   useEffect(() => {
     setBreakpoint(getCurrentBreakpoint());
+
+    if (!directory.white) {
+      const newTimeout = window.setTimeout(() => {
+        const gameCpy = cloneDeep(game);
+        makeOpponentMove(filteredLines, depth, gameCpy);
+      }, 1000);
+      setCurrentTimeout(newTimeout);
+    }
   }, []);
 
   const ctx: TrainingContextInterface = {

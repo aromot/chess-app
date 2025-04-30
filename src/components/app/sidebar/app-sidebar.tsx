@@ -57,10 +57,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent></SidebarContent>
         <SidebarFooter style={{ pointerEvents: "all" }}>
           <NavUser
-            onClickChangePassword={() => {
-              document.body.style.removeProperty("pointer-events");
-              setOpen(true);
-            }}
+          // onClickChangePassword={() => {
+          //   document.body.style.removeProperty("pointer-events");
+          //   setOpen(true);
+          // }}
           />
         </SidebarFooter>
         <SidebarRail />

@@ -8,10 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { URLS } from "@/app/urls";
-import FormCredentialsSignIn from "@/app/(auth)/_components/SignIn/FormCredentialsSignIn";
 import FormGoogleSignIn from "@/app/(auth)/_components/SignIn/FormGoogleSignIn";
+import AuthIntro from "@/app/(auth)/_components/SignIn/AuthIntro";
 
 const ModalLoginPage = () => {
   const router = useRouter();
@@ -28,12 +26,13 @@ const ModalLoginPage = () => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <FormCredentialsSignIn />
+        <AuthIntro />
+
         <FormGoogleSignIn />
 
-        <div>
+        {/* <div>
           <Link href={URLS.register}>Je n'ai pas de compte</Link>
-        </div>
+        </div> */}
       </DialogContent>
     </Dialog>
   );

@@ -31,7 +31,9 @@
 
 ## Utilisateurs / S'authentifier
 
-- implémenter les providers GMAIL et FACEBOOK.
+✅ implémenter le provider GMAIL.
+
+- implémenter le provider FACEBOOK.
 
 ## Utilisateurs / S'inscrire
 
@@ -50,18 +52,19 @@
 
 ## Membres / Tableau de bord
 
-- ajouter le champ updatedAt
-- ajouter la pagination
+✅ ajouter le champ updatedAt
+✅ ajouter la pagination
 
 ## Modifier un répertoire
 
-- bug de la gestion du clavier
-- retirer le "train from position"
-- vérifier que le répertoire appartient bien à l'utilisateur
+✅ bug de la gestion du clavier
+✅ retirer le "train from position"
+✅ vérifier que le répertoire appartient bien à l'utilisateur
 
 ## S'entraîner
 
-- vérifier que le répertoire appartient bien à l'utilisateur
+✅ vérifier que le répertoire appartient bien à l'utilisateur
+✅ bug des répertoires noirs
 
 ## Membres / Changer le mot de passe
 

@@ -32,6 +32,11 @@ export const columns: ColumnDef<Directory>[] = [
     cell: ({ renderValue }) => formatDateTime(renderValue() as string),
   },
   {
+    accessorKey: "updatedAt",
+    header: "Updated on",
+    cell: ({ renderValue }) => formatDateTime(renderValue() as string),
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const directory = row.original as Directory;

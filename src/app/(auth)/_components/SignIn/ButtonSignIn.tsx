@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormSignUp from "../SignUp/FormSignUp";
-import FormCredentialsSignIn from "./FormCredentialsSignIn";
 import FormGoogleSignIn from "./FormGoogleSignIn";
+import AuthIntro from "./AuthIntro";
 
 const ButtonSignIn = () => {
   const [open, setOpen] = useState(false);
@@ -49,13 +49,10 @@ const ButtonSignIn = () => {
             <DialogDescription></DialogDescription>
           </DialogHeader>
 
-          <FormCredentialsSignIn
-            onSuccess={() => {
-              setOpen(false);
-            }}
-          />
+          <AuthIntro />
+
           <FormGoogleSignIn />
-          <div>
+          {/* <div>
             <Button
               variant="link"
               onClick={() => {
@@ -64,7 +61,7 @@ const ButtonSignIn = () => {
             >
               Je n'ai pas de compte
             </Button>
-          </div>
+          </div> */}
         </DialogContent>
       )}
     </Dialog>

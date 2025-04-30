@@ -64,7 +64,10 @@ export function PaginatedDataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="font-bold bg-slate-700"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -91,7 +94,8 @@ export function PaginatedDataTable<TData, TValue>({
                       <TableCell
                         key={cell.id}
                         className={clsx(
-                          isAction && "invisible group-hover:visible"
+                          isAction &&
+                            "opacity-0 group-hover:opacity-100 transition-opacity"
                         )}
                       >
                         {flexRender(

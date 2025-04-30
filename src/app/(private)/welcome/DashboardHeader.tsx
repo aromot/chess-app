@@ -7,11 +7,13 @@ import Link from "next/link";
 import { URLS } from "@/app/urls";
 import ButtonAddDirectory from "../directories/_components/add/ButtonAddDirectory";
 import { useSession } from "next-auth/react";
+import TestSendEmail from "./_components/TestSendEmail";
 
 const DashboardHeader = () => {
   const isMobile = useIsMobile();
   const session = useSession();
   const isAdmin = session.data?.user?.role === "admin";
+
   return (
     <div>
       {isMobile ? (
@@ -23,6 +25,8 @@ const DashboardHeader = () => {
           {isAdmin && (
             <div>
               <Link href={URLS.ui}>UI guidelines</Link>
+              <br />
+              <TestSendEmail />
             </div>
           )}
 
@@ -31,9 +35,23 @@ const DashboardHeader = () => {
           </div>
         </div>
       ) : (
-        <div className="block sm:hidden text-right">
-          <ButtonAddDirectory size="sm" />
-        </div>
+        <>
+          <Title1 className="truncate">
+            <SidebarTrigger /> Dashboard
+          </Title1>
+
+          {isAdmin && (
+            <div>
+              <Link href={URLS.ui}>UI guidelines</Link>
+              <br />
+              <TestSendEmail />
+            </div>
+          )}
+
+          <div className="block sm:hidden text-right">
+            <ButtonAddDirectory size="sm" />
+          </div>
+        </>
       )}
     </div>
   );

@@ -1,12 +1,11 @@
 "use client";
 
-import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react";
+import { ChevronsUpDown, LogOut, User } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -21,11 +20,12 @@ import {
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
-export function NavUser({
-  onClickChangePassword,
-}: {
-  onClickChangePassword: () => void;
-}) {
+export function NavUser() {
+  //   {
+  //   onClickChangePassword,
+  // }: {
+  //   onClickChangePassword: () => void;
+  // }
   const { isMobile } = useSidebar();
   const session = useSession();
 
@@ -75,7 +75,7 @@ export function NavUser({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup>
+              {/* <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => {
                     onClickChangePassword();
@@ -85,7 +85,7 @@ export function NavUser({
                   Change your password
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator /> */}
               <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut />
                 Log out

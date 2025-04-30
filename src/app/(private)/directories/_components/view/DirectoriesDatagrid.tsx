@@ -9,7 +9,7 @@ const DirectoriesDatagrid = () => {
   const { directories } = useDirectory();
 
   return (
-    <div className="mx-auto my-10 max-w-screen-sm">
+    <div className="mx-auto my-10 max-w-screen-lg">
       <div className="flex justify-between items-center mb-4">
         <Title1>Your repertoires</Title1>
         {directories.length > 0 && <ButtonAddDirectory />}

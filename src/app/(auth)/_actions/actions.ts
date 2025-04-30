@@ -31,6 +31,8 @@ export async function signUp(data: SignUpFormValues) {
   const { email, password } = validation.data;
   const user = await insertUser(email, password);
 
+  // Send email
+
   return {
     success: true,
     user,
