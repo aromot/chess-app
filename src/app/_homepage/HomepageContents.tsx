@@ -5,6 +5,7 @@ import HomepageTitle from "./HomepageTitle";
 import { URLS } from "../urls";
 import { useMounted } from "@/hooks/use-mounted";
 import { getCurrentBreakpoint } from "@/lib/helpers";
+import FormGoogleSignIn from "../(auth)/_components/SignIn/FormGoogleSignIn";
 
 // https://medium.com/@eric.burel/how-to-get-rid-of-window-is-not-defined-and-hydration-mismatch-errors-in-next-js-567cc51b4a17
 const HomepageContents = () => {
@@ -44,17 +45,8 @@ const HomepageContents = () => {
           </div>
         </div>
 
-        <div className="flex mb-8 md:mb-0">
-          <div className="flex-1 text-center">
-            <Button asChild size={btnSize} className="text-2xl lg:text-3xl">
-              <Link href={URLS.login}>Sign in</Link>
-            </Button>
-          </div>
-          {/* <div className="flex-1 text-center">
-            <Button asChild size={btnSize} className="text-2xl lg:text-3xl">
-              <Link href={URLS.register}>Sign up</Link>
-            </Button>
-          </div> */}
+        <div className="mb-8 md:mb-0 flex justify-center">
+          <FormGoogleSignIn />
         </div>
       </div>
     </div>
