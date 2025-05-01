@@ -75,7 +75,7 @@ const DirectoriesCards = () => {
 
   if (!initiated) {
     return (
-      <div className="mt-28">
+      <div className="mt-36">
         <DirCard>
           <div className="my-8 text-center text-3xl">LOADING...</div>
         </DirCard>
@@ -85,7 +85,7 @@ const DirectoriesCards = () => {
 
   if (items.length === 0 && loaderRef?.current) {
     return (
-      <div className="mt-28">
+      <div className="mt-36">
         <DirCard>
           <div className="my-8 text-center">
             <MessageEmpty />
@@ -96,7 +96,7 @@ const DirectoriesCards = () => {
   }
 
   return (
-    <div className="mt-28 space-y-2">
+    <div className="mt-36 space-y-2">
       {items.map((directory, i) => {
         return (
           <DirCard key={i}>

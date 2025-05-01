@@ -50,11 +50,11 @@ const HomepageContents = () => {
               <Link href={URLS.login}>Sign in</Link>
             </Button>
           </div>
-          <div className="flex-1 text-center">
+          {/* <div className="flex-1 text-center">
             <Button asChild size={btnSize} className="text-2xl lg:text-3xl">
               <Link href={URLS.register}>Sign up</Link>
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

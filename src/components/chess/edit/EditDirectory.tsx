@@ -5,15 +5,16 @@ import EditChessboardProvider from "./EditChessboardProvider";
 import EditableChessboard from "./EditableChessboard";
 import PanelInfos from "./PanelInfos";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import BtnBack from "../common/BtnBack";
 
 const queryClient = new QueryClient();
 
 const EditDirectory = ({ directory }: { directory: Directory }) => {
   return (
     <div className="h-screen">
-      <div className="text-2xl md:text-3xl px-1 pt-1 truncate">
-        <SidebarTrigger /> {directory.name}
+      <div className="text-2xl md:text-3xl px-1 pt-1 flex gap-1 items-center">
+        <BtnBack />
+        <div className="truncate">{directory.name}</div>
       </div>
       <QueryClientProvider client={queryClient}>
         <EditChessboardProvider directory={directory}>
