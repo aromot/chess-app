@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import PwaManager from "@/components/pwa/PwaManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Billie Chess App",
+  title: "Billie Chess",
   description: "Prepare your openings.",
 };
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           {children}
           {modalLogin}
           {modalRegister}
+          <PwaManager />
         </SessionProvider>
       </body>
     </html>
